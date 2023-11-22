@@ -1,0 +1,262 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      Create a local scene | Sample | ArcGIS Maps SDK for JavaScript 4.28
+    </title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.28/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.28/"></script>
+
+    <script>
+      require([
+        "esri/Map",
+        "esri/views/SceneView",
+        "esri/layers/FeatureLayer",
+        "esri/widgets/Home",
+        "esri/core/reactiveUtils"
+      ], (Map, SceneView, FeatureLayer, Home, reactiveUtils) => {
+        const quakesUrl =
+          "https://luk.vedur.is/arcgis/rest/services/skjalftar/skjalftar_isn93/FeatureServer/0";
+
+        // The clipping extent for the scene
+        const kansasExtent = {
+          // autocasts as new Extent()
+          xmax: 811854,
+          xmin: 252851,
+          ymax: 707776,
+          ymin: 302498,
+          spatialReference: {
+            // autocasts as new SpatialReference()
+            wkid: 3057
+          }
+        };
+
+        /********************************************************
+         * The popupTemplate that will populate the content of the
+         * popup when a well feature is selected
+         *******************************************************/
+
+
+        /********************************************************
+         * Renderer for symbolizing earthquakes below the surface
+         *
+         * Earthquakes will be symbolized as spheres. The size of
+         * each will coincide with the magnitude of the earthquake,
+         * while the color will indicate the date at which the
+         * earthquake occured. The more white the color, the older the
+         * earthquake. The deeper the red, the more recent the
+         * earthquake occurred.
+         *******************************************************/
+
+        const quakesRenderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          symbol: {
+            type: "point-3d", // autocasts as new PointSymbol3D()
+            symbolLayers: [
+              {
+                type: "object", // autocasts as new ObjectSymbol3DLayer()
+                resource: {
+                  primitive: "sphere"
+                }
+              }
+            ]
+          },
+          visualVariables: [
+            {
+              type: "color",
+              field: "date_evt",
+              stops: [
+                {
+                  // From mid-2013
+                  value: startDate.valueOf(),
+                  color: "white"
+                },
+                {
+                  value: endDate.valueOf(),
+                  color: "red"
+                }
+              ] // to Nov. 2015
+            },
+            {
+              type: "size",
+              field: "mag",
+              axis: "all",
+              stops: [
+                {
+                  value: 2,
+                  size: 100
+                },
+                {
+                  value: 5,
+                  size: 2000
+                }
+              ]
+            }
+          ]
+        };
+
+        /********************************************************
+         * Renderer for symbolizing earthquakes on the surface
+         *******************************************************/
+
+        // Quakes will be symbolized as circles
+        const surfaceSym = {
+          type: "point-3d", // autocasts as new PointSymbol3D()
+          symbolLayers: [
+            {
+              type: "icon", // autocasts as new IconSymbol3DLayer()
+              material: {
+                color: [179, 75, 75]
+              },
+              resource: {
+                primitive: "circle"
+              }
+            }
+          ]
+        };
+
+        // Symbol size will vary depending on magnitude of the quake
+        const quakesSurfaceRenderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          symbol: surfaceSym,
+          visualVariables: [
+            {
+              type: "size",
+              field: "mag",
+              axis: "all",
+              stops: [
+                {
+                  value: 2,
+                  size: 3
+                },
+                {
+                  value: 5,
+                  size: 50
+                }
+              ]
+            }
+          ]
+        };
+
+        /********************************************************
+         * The popupTemplate that will populate the content of the
+         * popup when an earthquake feature is selected
+         *******************************************************/
+
+        const quakeTemplate = {
+          // autocasts as new PopupTemplate()
+          title: "{place}",
+          content:
+            "<b>Date and time:</b> {date_evt}<br>" +
+            "<b>Magnitude (0-10): </b> {mag}<br>" +
+            "<b>Depth: </b> {depth} km<br>",
+          fieldInfos: [
+            {
+              fieldName: "date_evt",
+              format: {
+                dateFormat: "short-date-short-time"
+              }
+            }
+          ]
+        };
+
+        /********************************************************
+         * Create earthquakes layers (one on the surface and one
+         * below the surface to show actual location).
+         *******************************************************/
+
+        // Defines a layer for drawing the exact location of quakes below the surface
+        const quakesDepthLayer = new FeatureLayer({
+          url: quakesUrl,
+          // Show only quakes of magnitude 2.0 or higher
+          definitionExpression: "mag >= 2",
+          outFields: ["*"],
+          renderer: quakesRenderer,
+          popupTemplate: quakeTemplate,
+          returnZ: true,
+          elevationInfo: {
+            mode: "relative-to-ground"
+          }
+        });
+
+        // Defines a layer for depicting quakes on the surface
+        const quakesSurfaceLayer = new FeatureLayer({
+          url: quakesUrl,
+          definitionExpression: "mag >= 2",
+          outFields: ["*"],
+          renderer: quakesSurfaceRenderer,
+          popupTemplate: quakeTemplate,
+          opacity: 0.6,
+          elevationInfo: {
+            mode: "on-the-ground"
+          }
+        });
+
+        /********************************************************************
+         * Create a map with the above defined layers and a topographic
+         * basemap. Setting the navigationConstraint on the ground to be of
+         * type "none" will allow the user to navigate the view's camera
+         * below the surface.
+         ********************************************************************/
+        const map = new Map({
+          basemap: "topo-vector",
+          layers: [
+            quakesDepthLayer,
+            quakesSurfaceLayer,
+            wellsLayer,
+            wellsSurfaceLayer
+          ],
+          ground: {
+            navigationConstraint: {
+              type: "none"
+            }
+          }
+        });
+
+        /********************************************************************
+         * Create a local scene in south central Kansas
+         *
+         * To create a local scene, you must set the viewingMode to "local".
+         * To define a small, localized area for the view, set
+         * the clippingArea property.
+         ********************************************************************/
+        const view = new SceneView({
+          container: "viewDiv",
+          map: map,
+          // Indicates to create a local scene
+          viewingMode: "local",
+          // Use the exent defined in clippingArea to define the bounds of the scene
+          clippingArea: kansasExtent,
+          extent: kansasExtent,
+          // Turns off atmosphere and stars settings
+          environment: {
+            atmosphereEnabled: false,
+            starsEnabled: false
+          }
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
