@@ -34,8 +34,10 @@
         "esri/core/reactiveUtils"
       ], (Map, SceneView, FeatureLayer, Home, reactiveUtils) => {
         const quakesUrl =
-          "https://luk.vedur.is/arcgis/rest/services/skjalftar/skjalftar_isn93/FeatureServer/0";
-
+          "https://luk.vedur.is/arcgis/rest/services/skjalftar/skjalftar_isn93/FeatureServer/1";
+          
+        //https://developers.arcgis.com/javascript/latest/sample-code/sandbox/?sample=timeslider-filter
+        // https://luk.vedur.is/arcgis/rest/services/skjalftar/skjalftar_isn93/FeatureServer/1?f=pjson
         // The clipping extent for the scene
         const kansasExtent = {
           // autocasts as new Extent()
@@ -45,15 +47,9 @@
           ymin: 302498,
           spatialReference: {
             // autocasts as new SpatialReference()
-            wkid: 3057
+            wkid: 3857
           }
         };
-
-        /********************************************************
-         * The popupTemplate that will populate the content of the
-         * popup when a well feature is selected
-         *******************************************************/
-
 
         /********************************************************
          * Renderer for symbolizing earthquakes below the surface
@@ -220,9 +216,7 @@
           basemap: "topo-vector",
           layers: [
             quakesDepthLayer,
-            quakesSurfaceLayer,
-            wellsLayer,
-            wellsSurfaceLayer
+            quakesSurfaceLayer
           ],
           ground: {
             navigationConstraint: {
