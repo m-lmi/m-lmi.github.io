@@ -1,29 +1,40 @@
-/***********************************
-* Add weather and day widget
-***********************************/
-//
-
+// Setting up the basic map widgets  like the home button, scale bar, zoom, and basemap gallery.
 define([
-  "esri/widgets/Weather",
-  "esri/widgets/Daylight",
-  "esri/widgets/Expand",
-], function(Weather, Daylight, Expand) {
-  return {
-    setupWeatherDaylight: function(mapView) {
-      let activeWidget;
-      // Code for setting up the line of sight widget
-
-      const weather = new Weather({ 
-        view: mapView,
-        container: "weather-container", //added to the container with other widgets
-      });
-
-
-      const daylight = new Daylight({ 
-        view: mapView,
-        container: "daylight-container", //addet to the container 
-      });
-
-    }
-  };
-});
+    "esri/widgets/Home",
+    "esri/widgets/BasemapGallery",
+    "esri/widgets/LayerList",
+    "esri/widgets/Search",
+  ], function(Home, BasemapGallery, LayerList, Search) {
+    return {
+      setupBasicWidgets: function(mapView) {
+        const homeBtn = new Home({
+          view: mapView  
+        });
+  
+        mapView.ui.add(homeBtn, "top-left");
+        mapView.ui.move("zoom", "top-left"); //bottom-right
+  
+        const basemaps = new BasemapGallery({
+          view: mapView,
+          container: "basemaps-container"
+        });
+  
+        const layerList = new LayerList({
+          view: mapView,
+          selectionEnabled: true,
+          container: "layers-container"
+        }); 
+  
+        // Initialize the Search widget
+        const search = new Search({
+          view: mapView,
+          container: "search-container"
+        });
+  
+      
+        
+        
+      },
+    };
+  });
+  

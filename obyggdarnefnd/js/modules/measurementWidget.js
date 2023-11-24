@@ -13,18 +13,18 @@ define([
       setupMeasurementWidget: function(mapView) {
   
         let activeWidget = null;
-  
   /*
         const distance = new DirectLineMeasurement3D({
           view: mapView,
           container: "distance-container"
         });
-  /*
+  
         const area = new AreaMeasurement3D({
           view: mapView,  
           container: "area-container"
         });
   */
+
   
   document
   .getElementById("distanceBtn")
@@ -64,7 +64,7 @@ define([
         throw error; // throw other errors since they are of interest
       });
   
-      mapView.ui.add(activeWidget, "top-right");
+      mapView.ui.add(activeWidget, "distance-container");
       setActiveButton(document.getElementById("distanceBtn"));
       break;
   
@@ -83,9 +83,11 @@ define([
         throw error; // throw other errors since they are of interest
       });
   
-      mapView.ui.add(activeWidget, "top-right");
+      mapView.ui.add(activeWidget, "area-container");
       setActiveButton(document.getElementById("areaBtn"));
       break;
+
+      
     case null:
       if (activeWidget) {
         mapView.ui.remove(activeWidget);
@@ -108,11 +110,6 @@ define([
       selectedButton.classList.add("active");
     }
     }
-    
-  
-  
-  
-  
       }
     };
   });//the end of measurementWidgets.js  

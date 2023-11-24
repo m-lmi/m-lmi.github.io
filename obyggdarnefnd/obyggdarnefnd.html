@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Óbyggðarnefnd 3D</title>
+  <link rel="icon" type="image" href="https://obyggdanefnd.is/wp-content/uploads/obn-logo-textalaust-300x300.jpg">
+   
+  <!-- Configure modules and widgets -->
+  <script>
+    var dojoConfig = {
+      packages: [
+        {
+          name: "modules",
+          location: location.pathname.replace(/\/[^/]+$/, "") + "/js/modules"
+        }
+      ]
+    };
+  </script>  
+
+  <!-- ArcGIS JS 4 -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.28/"></script>
+  <script type="module" src="https://js.arcgis.com/calcite-components/1.0.3/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.3/calcite.css" />
+
+
+  <!-- additional styles and JS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+
+  <!-- own scripts and styles-->
+  <link rel="stylesheet" href="style.css">
+  <script  src="js/script.js"></script>
+
+</head>
+
+<body>
+    <!-- Map with header, actiona bars and widgets-->
+    <calcite-shell content-behind>
+      <!-- header: project logo, map title and nav-button-->
+      <header slot="header" class="header">
+        <h3 id="header-left" slot="header">
+            <a href="https://obyggdanefnd.is" title="Óbyggðarnefnd - forsíða">
+            <img class="logo" src="https://obyggdanefnd.is/wp-content/uploads/obn-logo-textalaust-300x300.jpg" alt="Óbyggðarnefnd"/>
+          </a>
+          <span>Óbyggðarnefnd þrívíddarkort</span>
+        </h3>
+        <!-- widgets -->
+        <div  id="header-right" >
+          <calcite-action-bar layout="horizontal" position="start" expand-disabled="true" expanded="false" slot="action-bar">
+            <calcite-action 
+              id="basemapsBtn"  
+              data-action-id="basemaps" 
+              text="Grunnkort" 
+              text-enabled 
+              icon="basemap">
+            </calcite-action>
+            <calcite-action
+              id="layersBtn" 
+              data-action-id="layers" 
+              text="Gögn" 
+              text-enabled 
+              icon="layers" >
+            </calcite-action>
+            <calcite-action 
+              id="searchBtn"            
+              data-action-id="search" 
+              text="Leita" 
+              text-enabled  
+              icon="search">
+            </calcite-action> 
+            <calcite-action
+              id="distanceBtn"             
+              data-action-id="distance" 
+              text="Mæla lengd"
+              text-enabled  
+              icon="measure-line">
+            </calcite-action>
+            <calcite-action 
+              id="areaBtn"
+              heading="Area"            
+              data-action-id="area" 
+              text-enabled  
+              text="Mæla flatarmál" 
+              icon="measure-area">
+            </calcite-action>
+            <calcite-action 
+              id="weatherBtn"
+              data-action-id="weather" 
+              text="Veðurhermi" 
+              text-enabled 
+              icon="partly-cloudy">
+            </calcite-action>
+            <calcite-action
+              id="daylightBtn"
+              data-action-id="daylight"
+              text="Dagsbirtuhermi"
+              text-enabled
+              icon="brightness">
+            </calcite-action>
+          </calcite-action-bar> 
+        </div>
+        <!-- Custom Floating Panels -->
+        <div id="basemapsPanel" class="floating-panel">
+          <div id="basemaps-container"></div>
+        </div>
+        <div id="layersPanel" class="floating-list">
+          <div id="layers-container"></div>
+        </div>
+      </header>
+      <!-- the main map window -->
+      <div id="viewDiv">
+        <!-- Map-specific panels (each one provides a div for a ArcGIS Maps SDK for JavaScript widget) -->
+         <div id="searchPanel" class="floating-search">
+          <div id="search-container"></div>
+        </div> 
+        <div id="distancePanel" class="floating-measure">
+          <div id="distance-container">
+            <h6 id="head-widget">Measure distance</h6>
+          </div>
+        </div>
+        <div id="areaPanel" class="floating-measure">
+          <div id="area-container">
+            <h6 id="head-widget">Measure area</h6>
+          </div>
+        </div>
+        <div id="weatherPanel" class="floating-widget">
+          <div id="weather-container"></div>
+        </div>
+        <div id="daylightPanel" class="floating-widget">
+          <div id="daylight-container"></div>
+        </div> 
+      </div> <!-- Div for viewDiv -->
+    </calcite-shell> <!-- Shell for the header, panels and map -->
+</body>
+</html>
