@@ -170,3 +170,29 @@ calcite-loader {
     display: none; /* Initially hidden */
     overflow: auto;
   }
+
+    /* Adjust the size of the legend container */
+    .esri-legend {
+      font-size: 10px; /* Modify the font size as needed */
+      width: 100px; /* Adjust the width of the legend */
+      /* You can adjust other CSS properties as needed */
+    }
+  
+    /* Adjust the legend title size */
+    .esri-legend__title {
+      font-size: 10px; /* Modify the font size of the title */
+      /* You can adjust other CSS properties as needed */
+    }
+  
+    /* Adjust the size of the legend items */
+    .esri-legend__layer {
+      font-size: 10px; /* Modify the font size of the legend items */
+      /* You can adjust other CSS properties as needed */
+    }
+  
+    /* Adjust the size of the symbols within the legend */
+    .esri-legend__symbol {
+      width: 10px; /* Modify the width of the symbols */
+      height: 10px; /* Modify the height of the symbols */
+      /* You can adjust other CSS properties as needed */
+    }

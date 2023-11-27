@@ -55,22 +55,20 @@ define([
     FeatureLayer,
     ) {
     return {
-      setupScene: function() {
-  
-    // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
-    const map = new Map({
-        basemap: "satellite",
-        ground: "world-elevation"
-      });
-  /*
-      // load webscene from ArcGIS Online
-      const terrain3d = new WebScene({
-        portalItem: {
-          id: "7029fb60158543ad845c7e1527af11e4"
-        }
-      });
-  */ 
+      setupScene: function(map) {
       // The clipping extent for the scene
+      const drangaExtent = {
+        // autocasts as new Extent()
+        xmax: -21,
+        xmin: -23.5,
+        ymax: 66.5,
+        ymin: 65.5,
+        spatialReference: {
+          // autocasts as new SpatialReference()
+          wkid: 4326
+        }
+      };
+
       const icelandExtent = {
         // autocasts as new Extent()
         xmax: -11.4946155548096,
@@ -91,7 +89,7 @@ define([
         viewingMode: "global", //opion "local" to make cropped 2D
         // Use the exent defined in clippingArea to define the bounds of the scene
         //clippingArea: icelandExtent, // Use for local
-        extent: icelandExtent,
+        extent: drangaExtent,
         // or us the option to define center instead of extent
         //center: [-18.80500, 65.02700],
         //zoom: 7
@@ -104,10 +102,10 @@ define([
           atmosphere: {
             quality: "high"
           },
-          lighting: {
+          /*lighting: {
             waterReflectionEnabled: true,
             ambientOcclusionEnabled: true
-          }
+          }*/
         }
       });
         
@@ -134,21 +132,7 @@ define([
             };
           });
         }
-
-        // Add GeoJSON of municipality boundaries
-        const morkSveitarfelag = new GeoJSONLayer({
-            url: "https://gis.lmi.is/geoserver/IS_50V/mork_sveitarf_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:mork_sveitarf_flakar&outputFormat=json",
-            copyright: "Landmælingar Íslands IS50V",
-            visible: true, 
-            //popupTemplate: template,
-            //renderer: renderer_morkSveitarfelag,
-            title: "Mörk Sveitarfelag",
-            orderBy: {
-                field: "nrsveitarfelags"
-            }
-            });
-            map.add(morkSveitarfelag);
-
+        
         return mapView;
       }    
     };
