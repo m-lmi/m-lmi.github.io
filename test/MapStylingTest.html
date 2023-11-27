@@ -45,8 +45,9 @@
   field: "nrsveitarfelags",
   symbol: {
     type: "simple-fill",
+    color: [255, 255, 255, 0.1], // Set a transparent fill color
     outline: {
-      color: "black",
+      color: "transparent" // Set a transparent outline color
     }
   },
   uniqueValueInfos: [
@@ -127,6 +128,57 @@
         }
       });
 
+        // Örnefni Flákar
+        const ornefniLoadLayer = new GeoJSONLayer({
+          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_punktar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_punktar&outputFormat=json",
+        });
+        ornefniLoadLayer.load().then(() => {
+            // Get the features
+            ornefniLoadLayer.queryFeatures().then((result) => {
+                const features = result.features;
+              });
+        }); 
+
+        // Create a labeling renderer for the ornefni attribute in polygons
+        const rendererOrnefniP = {
+  type: "simple",
+  symbol: {
+    type: "simple-marker",
+    color: "blue",
+    outline: {
+      color: "white",
+      width: 1
+    }
+  },
+  labelingInfo: [
+    {
+      labelExpressionInfo: {
+        expression: "$feature.properties.ornefni" // Access ornefni attribute from feature properties
+      },
+      symbol: {
+        type: "text",
+        color: "black",
+        halo: {
+          color: "white",
+          size: 1
+        },
+        font: {
+          size: 12,
+          weight: "bold"
+        }
+      }
+    }
+  ]
+};
+
+        const ornefniPunktar = new GeoJSONLayer({
+          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_punktar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_punktar&outputFormat=json",
+          copyright: "Landmælingar Íslands IS50V",
+          visible: true, 
+          title: "Örnefni punktar",
+          renderer: rendererOrnefniP,
+          });
+
               // Add Feature layers
               const featureLayer = new FeatureLayer({
         url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer",
@@ -135,7 +187,7 @@
       const map = new Map({
         basemap: "satellite",
             ground: "world-elevation",
-        layers: [geojsonLayer, featureLayer]
+        layers: [geojsonLayer, featureLayer, ornefniPunktar]
       });
 
       const view = new MapView({
