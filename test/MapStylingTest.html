@@ -128,55 +128,15 @@
         }
       });
 
-        // Örnefni Flákar
-        const ornefniLoadLayer = new GeoJSONLayer({
-          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_punktar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_punktar&outputFormat=json",
-        });
-        ornefniLoadLayer.load().then(() => {
-            // Get the features
-            ornefniLoadLayer.queryFeatures().then((result) => {
-                const features = result.features;
-              });
-        }); 
-
-        // Create a labeling renderer for the ornefni attribute in polygons
-        const rendererOrnefniP = {
-  type: "simple",
-  symbol: {
-    type: "simple-marker",
-    color: "blue",
-    outline: {
-      color: "white",
-      width: 1
-    }
-  },
-  labelingInfo: [
-    {
-      labelExpressionInfo: {
-        expression: "$feature.properties.ornefni" // Access ornefni attribute from feature properties
-      },
-      symbol: {
-        type: "text",
-        color: "black",
-        halo: {
-          color: "white",
-          size: 1
-        },
-        font: {
-          size: 12,
-          weight: "bold"
-        }
-      }
-    }
-  ]
-};
+ 
+        
 
         const ornefniPunktar = new GeoJSONLayer({
           url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_punktar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_punktar&outputFormat=json",
           copyright: "Landmælingar Íslands IS50V",
           visible: true, 
           title: "Örnefni punktar",
-          renderer: rendererOrnefniP,
+          //renderer: rendererOrnefniP,
           });
 
               // Add Feature layers

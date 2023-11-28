@@ -23,8 +23,13 @@ define([
     //"esri/core/promiseUtils",
     //"esri/core/reactiveUtils",
     //"esri/geometry/ElevationLayer"
+    "esri/symbols/LabelSymbol3D",
+    "esri/symbols/TextSymbol3DLayer",
+    "esri/symbols/LineSymbol3D",
+    "esri/symbols/Symbol3D",
     "esri/layers/GroupLayer",  
     "esri/widgets/LayerList",
+    "esri/layers/support/LabelClass",
     "esri/layers/GeoJSONLayer", //Map and GeoJSON layer is needed for my experiment with adding Json layers.....
     "esri/layers/SceneLayer",
     "esri/layers/FeatureLayer",
@@ -55,9 +60,14 @@ define([
       Expand,
       //promiseUtils,
       //reactiveUtils,
-      //ElevationLayer   
+      //ElevationLayer
+      LabelSymbol3D,
+      TextSymbol3DLayer,
+      LineSymbol3D,
+      Symbol3D,
       GroupLayer, 
       LayerList, 
+      LabelClass,
       GeoJSONLayer,
       SceneLayer,
       FeatureLayer,
@@ -339,88 +349,224 @@ define([
 
         // Örnefni Flákar
         // Create a labeling renderer for the ornefni attribute in polygons
-        const rendererOrnefniF = {
-          type: "simple", // Use a simple renderer
-          symbol: {
-            type: "simple-fill", // Define the symbol type as simple-fill
-            color: [255, 255, 255, 0.1], // Set a transparent fill color
-            outline: {
-              color: "transparent" // Set a transparent outline color
-            }
-          },
-          labelingInfo: [
-            {
-              labelExpressionInfo: { expression: "$feature.ornefni" }, // Use the ornefni attribute for labeling
-              symbol: {
-                type: "label-3d", // Use a label symbol
-                symbolLayers: [
-                  {
-                    type: "text", // Use a text symbol layer
-                    material: { color: "black" }, // Set the text color
-                    halo: { color: "white", size: 1 }, // Set halo properties
-                    size: 12, // Set the font size for the text
-                    font: {
-                      weight: "bold" // Set font weight to bold (optional)
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        };
 
         const ornefniFlakar = new GeoJSONLayer({
           url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_flakar&outputFormat=json",
           copyright: "Landmælingar Íslands IS50V",
           visible: true, 
           title: "Örnefni flakar",
-          renderer: rendererOrnefniF,
-          });
-        
+          elevationInfo: {mode: "on-ground"},
+          renderer: {
+            type: "simple", // autocasts as new SimpleRenderer()
+            symbol: {
+              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+              symbolLayers: [
+                {
+                  type: "fill", // autocasts as new FillSymbol3DLayer()
+                  material: {
+                    color: [255, 255, 255, 0.3], // Set the color of the polygons
+                  },
+                  outline: {
+                    color: "black", // Set the outline color of the polygons
+                    size: 0.5 // Set the outline size of the polygons
+                  }
+                }
+              ]
+            }
+          },
+          outFields: ["*"],
+          // Add labels with callouts of type line to the icons
+          labelingInfo: [
+            {
+              // When using callouts on labels, "above-center" is the only allowed position
+              labelPlacement: "above-center",
+              labelExpressionInfo: {
+                value: "{ornefni}"
+              },
+              symbol: {
+                type: "label-3d", // autocasts as new LabelSymbol3D()
+                symbolLayers: [
+                  {
+                    type: "text", // autocasts as new TextSymbol3DLayer()
+                    material: {
+                      color: "black"
+                    },
+                    halo: {
+                      color: [255, 255, 255, 0.7],
+                      size: 2
+                    },
+                    size: 10
+                  }
+                ],
+                // Labels need a small vertical offset that will be used by the callout
+                verticalOffset: {
+                  screenLength: 50,
+                  maxWorldLength: 2000,
+                  minWorldLength: 30
+                },
+                // The callout has to have a defined type (currently only line is possible)
+                // The size, the color and the border color can be customized
+                callout: {
+                  type: "line", // autocasts as new LineCallout3D()
+                  size: 0.5,
+                  color: [0, 0, 0],
+                  border: {
+                    color: [255, 255, 255, 0.7]
+                  }
+                }
+              }
+            }
+          ]
+        });
+
         // Örnefni línur
         const ornefniLinur = new GeoJSONLayer({
           url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_linur/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_linur&outputFormat=json",
           copyright: "Landmælingar Íslands IS50V",
           visible: true, 
           title: "Örnefni línur",
-          //renderer: rendererOrnefniL,
-          });
-        
-        // Örnefni punktar
-        // Create a labeling renderer for the ornefni attribute
-        const rendererOrnefniP = {
-          type: "simple", // Use a simple renderer
-          symbol: {
-            type: "point-3d", // Define the symbol type as point-3d
-            symbolLayers: [
-              {
-                type: "text", // Use a text symbol layer
-                material: { color: "black" }, // Set the text color
-                halo: { color: "white", size: 1 }, // Set halo properties
-                size: 12, // Set the font size for the text
-                text: {
-                  field: "ornefni", // Use the ornefni attribute for labeling
-                  font: {
-                    weight: "bold" // Set font weight to bold (optional)
+          elevationInfo: {mode: "on-ground"},
+          renderer: {
+            type: "simple", // autocasts as new SimpleRenderer()
+            symbol: {
+              type: "line-3d", // Define the symbol type as line-3d
+              symbolLayers: [
+                {
+                  type: "line",
+                  material: {
+                    color: [0, 0, 0, 0.7] // Set the color of the lines
+                  },
+                  size: 3 // Set the size of the lines (thicker line)
+                },
+                {
+                  type: "line", // Define the symbol layer type as line
+                  material: {
+                    color: [255, 255, 255, 0.7] // Set the color of the lines
+                  },
+                  size: 2, // Set the size of the lines
+                }
+              ]
+            }
+          },
+          outFields: ["*"],
+          // Add labels with callouts of type line to the icons
+          labelingInfo: [
+            {
+              // When using callouts on labels, "above-center" is the only allowed position
+              labelPlacement: "above-center",
+              labelExpressionInfo: {
+                value: "{ornefni}"
+              },
+              symbol: {
+                type: "label-3d", // autocasts as new LabelSymbol3D()
+                symbolLayers: [
+                  {
+                    type: "text", // autocasts as new TextSymbol3DLayer()
+                    material: {
+                      color: "black"
+                    },
+                    halo: {
+                      color: [255, 255, 255, 0.7],
+                      size: 2
+                    },
+                    size: 10
+                  }
+                ],
+                // Labels need a small vertical offset that will be used by the callout
+                verticalOffset: {
+                  screenLength: 50,
+                  maxWorldLength: 2000,
+                  minWorldLength: 30
+                },
+                // The callout has to have a defined type (currently only line is possible)
+                // The size, the color and the border color can be customized
+                callout: {
+                  type: "line", // autocasts as new LineCallout3D()
+                  size: 0.5,
+                  color: [0, 0, 0],
+                  border: {
+                    color: [255, 255, 255, 0.7]
                   }
                 }
               }
-            ]
-          }
-        };
+            }
+          ]
+        });
 
+        // Örnefni punktar
         const ornefniPunktar = new GeoJSONLayer({
           url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_punktar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_punktar&outputFormat=json",
           copyright: "Landmælingar Íslands IS50V",
           visible: true, 
           title: "Örnefni punktar",
-          renderer: rendererOrnefniP,
-          });
+          elevationInfo: {mode: "on-ground"}, //https://developers.arcgis.com/javascript/latest/api-reference/esri-layers-FeatureLayer.html#elevationInfo
+          renderer: {
+            type: "simple", // autocasts as new SimpleRenderer()
+            symbol: {
+              type: "point-3d", // autocasts as new PointSymbol3D()
+              symbolLayers: [
+                {
+                  type: "icon", // autocasts as new IconSymbol3DLayer()
+                  resource: {
+                    primitive: "circle"
+                  },
+                  material: {
+                    color: "black"
+                  },
+                  size: 4
+                }
+              ]
+            }
+          },
+          outFields: ["*"],
+          // Add labels with callouts of type line to the icons
+          labelingInfo: [
+            {
+              // When using callouts on labels, "above-center" is the only allowed position
+              labelPlacement: "above-center",
+              labelExpressionInfo: {
+                value: "{ornefni}"
+              },
+              symbol: {
+                type: "label-3d", // autocasts as new LabelSymbol3D()
+                symbolLayers: [
+                  {
+                    type: "text", // autocasts as new TextSymbol3DLayer()
+                    material: {
+                      color: "black"
+                    },
+                    halo: {
+                      color: [255, 255, 255, 0.7],
+                      size: 2
+                    },
+                    size: 10
+                  }
+                ],
+                // Labels need a small vertical offset that will be used by the callout
+                verticalOffset: {
+                  screenLength: 50,
+                  maxWorldLength: 2000,
+                  minWorldLength: 30
+                },
+                // The callout has to have a defined type (currently only line is possible)
+                // The size, the color and the border color can be customized
+                callout: {
+                  type: "line", // autocasts as new LineCallout3D()
+                  size: 0.5,
+                  color: [0, 0, 0],
+                  border: {
+                    color: [255, 255, 255, 0.7]
+                  }
+                }
+              }
+            }
+          ]
+        });
 
         // Create a GroupLayer to contain örnefni
         const ornefniLayer = new GroupLayer({
           title: "Örnefni",
-          visible: true,
+          visible: false,
           layers: [ornefniFlakar, ornefniLinur, ornefniPunktar],
          });
 
