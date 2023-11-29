@@ -21,144 +21,214 @@
   <script src="https://js.arcgis.com/4.28/"></script>
 
   <script>
-    require(["esri/Map", "esri/layers/GeoJSONLayer", "esri/views/MapView", "esri/renderers/UniqueValueRenderer", "esri/layers/FeatureLayer",], (
+    require(["esri/Map",
+    "esri/layers/GeoJSONLayer", 
+    "esri/views/MapView", 
+    "esri/renderers/UniqueValueRenderer", 
+    "esri/layers/FeatureLayer",
+    "esri/layers/WebTileLayer",
+    "esri/layers/support/TileInfo",
+    "esri/layers/GroupLayer"
+    ], (
       Map,
       GeoJSONLayer,
       MapView,
       UniqueValueRenderer,
-      FeatureLayer
+      FeatureLayer,
+      WebTileLayer, 
+      TileInfo,
+      GroupLayer 
     ) => {
-      // If GeoJSON files are not on the same domain as your website, a CORS enabled server
-      // or a proxy is required.
-      //const url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
-      const url ="https://gis.lmi.is/geoserver/IS_50V/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=IS_50V%3Amork_sveitarf_svaedi&maxFeatures=100000&outputFormat=application%2Fjson"
-      // Paste the url into a browser's address bar to download and view the attributes
-      // in the GeoJSON file. These attributes include:
-      // * mag - magnitude
-      // * type - earthquake or other event such as nuclear test
-      // * place - location of the event
-      // * time - the time of the event
-      // Use the Arcade Date() function to format time field into a human-readable format
-
-      const renderer = {
-  type: "unique-value",
-  field: "nrsveitarfelags",
-  symbol: {
-    type: "simple-fill",
-    color: [255, 255, 255, 0.1], // Set a transparent fill color
-    outline: {
-      color: "transparent" // Set a transparent outline color
-    }
-  },
-  uniqueValueInfos: [
-  { value:0, symbol: {type: "simple-fill", color: "dimgray"}},
-{ value:1000, symbol: {type: "simple-fill", color: "forestgreen"}},
-{ value:1100, symbol: {type: "simple-fill", color: "darkviolet"}},
-{ value:1300, symbol: {type: "simple-fill", color: "gold"}},
-{ value:1400, symbol: {type: "simple-fill", color: "mediumblue"}},
-{ value:1604, symbol: {type: "simple-fill", color: "dodgerblue"}},
-{ value:1606, symbol: {type: "simple-fill", color: "mediumseagreen"}},
-{ value:2000, symbol: {type: "simple-fill", color: "orangered"}},
-{ value:2300, symbol: {type: "simple-fill", color: "gray"}},
-{ value:2506, symbol: {type: "simple-fill", color: "deepskyblue"}},
-{ value:2510, symbol: {type: "simple-fill", color: "green"}},
-{ value:3000, symbol: {type: "simple-fill", color: "blueviolet"}},
-{ value:3506, symbol: {type: "simple-fill", color: "seagreen"}},
-{ value:3511, symbol: {type: "simple-fill", color: "springgreen"}},
-{ value:3609, symbol: {type: "simple-fill", color: "darkblue"}},
-{ value:3709, symbol: {type: "simple-fill", color: "coral"}},
-{ value:3713, symbol: {type: "simple-fill", color: "khaki"}},
-{ value:3714, symbol: {type: "simple-fill", color: "lightyellow"}},
-{ value:3716, symbol: {type: "simple-fill", color: "darkred"}},
-{ value:3811, symbol: {type: "simple-fill", color: "tomato"}},
-{ value:4100, symbol: {type: "simple-fill", color: "indianred"}},
-{ value:4200, symbol: {type: "simple-fill", color: "steelblue"}},
-{ value:4502, symbol: {type: "simple-fill", color: "darkgray"}},
-{ value:4604, symbol: {type: "simple-fill", color: "darkorchid"}},
-{ value:4607, symbol: {type: "simple-fill", color: "lightcoral"}},
-{ value:4803, symbol: {type: "simple-fill", color: "darkorange"}},
-{ value:4901, symbol: {type: "simple-fill", color: "dimgray"}},
-{ value:4902, symbol: {type: "simple-fill", color: "gainsboro"}},
-{ value:4911, symbol: {type: "simple-fill", color: "darkorange"}},
-{ value:5508, symbol: {type: "simple-fill", color: "moccasin"}},
-{ value:5609, symbol: {type: "simple-fill", color: "skyblue"}},
-{ value:5611, symbol: {type: "simple-fill", color: "blue"}},
-{ value:5613, symbol: {type: "simple-fill", color: "royalblue"}},
-{ value:5716, symbol: {type: "simple-fill", color: "orange"}},
-{ value:6000, symbol: {type: "simple-fill", color: "violet"}},
-{ value:6100, symbol: {type: "simple-fill", color: "firebrick"}},
-{ value:6250, symbol: {type: "simple-fill", color: "red"}},
-{ value:6400, symbol: {type: "simple-fill", color: "yellow"}},
-{ value:6513, symbol: {type: "simple-fill", color: "lightblue"}},
-{ value:6515, symbol: {type: "simple-fill", color: "lime"}},
-{ value:6601, symbol: {type: "simple-fill", color: "lemonchiffon"}},
-{ value:6602, symbol: {type: "simple-fill", color: "mediumorchid"}},
-{ value:6611, symbol: {type: "simple-fill", color: "mediumpurple"}},
-{ value:6613, symbol: {type: "simple-fill", color: "cadetblue"}},
-{ value:6710, symbol: {type: "simple-fill", color: "darkgreen"}},
-{ value:7300, symbol: {type: "simple-fill", color: "lightgray"}},
-{ value:7400, symbol: {type: "simple-fill", color: "purple"}},
-{ value:7502, symbol: {type: "simple-fill", color: "silver"}},
-{ value:7505, symbol: {type: "simple-fill", color: "forestgreen"}},
-{ value:8000, symbol: {type: "simple-fill", color: "darkviolet"}},
-{ value:8200, symbol: {type: "simple-fill", color: "gold"}},
-{ value:8401, symbol: {type: "simple-fill", color: "mediumblue"}},
-{ value:8508, symbol: {type: "simple-fill", color: "dodgerblue"}},
-{ value:8509, symbol: {type: "simple-fill", color: "mediumseagreen"}},
-{ value:8610, symbol: {type: "simple-fill", color: "orangered"}},
-{ value:8613, symbol: {type: "simple-fill", color: "gray"}},
-{ value:8614, symbol: {type: "simple-fill", color: "deepskyblue"}},
-{ value:8710, symbol: {type: "simple-fill", color: "green"}},
-{ value:8716, symbol: {type: "simple-fill", color: "blueviolet"}},
-{ value:8717, symbol: {type: "simple-fill", color: "seagreen"}},
-{ value:8719, symbol: {type: "simple-fill", color: "springgreen"}},
-{ value:8720, symbol: {type: "simple-fill", color: "darkblue"}},
-{ value:8721, symbol: {type: "simple-fill", color: "coral"}},
-{ value:8722, symbol: {type: "simple-fill", color: "khaki"}},
-
-  ],
-};
-
-      const geojsonLayer = new GeoJSONLayer({
-        url: url,
-        copyright: "USGS Earthquakes",
-        renderer: renderer,
-        orderBy: {
-          field: "mag"
-        }
-      });
-
- 
-        
-
-        const ornefniPunktar = new GeoJSONLayer({
-          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_punktar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_punktar&outputFormat=json",
-          copyright: "Landmælingar Íslands IS50V",
-          visible: true, 
-          title: "Örnefni punktar",
-          //renderer: rendererOrnefniP,
-          });
-
-              // Add Feature layers
-              const featureLayer = new FeatureLayer({
-        url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer",
-        });
 
       const map = new Map({
         basemap: "satellite",
-            ground: "world-elevation",
-        layers: [geojsonLayer, featureLayer, ornefniPunktar]
+        ground: "world-elevation",
       });
 
       const view = new MapView({
         container: "viewDiv",
         center: [-18, 65],
-        zoom: 5,
+        zoom: 6,
         map: map
       });
-    });
+    }); 
 
-        
+    /*
+    //"modules/mapConfig",
+    //"modules/basicWidgets",
+    //"modules/weatherDaylight",
+    //"modules/measurementWidget",
+    //"modules/cameraPosition",
+    "esri/config",
+    "esri/WebMap",
+    "esri/views/SceneView",
+    "esri/Map",
+    "esri/WebScene",
+    "esri/Basemap",
+    //"esri/widgets/Search",
+    "esri/widgets/Legend",
+    //"esri/widgets/Home",
+    "esri/widgets/Weather",
+    "esri/widgets/Daylight",
+    "esri/widgets/LayerList", //Layer list to turn on/off layers visibility
+    //"esri/widgets/DirectLineMeasurement3D",
+    //"esri/widgets/AreaMeasurement3D",
+    //"esri/widgets/TimeSlider",
+    "esri/widgets/Expand",
+    //"esri/core/promiseUtils",
+    //"esri/core/reactiveUtils",
+    //"esri/geometry/ElevationLayer"
+    "esri/symbols/LabelSymbol3D",
+    "esri/symbols/TextSymbol3DLayer",
+    "esri/symbols/LineSymbol3D",
+    "esri/symbols/Symbol3D",
+    "esri/layers/GroupLayer",  
+    "esri/widgets/LayerList",
+    "esri/layers/support/LabelClass",
+    "esri/layers/GeoJSONLayer", //Map and GeoJSON layer is needed for my experiment with adding Json layers.....
+    "esri/layers/SceneLayer",
+    "esri/layers/FeatureLayer",
+    "esri/layers/OGCFeatureLayer",
+    "esri/layers/WMSLayer",
+    "esri/layers/WFSLayer",
+    "esri/renderers/UniqueValueRenderer",
+    "esri/layers/WebTileLayer",
+    "esri/geometry/SpatialReference",
+    "esri/layers/support/TileInfo",
+    ], function(
+      //MapConfig,
+      //BasicWidgets,
+      //WeatherDaylight,
+      //MeasurementWidget,
+      //CameraPosition,
+      esriConfig,
+      WebMap,
+      SceneView,
+      Map,
+      WebScene, 
+      Basemap,
+      //Search,
+      Legend,
+      //Home,
+      Weather, 
+      Daylight, 
+      LayerList,
+      //DirectLineMeasurement3D,
+      //AreaMeasurement3D,
+      //TimeSlider,
+      Expand,
+      //promiseUtils,
+      //reactiveUtils,
+      //ElevationLayer
+      LabelSymbol3D,
+      TextSymbol3DLayer,
+      LineSymbol3D,
+      Symbol3D,
+      GroupLayer, 
+      LayerList, 
+      LabelClass,
+      GeoJSONLayer,
+      SceneLayer,
+      FeatureLayer,
+      OGCFeatureLayer,
+      WMSLayer,
+      WFSLayer,
+      UniqueValueRenderer,
+      WebTileLayer,
+      SpatialReference, 
+      TileInfo,
+      )/*
+
+    /*
+    const demTileInfo = new TileInfo.create({
+          spatialReference: {
+            wkid: 3057 // Set the WKID for EPSG:3057 projection
+          },
+          origin: {
+            x: -161616,
+            y: -72.00000049173832
+          },
+          lods: [
+            { level: 0, resolution: 4096 },
+            { level: 1, resolution: 2048 },
+            { level: 2, resolution: 1024},
+            { level: 3, resolution: 512 },
+            { level: 4, resolution: 256 },
+            { level: 5, resolution: 128 },
+            { level: 6, resolution: 64 },
+            { level: 7, resolution: 32 },
+            { level: 8, resolution: 16 },
+            { level: 9, resolution: 8 },
+            { level: 10, resolution: 4 },
+            { level: 11, resolution: 2 },
+            { level: 12, resolution: 1 },
+            { level: 13, resolution: 0.5 },
+            { level: 14, resolution: 0.25 },
+            { level: 15, resolution: 0.125 },
+            { level: 16, resolution: 0.0625 },
+            // Add other levels as per your requirement
+          ],
+          size: [256, 256] // Tile size
+        });
+          // Web Tile Layer DEM
+          const demLayer = new WebTileLayer({
+            urlTemplate: "https://gis.lmi.is/mapcache/tms/1.0.0/IslandsDEMDaylight@EPSG:3057/{z}/{x}/{-y}.png",
+            //copyright: 'Map data from &copy; <a href="https://www.loftmyndir.is/" target="_blank">Loftmyndir</a> Map design by &copy; <a href="http://opentopomap.org/" target="_blank">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank">CC-BY-SA</a>) contributors'
+            title: "ÍslandsDEM",
+            spatialReference: {
+              wkid: 3057 // Set the WKID for EPSG:3057 projection
+            },
+            //tileInfo: demTileInfo,
+          });
+      map.add(demLayer);*/
+      
+
+      // Create the FeatureLayer with multiple polygons
+      const obnLoadLayer = new FeatureLayer({
+            url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer",
+        });
+
+        // Create a GroupLayer to contain individual polygons
+        const obnLayer = new GroupLayer({
+            title: "Óbyggðanefnd",
+            visible: true
+        });
+        obnLayer.elevationInfo ={
+            mode: "on-the-ground",
+        };
+
+        // Fetch features from the FeatureLayer and create individual FeatureLayers for each polygon
+        obnLoadLayer.load().then(() => {
+            // Get the features
+            obnLoadLayer.queryFeatures().then((result) => {
+                const features = result.features;
+
+                // Create a FeatureLayer for each individual polygon
+                features.forEach((feature, index) => {
+                    const singleFeatureOBNLayer = new FeatureLayer({
+                        source: [feature], // Provide the individual feature
+                        objectIdField: "fid", // Replace with your object ID field
+                        title: `Mörk ${index + 1}`, // Title for the layer
+                        visible: true, // Set initial visibility as needed
+                        // Add any other properties or configurations for the layer
+                        //popupTemplate: templateObyggdanefnd,
+                        renderer: rendererObyggdanefnd,
+                        popupTemplate: {
+                          title: "{gogn}",
+                          fieldInfos: [
+                            {
+                              fieldName: 'gogn',
+                            }
+                          ]
+                        },
+                        opacity: 0.7,
+                    });
+
+                    obnLayer.add(singleFeatureOBNLayer); // Add the FeatureLayer to the GroupLayer
+                });
+            });
+        });
+
 
   </script>
 </head>

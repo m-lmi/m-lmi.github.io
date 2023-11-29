@@ -1,10 +1,5 @@
 // mapConfig.js  Define the webScene and setting the environment
 define([
-    //"modules/mapConfig",
-    //"modules/basicWidgets",
-    //"modules/weatherDaylight",
-    //"modules/measurementWidget",
-    //"modules/cameraPosition",
     "esri/config",
     "esri/WebMap",
     "esri/views/SceneView",
@@ -33,11 +28,6 @@ define([
     "esri/layers/WFSLayer",
     "esri/renderers/UniqueValueRenderer",
     ], function(
-      //MapConfig,
-      //BasicWidgets,
-      //WeatherDaylight,
-      //MeasurementWidget,
-      //CameraPosition,
       esriConfig,
       WebMap,
       SceneView,
@@ -69,16 +59,6 @@ define([
       return {
         setupLayers: function() {
 
-
-            /*
-        // load webscene from ArcGIS Online
-            const terrain3d = new WebScene({
-                portalItem: {
-                id: "7029fb60158543ad845c7e1527af11e4"
-                }
-            });
-            */
-
         // Create SceneLayer from a Scene Service URL
         const sceneLayer = new SceneLayer({
             url: "https://basemaps3d.arcgis.com/arcgis/rest/services/OpenStreetMap3D_Buildings_v1/SceneServer",
@@ -95,26 +75,16 @@ define([
         sublayers: [{
             name: "IS_50V:samgongur_linur", // layer to filter out from WMS
             title: "Samgöngur línur", // title for in legend
-            legendUrl: ""}, // Url for legend image as png
+            },
             {
             name: "IS_50V:vatnafar_linur", // Layer to filter out from WMS
             title: "Vatnafar línur", // title for in legend
-            lengedUrl: ""}, // Url for legend image as png
+            },
             {
             name: "IS_50V:ornefni_linur", // Layer to filter out from WMS
             title: "Örnefni línur", // title for in legend
-            lengedUrl: ""}, // Url for legend image as png
+            },
         ]}); 
-
-        // Constructing the renderer
-        const rendererVatnafarL = {
-            type: "simple",
-            symbol: {
-              type: "simple-line", // Use simple-line for 2D lines
-              color: "steelblue", // Set the color of the line
-              width: 2 // Adjust the width of the line
-            }
-          };
         
         // Vatnafar Línur
         const vatnafarLinur = new GeoJSONLayer({
@@ -122,30 +92,15 @@ define([
             copyright: "Landmælingar Íslands IS50V",
             visible: true, 
             title: "Vatnafar Línur",
-            renderer: rendererVatnafarL,
+            renderer: {
+              type: "simple",
+              symbol: {
+                type: "simple-line", // Use simple-line for 2D lines
+                color: "steelblue", // Set the color of the line
+                width: 2 // Adjust the width of the line
+              }
+            },
             });
-        
-            const rendererVatnafarF = {
-                type: "simple",
-                symbol: {
-                  type: "polygon-3d",
-                  symbolLayers: [
-                    {
-                      type: "fill",
-                      material: {
-                        color: "steelblue"
-                      },
-                      outline: {
-                        color: "steelblue",
-                        size: 1 // Adjust the outline size as needed
-                      }
-                    }
-                  ]
-                },
-                elevationInfo: {
-                  mode: "on-the-ground" // Set elevation mode to 'on-the-ground'
-                }
-              };
 
         // Vatnafar Flákar
         const vatnafarFlakar = new GeoJSONLayer({
@@ -153,7 +108,27 @@ define([
             copyright: "Landmælingar Íslands IS50V",
             visible: true, 
             title: "Vatnafar Flakar",
-            renderer: rendererVatnafarF,
+            renderer: {
+              type: "simple",
+              symbol: {
+                type: "polygon-3d",
+                symbolLayers: [
+                  {
+                    type: "fill",
+                    material: {
+                      color: "steelblue"
+                    },
+                    outline: {
+                      color: "steelblue",
+                      size: 1 // Adjust the outline size as needed
+                    }
+                  }
+                ]
+              },
+              elevationInfo: {
+                mode: "on-the-ground" // Set elevation mode to 'on-the-ground'
+              }
+            },
             });
 
         // Group the Vatnafar layers into one grouped layer    
@@ -173,8 +148,19 @@ define([
             ]
           };
 
-        // Constructing the renderer
-        const rendererSveitarfelag = {
+        const morkSveitarfelag = new GeoJSONLayer({
+            url: "https://gis.lmi.is/geoserver/IS_50V/mork_sveitarf_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:mork_sveitarf_flakar&outputFormat=json",
+            copyright: "Landmælingar Íslands IS50V",
+            visible: false, 
+            popupTemplate: {
+              title: "{sveitarfelag}",
+              fieldInfos: [
+                {
+                  fieldName: 'sveitarfelag',
+                }
+              ]
+            },
+            renderer: {
             type: "unique-value",
             field: "nrsveitarfelags",
             symbol: {
@@ -200,14 +186,7 @@ define([
                   width: 1
                 }
               }
-          };
-
-        const morkSveitarfelag = new GeoJSONLayer({
-            url: "https://gis.lmi.is/geoserver/IS_50V/mork_sveitarf_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:mork_sveitarf_flakar&outputFormat=json",
-            copyright: "Landmælingar Íslands IS50V",
-            visible: false, 
-            popupTemplate: templateSveitarfelag,
-            renderer: rendererSveitarfelag,
+          },
             title: "Mörk Sveitarfelag",
             opacity: 0.4,
             orderBy: {
@@ -299,8 +278,58 @@ obnLoadLayer.load().then(() => {
                 title: `Mörk ${index + 1}`, // Title for the layer
                 visible: true, // Set initial visibility as needed
                 // Add any other properties or configurations for the layer
-                //popupTemplate: templateObyggdanefnd,
-                renderer: rendererObyggdanefnd,
+                popupTemplate: {
+                  title: `Mörk ${index + 1}`,
+                  content: [
+                      {
+                          type: "text", // Use "text" for simple text display
+                          text: `Gögn: ${feature.attributes.gogn}`,
+                      },
+                      {
+                        type: "text",
+                        text: `Heiti: ${feature.attributes.heiti}`,
+                    },
+                    {
+                      type: "text",
+                      text: `Krafa: ${feature.attributes.krafa}`,
+                  },
+                    {
+                      type: "text",
+                      text: `Stutt: ${feature.attributes.stutt}`, 
+                  },
+                  ],
+              },
+                renderer: {
+                  type: "unique-value",
+                  field: "fid",
+                  symbol: {
+                    type: "simple-fill",
+                    outline: {
+                      color: "black",
+                      width: 1,
+                    }
+                  },
+                  uniqueValueInfos: [
+                { value:1, symbol: {type: "simple-fill", color: "steelblue"}},
+                { value:2, symbol: {type: "simple-fill", color: "lightblue"}},
+                { value:3, symbol: {type: "simple-fill", color: "blue"}},
+                { value:4, symbol: {type: "simple-fill", color: "skyblue"}},
+                { value:5, symbol: {type: "simple-fill", color: "royalblue"}},
+                { value:6, symbol: {type: "simple-fill", color: "dodgerblue"}},
+                { value:7, symbol: {type: "simple-fill", color: "deepskyblue"}},
+                { value:8, symbol: {type: "simple-fill", color: "cadetblue"}},
+                { value:9, symbol: {type: "simple-fill", color: "darkblue"}},
+                  ],
+                  defaultSymbol: {
+                      type: "simple-fill",
+                      color: "white", // Default color if value doesn't match any uniqueValueInfos
+                      opacity: 0.2, // Opacity set to 70% (0.7)
+                      outline: {
+                        color: "black",
+                        width: 1
+                      }
+                    }
+                },
                 opacity: 0.4,
             });
 
@@ -312,32 +341,225 @@ obnLoadLayer.load().then(() => {
         // Örnefni
 
         // Define a renderer that displays only the text labels
-        const labelRenderer = {
-            type: "simple", // Use a simple renderer
+        const ornefniFlakar = new GeoJSONLayer({
+          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_flakar&outputFormat=json",
+          copyright: "Landmælingar Íslands IS50V",
+          visible: true, 
+          title: "Örnefni flakar",
+          elevationInfo: {mode: "on-the-ground"},
+          renderer: {
+            type: "simple", // autocasts as new SimpleRenderer()
             symbol: {
-            type: "text", // Use text symbol for rendering labels
-            color: "black", // Set the text color
-            haloColor: "white", // Set halo (background) color for better visibility
-            haloSize: 1, // Adjust the halo size if needed
-            font: { // Define font properties for the text label
-                size: 20, // Set the font size
-                family: "Arial" // Set the font family
-                // Add other font properties if required
-            },
-            labelPlacement: "above-center", // Adjust label placement as per your preference
-            labelExpressionInfo: {
-                expression: "$feature.ornefni" // Replace 'labelField' with the field name containing label text
+              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+              symbolLayers: [
+                {
+                  type: "fill", // autocasts as new FillSymbol3DLayer()
+                  material: {
+                    color: [255, 255, 255, 0.3], // Set the color of the polygons
+                  },
+                  outline: {
+                    color: "black", // Set the outline color of the polygons
+                    size: 0.5 // Set the outline size of the polygons
+                  }
+                }
+              ]
             }
+          },
+          outFields: ["*"],
+          // Add labels with callouts of type line to the icons
+          labelingInfo: [
+            {
+              // When using callouts on labels, "above-center" is the only allowed position
+              labelPlacement: "above-center",
+              labelExpressionInfo: {
+                value: "{ornefni}"
+              },
+              symbol: {
+                type: "label-3d", // autocasts as new LabelSymbol3D()
+                symbolLayers: [
+                  {
+                    type: "text", // autocasts as new TextSymbol3DLayer()
+                    material: {
+                      color: "black"
+                    },
+                    halo: {
+                      color: [255, 255, 255, 0.7],
+                      size: 2
+                    },
+                    size: 10
+                  }
+                ],
+                // Labels need a small vertical offset that will be used by the callout
+                verticalOffset: {
+                  screenLength: 50,
+                  maxWorldLength: 2000,
+                  minWorldLength: 30
+                },
+                // The callout has to have a defined type (currently only line is possible)
+                // The size, the color and the border color can be customized
+                callout: {
+                  type: "line", // autocasts as new LineCallout3D()
+                  size: 0.5,
+                  color: [0, 0, 0],
+                  border: {
+                    color: [255, 255, 255, 0.7]
+                  }
+                }
+              }
             }
-        };
+          ]
+        });
 
-        const ornefni = new GeoJSONLayer({
-            url: "https://gis.lmi.is/geoserver/IS_50V/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=IS_50V%3Aornefni_flakar&maxFeatures=100000&outputFormat=application%2Fjson",
-            copyright: "Landmælingar Íslands IS50V",
-            renderer: labelRenderer,
-            visible: false, 
-            title: "Örnefni",
-            });
+        // Örnefni línur
+        const ornefniLinur = new GeoJSONLayer({
+          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_linur/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_linur&outputFormat=json",
+          copyright: "Landmælingar Íslands IS50V",
+          visible: true, 
+          title: "Örnefni línur",
+          elevationInfo: {mode: "on-the-ground"},
+          renderer: {
+            type: "simple", // autocasts as new SimpleRenderer()
+            symbol: {
+              type: "line-3d", // Define the symbol type as line-3d
+              symbolLayers: [
+                {
+                  type: "line",
+                  material: {
+                    color: [0, 0, 0, 0.7] // Set the color of the lines
+                  },
+                  size: 3 // Set the size of the lines (thicker line)
+                },
+                {
+                  type: "line", // Define the symbol layer type as line
+                  material: {
+                    color: [255, 255, 255, 0.7] // Set the color of the lines
+                  },
+                  size: 2, // Set the size of the lines
+                }
+              ]
+            }
+          },
+          outFields: ["*"],
+          // Add labels with callouts of type line to the icons
+          labelingInfo: [
+            {
+              // When using callouts on labels, "above-center" is the only allowed position
+              labelPlacement: "above-center",
+              labelExpressionInfo: {
+                value: "{ornefni}"
+              },
+              symbol: {
+                type: "label-3d", // autocasts as new LabelSymbol3D()
+                symbolLayers: [
+                  {
+                    type: "text", // autocasts as new TextSymbol3DLayer()
+                    material: {
+                      color: "black"
+                    },
+                    halo: {
+                      color: [255, 255, 255, 0.7],
+                      size: 2
+                    },
+                    size: 10
+                  }
+                ],
+                // Labels need a small vertical offset that will be used by the callout
+                verticalOffset: {
+                  screenLength: 50,
+                  maxWorldLength: 2000,
+                  minWorldLength: 30
+                },
+                // The callout has to have a defined type (currently only line is possible)
+                // The size, the color and the border color can be customized
+                callout: {
+                  type: "line", // autocasts as new LineCallout3D()
+                  size: 0.5,
+                  color: [0, 0, 0],
+                  border: {
+                    color: [255, 255, 255, 0.7]
+                  }
+                }
+              }
+            }
+          ]
+        });
+
+        // Örnefni punktar
+        
+        const ornefniPunktar = new GeoJSONLayer({
+          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_punktar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_punktar&outputFormat=json",
+          copyright: "Landmælingar Íslands IS50V",
+          visible: true, 
+          title: "Örnefni punktar",
+          //elevationInfo: {mode: "on-the-ground"}, //https://developers.arcgis.com/javascript/latest/api-reference/esri-layers-FeatureLayer.html#elevationInfo
+          renderer: {
+            type: "simple", // autocasts as new SimpleRenderer()
+            symbol: {
+              type: "point-3d", // autocasts as new PointSymbol3D()
+              symbolLayers: [
+                {
+                  type: "icon", // autocasts as new IconSymbol3DLayer()
+                  resource: {
+                    primitive: "circle"
+                  },
+                  material: {
+                    color: "black"
+                  },
+                  size: 4
+                }
+              ]
+            }
+          },
+          outFields: ["*"],
+          // Add labels with callouts of type line to the icons
+          labelingInfo: [
+            {
+              // When using callouts on labels, "above-center" is the only allowed position
+              labelPlacement: "above-center",
+              labelExpressionInfo: {
+                value: "{ornefni}"
+              },
+              symbol: {
+                type: "label-3d", // autocasts as new LabelSymbol3D()
+                symbolLayers: [
+                  {
+                    type: "text", // autocasts as new TextSymbol3DLayer()
+                    material: {
+                      color: "black"
+                    },
+                    halo: {
+                      color: [255, 255, 255, 0.7],
+                      size: 2
+                    },
+                    size: 10
+                  }
+                ],
+                // Labels need a small vertical offset that will be used by the callout
+                verticalOffset: {
+                  screenLength: 50,
+                  maxWorldLength: 2000,
+                  minWorldLength: 30
+                },
+                // The callout has to have a defined type (currently only line is possible)
+                // The size, the color and the border color can be customized
+                callout: {
+                  type: "line", // autocasts as new LineCallout3D()
+                  size: 0.5,
+                  color: [0, 0, 0],
+                  border: {
+                    color: [255, 255, 255, 0.7]
+                  }
+                }
+              }
+            }
+          ]
+        });
+
+        const ornefniLayer = new GroupLayer({
+          title: "Örnefni",
+          visible: false,
+          layers: [ornefniFlakar, ornefniLinur, ornefniPunktar],
+         });
 
         // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
         const map = new Map({
@@ -347,7 +569,7 @@ obnLoadLayer.load().then(() => {
                 morkSveitarfelag,
                 wmsLayer,
                 sceneLayer,
-                ornefni,
+                ornefniLayer,
                 vatnafarLayer,
                 obnLayer,
             ],

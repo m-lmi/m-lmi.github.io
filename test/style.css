@@ -102,6 +102,27 @@ calcite-loader {
     display: none; /* Initially hidden */
     overflow: auto;
   }
+
+  /* Styling for the basemap items */
+.basemap-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.basemap-thumbnail {
+  width: 80px; /* Set the width of the thumbnail */
+  height: 80px; /* Set the height of the thumbnail */
+  margin-right: 10px; /* Add some space between the thumbnail and text */
+}
+
+.basemap-title {
+  flex: 1; /* Let the title take the remaining space */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
   
   .floating-list { /*Layer list*/
     position: absolute;
