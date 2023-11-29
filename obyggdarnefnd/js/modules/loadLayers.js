@@ -63,7 +63,7 @@ define([
         const sceneLayer = new SceneLayer({
             url: "https://basemaps3d.arcgis.com/arcgis/rest/services/OpenStreetMap3D_Buildings_v1/SceneServer",
             title: "OpenStreetMaps 3D Buildings",
-            visible: false,
+            visible: true,
             copyright: "Data from ESRI"
         });
 
@@ -236,19 +236,6 @@ define([
                 }
               }
           };
-
-        /* 
-        const obnLayer = new FeatureLayer({
-            url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer",
-            title: "Óbyggdanefnd",
-            visible: true, 
-            popupTemplate: templateObyggdanefnd,
-            renderer: rendererObyggdanefnd,
-            opacity: 0.4,
-        });
-        obnLayer.elevationInfo ={
-            mode: "on-the-ground",
-        };*/
 
 // Create the FeatureLayer with multiple polygons
 const obnLoadLayer = new FeatureLayer({
