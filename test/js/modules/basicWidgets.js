@@ -100,6 +100,9 @@ define([
           selectionEnabled: true,
           container: "layers-container"
         }); 
+
+        // Assuming you have defined your rendererObyggdanefnd previously
+const layerListContainer = document.getElementById("layer-list");
   
   
         // Initialize the Search widget
@@ -107,9 +110,6 @@ define([
           view: mapView,
           container: "search-container"
         });
-  
-      
-        
         
       },
     };

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>Óbyggðarnefnd 3D</title>
+  <title>Óbyggðanefnd 3D</title>
   <link rel="icon" type="image" href="https://obyggdanefnd.is/wp-content/uploads/obn-logo-textalaust-300x300.jpg">
    
   <!-- Configure modules and widgets -->
@@ -12,7 +12,8 @@
       packages: [
         {
           name: "modules",
-          location: location.pathname.replace(/\/[^/]+$/, "") + "/js/modules"
+          //location: location.pathname.replace(/\/[^/]+$/, "") + "/js/modules"
+          location: location.origin + location.pathname + "js/modules"
         }
       ]
     };
@@ -42,17 +43,17 @@
       <!-- header: project logo, map title and nav-button-->
       <header slot="header" class="header">
         <h3 id="header-left" slot="header">
-            <a href="https://obyggdanefnd.is" title="Óbyggðarnefnd - forsíða">
-            <img class="logo" src="https://obyggdanefnd.is/wp-content/uploads/obn-logo-textalaust-300x300.jpg" alt="Óbyggðarnefnd"/>
+            <a href="https://obyggdanefnd.is" title="Óbyggðanefnd - forsíða">
+            <img class="logo" src="https://obyggdanefnd.is/wp-content/uploads/obn-logo-textalaust-300x300.jpg" alt="Óbyggðanefnd"/>
           </a>
-          <span>Óbyggðarnefnd þrívíddarkort</span>
+          <span>Óbyggðanefnd þrívíddarkort</span>
         </h3>
         <!-- widgets -->
         <div  id="header-right" >
           <calcite-action-bar layout="horizontal" position="start" expand-disabled="true" expanded="false" slot="action-bar">
             <calcite-action 
               id="basemapsBtn"  
-              data-action-id="basemaps"
+              data-action-id="basemaps" 
               text="Grunnkort" 
               text-enabled 
               icon="basemap">
@@ -107,6 +108,14 @@
               icon="brightness">
               <calcite-tooltip slot="tooltip" reference-element="info-action" overlay-positioning="fixed" placement="bottom">Dagsbirtuhermi</calcite-tooltip>
             </calcite-action>
+            <calcite-action
+            id="editorBtn"
+            data-action-id="editor"
+            text="Breyta"
+            text-enabled
+            icon="layers-editable">
+            <calcite-tooltip slot="tooltip" reference-element="info-action" overlay-positioning="fixed" placement="bottom">Breyta</calcite-tooltip>
+          </calcite-action>
           </calcite-action-bar> 
         </div>
         <!-- Custom Floating Panels -->
@@ -139,6 +148,9 @@
         <div id="daylightPanel" class="floating-widget">
           <div id="daylight-container"></div>
         </div> 
+        <div id="editorPanel" class="floating-editor">
+          <div id="editor-container"></div>
+        </div>
       </div> <!-- Div for viewDiv -->
     </calcite-shell> <!-- Shell for the header, panels and map -->
 </body>

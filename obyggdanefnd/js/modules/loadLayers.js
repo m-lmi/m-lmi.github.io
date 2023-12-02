@@ -206,36 +206,36 @@ define([
 
         // Constructing the renderer
         const rendererObyggdanefnd = {
-            type: "unique-value",
-            field: "fid",
-            symbol: {
-              type: "simple-fill",
-              outline: {
-                color: "black",
-                width: 1,
-              }
-            },
-            uniqueValueInfos: [
-          { value:1, symbol: {type: "simple-fill", color: "steelblue"}},
-          { value:2, symbol: {type: "simple-fill", color: "lightblue"}},
-          { value:3, symbol: {type: "simple-fill", color: "blue"}},
-          { value:4, symbol: {type: "simple-fill", color: "skyblue"}},
-          { value:5, symbol: {type: "simple-fill", color: "royalblue"}},
-          { value:6, symbol: {type: "simple-fill", color: "dodgerblue"}},
-          { value:7, symbol: {type: "simple-fill", color: "deepskyblue"}},
-          { value:8, symbol: {type: "simple-fill", color: "cadetblue"}},
-          { value:9, symbol: {type: "simple-fill", color: "darkblue"}},
-            ],
-            defaultSymbol: {
-                type: "simple-fill",
-                color: "white", // Default color if value doesn't match any uniqueValueInfos
-                opacity: 0.2, // Opacity set to 70% (0.7)
-                outline: {
-                  color: "black",
-                  width: 1
-                }
-              }
-          };
+          type: "unique-value",
+          field: "fid",
+          symbol: {
+            type: "simple-line",
+            style: "solid",
+            color: "black",
+            width: 3,
+          
+          },
+          uniqueValueInfos: [
+        { value:1, symbol: {type: "simple-line", color: "red", width: 5,}},
+        { value:2, symbol: {type: "simple-line", color: "green", width: 3}},
+        { value:3, symbol: {type: "simple-line", color: "gold", width: 3}},
+        { value:4, symbol: {type: "simple-line", color: "indigo", width: 3}},
+        { value:5, symbol: {type: "simple-line", color: "blue", width: 3}},
+        { value:6, symbol: {type: "simple-line", color: "fuchsia", width: 3}},
+        { value:7, symbol: {type: "simple-line", color: "darkorange", width: 3}},
+        { value:8, symbol: {type: "simple-line", color: "chartreuse", width: 3}},
+        { value:9, symbol: {type: "simple-line", color: "aqua", width: 3}},
+          ],
+          defaultSymbol: {
+              type: "simple-line",
+              color: "white", // Default color if value doesn't match any uniqueValueInfos
+              opacity: 0.2, // Opacity set to 70% (0.7)
+              style: "solid",
+              color: "black",
+              width: 3
+              
+            }
+        };
 
 // Create the FeatureLayer with multiple polygons
 const obnLoadLayer = new FeatureLayer({
@@ -253,76 +253,62 @@ obnLayer.elevationInfo ={
 
 // Fetch features from the FeatureLayer and create individual FeatureLayers for each polygon
 obnLoadLayer.load().then(() => {
-    // Get the features
-    obnLoadLayer.queryFeatures().then((result) => {
-        const features = result.features;
+  // Get the features
+  obnLoadLayer.queryFeatures().then((result) => {
+      const features = result.features;
 
-        // Create a FeatureLayer for each individual polygon
-        features.forEach((feature, index) => {
-            const singleFeatureOBNLayer = new FeatureLayer({
-                source: [feature], // Provide the individual feature
-                objectIdField: "fid", // Replace with your object ID field
-                title: `Mörk ${index + 1}`, // Title for the layer
-                visible: true, // Set initial visibility as needed
-                // Add any other properties or configurations for the layer
-                popupTemplate: {
-                  title: `Mörk ${index + 1}`,
-                  content: [
-                      {
-                          type: "text", // Use "text" for simple text display
-                          text: `Gögn: ${feature.attributes.gogn}`,
-                      },
-                      {
-                        type: "text",
-                        text: `Heiti: ${feature.attributes.heiti}`,
-                    },
-                    {
-                      type: "text",
-                      text: `Krafa: ${feature.attributes.krafa}`,
-                  },
-                    {
-                      type: "text",
-                      text: `Stutt: ${feature.attributes.stutt}`, 
-                  },
-                  ],
-              },
-                renderer: {
-                  type: "unique-value",
-                  field: "fid",
-                  symbol: {
-                    type: "simple-fill",
-                    outline: {
-                      color: "black",
-                      width: 1,
-                    }
-                  },
-                  uniqueValueInfos: [
-                { value:1, symbol: {type: "simple-fill", color: "steelblue"}},
-                { value:2, symbol: {type: "simple-fill", color: "lightblue"}},
-                { value:3, symbol: {type: "simple-fill", color: "blue"}},
-                { value:4, symbol: {type: "simple-fill", color: "skyblue"}},
-                { value:5, symbol: {type: "simple-fill", color: "royalblue"}},
-                { value:6, symbol: {type: "simple-fill", color: "dodgerblue"}},
-                { value:7, symbol: {type: "simple-fill", color: "deepskyblue"}},
-                { value:8, symbol: {type: "simple-fill", color: "cadetblue"}},
-                { value:9, symbol: {type: "simple-fill", color: "darkblue"}},
-                  ],
-                  defaultSymbol: {
-                      type: "simple-fill",
-                      color: "white", // Default color if value doesn't match any uniqueValueInfos
-                      opacity: 0.2, // Opacity set to 70% (0.7)
-                      outline: {
-                        color: "black",
-                        width: 1
-                      }
-                    }
+      // Create a FeatureLayer for each individual polygon
+      features.forEach((feature, index) => {
+          const singleFeatureOBNLayer = new FeatureLayer({
+              source: [feature], // Provide the individual feature
+              objectIdField: "fid", // Replace with your object ID field
+              title: `Mörk ${index + 1}: ${feature.attributes.athugasemdir}`, // Title for the layer
+              visible: true, // Set initial visibility as needed
+              // Add any other properties or configurations for the layer
+              renderer: {
+                type: "unique-value",
+                field: "fid",
+                symbol: {
+                  type: "simple-line",
+                  style: "solid",
+                  color: "black",
+                  width: 3,
                 },
-                opacity: 0.4,
-            });
-
-            obnLayer.add(singleFeatureOBNLayer); // Add the FeatureLayer to the GroupLayer
-        });
-    });
+                uniqueValueInfos: [
+              { value:1, symbol: {type: "simple-line", color: "red", width: 5,}},
+              { value:2, symbol: {type: "simple-line", color: "green", width: 3}},
+              { value:3, symbol: {type: "simple-line", color: "gold", width: 3}},
+              { value:4, symbol: {type: "simple-line", color: "indigo", width: 3}},
+              { value:5, symbol: {type: "simple-line", color: "blue", width: 3}},
+              { value:6, symbol: {type: "simple-line", color: "fuchsia", width: 3}},
+              { value:7, symbol: {type: "simple-line", color: "darkorange", width: 3}},
+              { value:8, symbol: {type: "simple-line", color: "chartreuse", width: 3}},
+              { value:9, symbol: {type: "simple-line", color: "aqua", width: 3}},
+                ],
+                defaultSymbol: {
+                    type: "simple-line",
+                    color: "white", // Default color if value doesn't match any uniqueValueInfos
+                    opacity: 0.2, // Opacity set to 70% (0.7)
+                    style: "solid",
+                    color: "black",
+                    width: 3
+                    
+                  }
+              },
+              popupTemplate: {
+                title: `Mörk ${index + 1}: ${feature.attributes.athugasemdir}`,
+                content: [
+                    {
+                        type: "text", // Use "text" for simple text display
+                        text: `Gögn: ${feature.attributes.gogn}`,
+                    },
+                ],
+            },
+              opacity: 0.7,
+          });
+          obnLayer.add(singleFeatureOBNLayer); // Add the FeatureLayer to the GroupLayer
+      });
+  });
 });
 
         // Örnefni

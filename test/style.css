@@ -192,6 +192,19 @@ calcite-loader {
     overflow: auto;
   }
 
+  .floating-editor {
+    position: absolute;
+    z-index: 100;
+    top: 0px;
+    right: 0px;
+    width: fit-content;
+    height: 75%;
+    background-color: white;
+    border: 1px solid #ccc;
+    display: none; /* Initially hidden */
+    overflow: auto;
+  }
+
     /* Adjust the size of the legend container */
     .esri-legend {
       font-size: 10px; /* Modify the font size as needed */

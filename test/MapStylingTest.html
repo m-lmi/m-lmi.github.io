@@ -1,152 +1,224 @@
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Edit features in 3D with the Editor widget | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.28/"></script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <script>
+      require([  "esri/Map", "esri/layers/FeatureLayer", "esri/layers/support/TileInfo", "esri/layers/WebTileLayer", "esri/WebScene", "esri/views/SceneView", "esri/widgets/Editor"], (
+        Map,
+        FeatureLayer,
+        TileInfo,
+        WebTileLayer,
+        WebScene,
+        SceneView,
+        Editor
+      ) => {
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>GeoJSONLayer | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
+        // Create a map from the referenced webscene item id
+        const webscene = new WebScene({
+          portalItem: {
+            id: "ad3a0bfc93cd4fbfa37b0fd339c80a3e"
+          }
+        });
 
-  <style>
-    html,
-    body,
-    #viewDiv {
-      padding: 0;
-      margin: 0;
-      height: 100%;
-      width: 100%;
-    }
+          // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
+          const map = new Map({
+            basemap: "satellite",
+            ground: "world-elevation",
+            //layers:[],
+          });
 
-  </style>
+        // Create a layer with visualVariables to use interactive handles for size and rotation
+        /*
+        const recreationLayer = new FeatureLayer({
+          title: "Recreation",
+          url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/EditableFeatures3D/FeatureServer/1",
+          elevationInfo: {
+            mode: "absolute-height"
+          },
+          renderer: {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            field: "TYPE",
+            visualVariables: [
+              {
+                // size can be modified with the interactive handle
+                type: "size",
+                field: "SIZE",
+                axis: "height",
+                valueUnit: "meters"
+              },
+              {
+                // rotation can be modified with the interactive handle
+                type: "rotation",
+                field: "ROTATION"
+              }
+            ],
+            uniqueValueInfos: [
+              {
+                value: "1",
+                label: "Slide",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Slide.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Slide"
+                  }
+                }
+              },
+              {
+                value: "2",
+                label: "Swing",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Swing.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Swing"
+                  }
+                }
+              }
+            ]
+          }
+        });
 
-  <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
-  <script src="https://js.arcgis.com/4.28/"></script>
+        webscene.add(recreationLayer);*/
+        
+        /*
+          // Create a layer with visualVariables to use interactive handles for size and rotation
+          const testLayer = new FeatureLayer({
+          title: "Test",
+          url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/testEditable/FeatureServer/0",
+          editable: true,
+          elevationInfo: {
+            mode: "absolute-height"
+          },
+          renderer: {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            field: "TYPE",
+            visualVariables: [
+              {
+                // size can be modified with the interactive handle
+                type: "size",
+                field: "SIZE",
+                axis: "height",
+                valueUnit: "meters"
+              },
+              {
+                // rotation can be modified with the interactive handle
+                type: "rotation",
+                field: "ROTATION"
+              }
+            ],
+            uniqueValueInfos: [
+              {
+                value: "1",
+                label: "Slide",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Slide.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Slide"
+                  }
+                }
+              },
+              {
+                value: "2",
+                label: "Swing",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Swing.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Swing"
+                  }
+                }
+              }
+            ]
+          }
+        });
+        webscene.add(testLayer);
+        */
 
-  <script>
-    require(["esri/Map",
-    "esri/layers/GeoJSONLayer", 
-    "esri/views/MapView", 
-    "esri/renderers/UniqueValueRenderer", 
-    "esri/layers/FeatureLayer",
-    "esri/layers/WebTileLayer",
-    "esri/layers/support/TileInfo",
-    "esri/layers/GroupLayer"
-    ], (
-      Map,
-      GeoJSONLayer,
-      MapView,
-      UniqueValueRenderer,
-      FeatureLayer,
-      WebTileLayer, 
-      TileInfo,
-      GroupLayer 
-    ) => {
+        const polygonLayer = new FeatureLayer({
+          title: "Test",
+          url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/TestPolygon/FeatureServer/",
+          editable: true,
+          elevationInfo: {
+            mode: "on-the-ground"
+          },
+          renderer: {
+            type: "simple", // Change the renderer type to 'simple'
+            symbol: {
+              type: "polygon-3d", // Specify 'polygon-3d' symbol type
+              symbolLayers: [
+                {
+                  type: "fill", // Use 'extrude' symbol layer for polygon extrusion
+                  material: {
+                    color: [255, 0, 0, 0.7] // Set the color and transparency for the polygons
+                  },/* for extrude mode
+                  edges: {
+                    type: "solid", // Specify solid edges
+                    color: [50, 50, 50, 0.5] // Set edge color and transparency
+                  },
+                  size: 10 // Adjust extrusion height as needed
+                  */
+                }
+              ]
+            }
+          }
+        });
+        map.add(polygonLayer);
 
-      const map = new Map({
-        basemap: "satellite",
-        ground: "world-elevation",
-      });
-
-      const view = new MapView({
-        container: "viewDiv",
-        center: [-18, 65],
-        zoom: 6,
-        map: map
-      });
-    }); 
-
-    /*
-    //"modules/mapConfig",
-    //"modules/basicWidgets",
-    //"modules/weatherDaylight",
-    //"modules/measurementWidget",
-    //"modules/cameraPosition",
-    "esri/config",
-    "esri/WebMap",
-    "esri/views/SceneView",
-    "esri/Map",
-    "esri/WebScene",
-    "esri/Basemap",
-    //"esri/widgets/Search",
-    "esri/widgets/Legend",
-    //"esri/widgets/Home",
-    "esri/widgets/Weather",
-    "esri/widgets/Daylight",
-    "esri/widgets/LayerList", //Layer list to turn on/off layers visibility
-    //"esri/widgets/DirectLineMeasurement3D",
-    //"esri/widgets/AreaMeasurement3D",
-    //"esri/widgets/TimeSlider",
-    "esri/widgets/Expand",
-    //"esri/core/promiseUtils",
-    //"esri/core/reactiveUtils",
-    //"esri/geometry/ElevationLayer"
-    "esri/symbols/LabelSymbol3D",
-    "esri/symbols/TextSymbol3DLayer",
-    "esri/symbols/LineSymbol3D",
-    "esri/symbols/Symbol3D",
-    "esri/layers/GroupLayer",  
-    "esri/widgets/LayerList",
-    "esri/layers/support/LabelClass",
-    "esri/layers/GeoJSONLayer", //Map and GeoJSON layer is needed for my experiment with adding Json layers.....
-    "esri/layers/SceneLayer",
-    "esri/layers/FeatureLayer",
-    "esri/layers/OGCFeatureLayer",
-    "esri/layers/WMSLayer",
-    "esri/layers/WFSLayer",
-    "esri/renderers/UniqueValueRenderer",
-    "esri/layers/WebTileLayer",
-    "esri/geometry/SpatialReference",
-    "esri/layers/support/TileInfo",
-    ], function(
-      //MapConfig,
-      //BasicWidgets,
-      //WeatherDaylight,
-      //MeasurementWidget,
-      //CameraPosition,
-      esriConfig,
-      WebMap,
-      SceneView,
-      Map,
-      WebScene, 
-      Basemap,
-      //Search,
-      Legend,
-      //Home,
-      Weather, 
-      Daylight, 
-      LayerList,
-      //DirectLineMeasurement3D,
-      //AreaMeasurement3D,
-      //TimeSlider,
-      Expand,
-      //promiseUtils,
-      //reactiveUtils,
-      //ElevationLayer
-      LabelSymbol3D,
-      TextSymbol3DLayer,
-      LineSymbol3D,
-      Symbol3D,
-      GroupLayer, 
-      LayerList, 
-      LabelClass,
-      GeoJSONLayer,
-      SceneLayer,
-      FeatureLayer,
-      OGCFeatureLayer,
-      WMSLayer,
-      WFSLayer,
-      UniqueValueRenderer,
-      WebTileLayer,
-      SpatialReference, 
-      TileInfo,
-      )/*
-
-    /*
-    const demTileInfo = new TileInfo.create({
+              
+        const demTileInfo = new TileInfo({
           spatialReference: {
             wkid: 3057 // Set the WKID for EPSG:3057 projection
           },
           origin: {
-            x: -161616,
-            y: -72.00000049173832
+            x: 0,
+            y: 0
           },
           lods: [
             { level: 0, resolution: 4096 },
@@ -168,73 +240,72 @@
             { level: 16, resolution: 0.0625 },
             // Add other levels as per your requirement
           ],
-          size: [256, 256] // Tile size
+          size: [512, 512] // Tile size
         });
+
           // Web Tile Layer DEM
           const demLayer = new WebTileLayer({
-            urlTemplate: "https://gis.lmi.is/mapcache/tms/1.0.0/IslandsDEMDaylight@EPSG:3057/{z}/{x}/{-y}.png",
+            urlTemplate: "https://gis.lmi.is/mapcache/isn93/tms/1.0.0/IslandsDEMDaylight@EPSG:3057/{z}/{x}/{-y}.png",
             //copyright: 'Map data from &copy; <a href="https://www.loftmyndir.is/" target="_blank">Loftmyndir</a> Map design by &copy; <a href="http://opentopomap.org/" target="_blank">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank">CC-BY-SA</a>) contributors'
             title: "ÍslandsDEM",
             spatialReference: {
               wkid: 3057 // Set the WKID for EPSG:3057 projection
             },
-            //tileInfo: demTileInfo,
+            tileInfo: demTileInfo,
           });
-      map.add(demLayer);*/
+          map.add(demLayer)
+
       
-
-      // Create the FeatureLayer with multiple polygons
-      const obnLoadLayer = new FeatureLayer({
-            url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer",
+      // The clipping extent for the scene
+      const drangaExtent = {
+        // autocasts as new Extent()
+        xmax: -21,
+        xmin: -23.5,
+        ymax: 66.5,
+        ymin: 65.5,
+        spatialReference: {
+          // autocasts as new SpatialReference()
+          wkid: 4326
+        }
+      };
+  
+      // Make new 3D SceneView
+        const view = new SceneView({
+          container: "viewDiv", //This your main container in HTML for all the widgets
+          map: map,
+          viewingMode: "global", //opion "local" to make cropped 2D
+          extent: drangaExtent,
+          environment: {
+            weather: {
+              type: "cloudy", // autocasts as new CloudyWeather({ cloudCover: 1 })
+              cloudCover: 0.2
+            },
+            atmosphere: {
+              quality: "high"
+            },
+          }
         });
+/*
+        const view0 = new SceneView({
+          container: "viewDiv",
+          qualityProfile: "high",
+          map: webscene
+        });*/
 
-        // Create a GroupLayer to contain individual polygons
-        const obnLayer = new GroupLayer({
-            title: "Óbyggðanefnd",
-            visible: true
+        view.when(() => {
+          view.popupEnabled = false; //disable popups
+          // Create the Editor
+          const editor = new Editor({
+            view: view
+          });
+          // Add widget to top-right of the view
+          view.ui.add(editor, "top-right");
         });
-        obnLayer.elevationInfo ={
-            mode: "on-the-ground",
-        };
+      });
+    </script>
+  </head>
 
-        // Fetch features from the FeatureLayer and create individual FeatureLayers for each polygon
-        obnLoadLayer.load().then(() => {
-            // Get the features
-            obnLoadLayer.queryFeatures().then((result) => {
-                const features = result.features;
-
-                // Create a FeatureLayer for each individual polygon
-                features.forEach((feature, index) => {
-                    const singleFeatureOBNLayer = new FeatureLayer({
-                        source: [feature], // Provide the individual feature
-                        objectIdField: "fid", // Replace with your object ID field
-                        title: `Mörk ${index + 1}`, // Title for the layer
-                        visible: true, // Set initial visibility as needed
-                        // Add any other properties or configurations for the layer
-                        //popupTemplate: templateObyggdanefnd,
-                        renderer: rendererObyggdanefnd,
-                        popupTemplate: {
-                          title: "{gogn}",
-                          fieldInfos: [
-                            {
-                              fieldName: 'gogn',
-                            }
-                          ]
-                        },
-                        opacity: 0.7,
-                    });
-
-                    obnLayer.add(singleFeatureOBNLayer); // Add the FeatureLayer to the GroupLayer
-                });
-            });
-        });
-
-
-  </script>
-</head>
-
-<body>
-  <div id="viewDiv"></div>
-</body>
-
+  <body>
+    <div id="viewDiv"></div>
+  </body>
 </html>

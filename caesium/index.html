@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cesium with ArcGIS Tiled Elevation</title>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #loadingOverlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="cesiumContainer"></div>
+    <div id="loadingOverlay"><h1>Loading...</h1></div>
+
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.85/Build/Cesium/Cesium.js"></script>
+    <script>
+              // Set the access token
+              Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5MTZiYTU1MC1jZmQ2LTRkZTEtOTgyOC0yMjBlZTAyZGZlMDgiLCJpZCI6MTU3NzMzLCJpYXQiOjE2OTA4ODYxOTR9.xLVVhFb_7-r8A6s2sMHkrKpBkjzWdnPZjK7fOr_l4co';
+
+        // Use async function to handle await
+        async function loadCesiumTerrain() {
+            const viewer = new Cesium.Viewer("cesiumContainer");
+
+            try {
+                viewer.scene.terrainProvider = await Cesium.ArcGISTiledElevationTerrainProvider.fromUrl(
+                    "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"
+                );
+            } catch (error) {
+                window.alert(`Failed to load terrain. ${error}`);
+            } finally {
+                // Hide loading overlay once the terrain is loaded
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        }
+
+        // Call the function to load Cesium terrain
+        loadCesiumTerrain();
+    </script>
+</body>
+</html>

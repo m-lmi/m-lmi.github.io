@@ -100,7 +100,7 @@ define([
         const sceneLayer = new SceneLayer({
             url: "https://basemaps3d.arcgis.com/arcgis/rest/services/OpenStreetMap3D_Buildings_v1/SceneServer",
             title: "OpenStreetMaps 3D Buildings",
-            visible: false,
+            visible: true,
             copyright: "Data from ESRI"
         });
 
@@ -122,16 +122,6 @@ define([
             title: "Örnefni línur", // title for in legend
             lengedUrl: ""}, // Url for legend image as png
         ]}); 
-
-        // Constructing the renderer
-        const rendererVatnafarL = {
-            type: "simple",
-            symbol: {
-              type: "simple-line", // Use simple-line for 2D lines
-              color: "steelblue", // Set the color of the line
-              width: 2 // Adjust the width of the line
-            }
-          };
         
         // Vatnafar Línur
         const vatnafarLinur = new GeoJSONLayer({
@@ -139,30 +129,15 @@ define([
             copyright: "Landmælingar Íslands IS50V",
             visible: true, 
             title: "Vatnafar Línur",
-            renderer: rendererVatnafarL,
-            });
-        
-        const rendererVatnafarF = {
-            type: "simple",
-            symbol: {
-              type: "polygon-3d",
-              symbolLayers: [
-                {
-                  type: "fill",
-                  material: {
-                    color: "steelblue"
-                  },
-                  outline: {
-                    color: "steelblue",
-                    size: 1 // Adjust the outline size as needed
-                  }
-                }
-              ]
+            renderer: {
+              type: "simple",
+              symbol: {
+                type: "simple-line", // Use simple-line for 2D lines
+                color: "steelblue", // Set the color of the line
+                width: 2 // Adjust the width of the line
+              }
             },
-            elevationInfo: {
-              mode: "on-the-ground" // Set elevation mode to 'on-the-ground'
-            }
-          };
+            });          
 
         // Vatnafar Flákar
         const vatnafarFlakar = new GeoJSONLayer({
@@ -170,7 +145,18 @@ define([
             copyright: "Landmælingar Íslands IS50V",
             visible: true, 
             title: "Vatnafar Flakar",
-            renderer: rendererVatnafarF,
+            elevationInfo: {mode: "on-the-ground"},
+            renderer: {
+              type: "simple",
+              symbol: {
+                type: "simple-fill",
+                color: "steelblue", // Set the fill color and transparency for the polygons
+                outline: {
+                  color: "steelblue", // Set the outline color (black)
+                  width: 1 // Set the outline width
+                }
+              }
+            },
             });
 
         // Group the Vatnafar layers into one grouped layer    
@@ -181,50 +167,45 @@ define([
             });
 
         // Mörk Sveitarfélag
-        const templateSveitarfelag = {
-            title: "{sveitarfelag}",
-            fieldInfos: [
-              {
-                fieldName: 'sveitarfelag',
-              }
-            ]
-          };
-
-        // Constructing the renderer
-        const rendererSveitarfelag = {
-            type: "unique-value",
-            field: "nrsveitarfelags",
-            symbol: {
-              type: "simple-fill",
-              outline: {
-                color: "black",
-              }
-            },
-            uniqueValueInfos: [
-          { value:4200, symbol: {type: "simple-fill", color: "steelblue"}},
-          { value:4901, symbol: {type: "simple-fill", color: "lightcoral"}},
-          { value:4902, symbol: {type: "simple-fill", color: "khaki"}},
-          { value:4911, symbol: {type: "simple-fill", color: "springgreen"}},
-          { value:4803, symbol: {type: "simple-fill", color: "royalblue"}},
-          { value:4100, symbol: {type: "simple-fill", color: "mediumorchid"}},
-            ],
-            defaultSymbol: {
-                type: "simple-fill",
-                color: "white", // Default color if value doesn't match any uniqueValueInfos
-                opacity: 0.2, // Opacity set to 70% (0.7)
-                outline: {
-                  color: "black",
-                  width: 1
-                }
-              }
-          };
-
         const sveitarfelagLayer = new GeoJSONLayer({
             url: "https://gis.lmi.is/geoserver/IS_50V/mork_sveitarf_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:mork_sveitarf_flakar&outputFormat=json",
             copyright: "Landmælingar Íslands IS50V",
             visible: false, 
-            popupTemplate: templateSveitarfelag,
-            renderer: rendererSveitarfelag,
+            popupTemplate: {
+              title: "{sveitarfelag}",
+              fieldInfos: [
+                {
+                  fieldName: 'sveitarfelag',
+                }
+              ]
+            },
+            renderer: {
+              type: "unique-value",
+              field: "nrsveitarfelags",
+              symbol: {
+                type: "simple-fill",
+                outline: {
+                  color: "black",
+                }
+              },
+              uniqueValueInfos: [
+            { value:4200, symbol: {type: "simple-fill", color: "steelblue"}},
+            { value:4901, symbol: {type: "simple-fill", color: "lightcoral"}},
+            { value:4902, symbol: {type: "simple-fill", color: "khaki"}},
+            { value:4911, symbol: {type: "simple-fill", color: "springgreen"}},
+            { value:4803, symbol: {type: "simple-fill", color: "royalblue"}},
+            { value:4100, symbol: {type: "simple-fill", color: "mediumorchid"}},
+              ],
+              defaultSymbol: {
+                  type: "simple-fill",
+                  color: "white", // Default color if value doesn't match any uniqueValueInfos
+                  opacity: 0.2, // Opacity set to 70% (0.7)
+                  outline: {
+                    color: "black",
+                    width: 1
+                  }
+                }
+            },
             title: "Mörk Sveitarfelag",
             opacity: 0.4,
             orderBy: {
@@ -233,53 +214,6 @@ define([
             });
 
         // Add Feature layer Obyggðanefnd
-
-        // Constructing the renderer
-        const rendererObyggdanefnd = {
-            type: "unique-value",
-            field: "fid",
-            symbol: {
-              type: "simple-fill",
-              outline: {
-                color: "black",
-                width: 1,
-              }
-            },
-            uniqueValueInfos: [
-          { value:1, symbol: {type: "simple-fill", color: "steelblue"}},
-          { value:2, symbol: {type: "simple-fill", color: "lightblue"}},
-          { value:3, symbol: {type: "simple-fill", color: "blue"}},
-          { value:4, symbol: {type: "simple-fill", color: "skyblue"}},
-          { value:5, symbol: {type: "simple-fill", color: "royalblue"}},
-          { value:6, symbol: {type: "simple-fill", color: "dodgerblue"}},
-          { value:7, symbol: {type: "simple-fill", color: "deepskyblue"}},
-          { value:8, symbol: {type: "simple-fill", color: "cadetblue"}},
-          { value:9, symbol: {type: "simple-fill", color: "darkblue"}},
-            ],
-            defaultSymbol: {
-                type: "simple-fill",
-                color: "white", // Default color if value doesn't match any uniqueValueInfos
-                opacity: 0.2, // Opacity set to 70% (0.7)
-                outline: {
-                  color: "black",
-                  width: 1
-                }
-              }
-          };
-
-        /* 
-        const obnLayer = new FeatureLayer({
-            url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer",
-            title: "Óbyggdanefnd",
-            visible: true, 
-            popupTemplate: templateObyggdanefnd,
-            renderer: rendererObyggdanefnd,
-            opacity: 0.4,
-        });
-        obnLayer.elevationInfo ={
-            mode: "on-the-ground",
-        };*/
-
         // Create the FeatureLayer with multiple polygons
         const obnLoadLayer = new FeatureLayer({
             url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer",
@@ -287,12 +221,11 @@ define([
 
         // Create a GroupLayer to contain individual polygons
         const obnLayer = new GroupLayer({
-            title: "Óbyggðanefnd",
-            visible: true
+            title: "Óbyggðanefnd óbreytt",
+            visible: false,
+            editable: false,
+            elevationInfo: {mode: "on-the-ground",}
         });
-        obnLayer.elevationInfo ={
-            mode: "on-the-ground",
-        };
 
         // Fetch features from the FeatureLayer and create individual FeatureLayers for each polygon
         obnLoadLayer.load().then(() => {
@@ -305,67 +238,57 @@ define([
                     const singleFeatureOBNLayer = new FeatureLayer({
                         source: [feature], // Provide the individual feature
                         objectIdField: "fid", // Replace with your object ID field
-                        title: `Mörk ${index + 1}`, // Title for the layer
+                        title: `Mörk ${index + 1}: ${feature.attributes.athugasemdir}`, // Title for the layer
                         visible: true, // Set initial visibility as needed
+                        editable: false,
                         // Add any other properties or configurations for the layer
-                        renderer: rendererObyggdanefnd,
+                        renderer: {
+                          type: "unique-value",
+                          field: "fid",
+                          symbol: {
+                            type: "simple-line",
+                            style: "solid",
+                            color: "black",
+                            width: 3,
+                          },
+                          uniqueValueInfos: [
+                        { value:1, symbol: {type: "simple-line", color: "red", width: 6,}},
+                        { value:2, symbol: {type: "simple-line", color: "green", width: 3}},
+                        { value:3, symbol: {type: "simple-line", color: "gold", width: 3}},
+                        { value:4, symbol: {type: "simple-line", color: "indigo", width: 3}},
+                        { value:5, symbol: {type: "simple-line", color: "blue", width: 3}},
+                        { value:6, symbol: {type: "simple-line", color: "fuchsia", width: 3}},
+                        { value:7, symbol: {type: "simple-line", color: "darkorange", width: 3}},
+                        { value:8, symbol: {type: "simple-line", color: "chartreuse", width: 3}},
+                        { value:9, symbol: {type: "simple-line", color: "aqua", width: 3}},
+                          ],
+                          defaultSymbol: {
+                              type: "simple-line",
+                              color: "white", // Default color if value doesn't match any uniqueValueInfos
+                              opacity: 0.8, // Opacity set to 70% (0.7)
+                              style: "solid",
+                              color: "black",
+                              width: 3
+                              
+                            }
+                        },
                         popupTemplate: {
-                          title: `Mörk ${index + 1}`,
+                          title: `Mörk ${index + 1}: ${feature.attributes.athugasemdir}`,
                           content: [
                               {
                                   type: "text", // Use "text" for simple text display
                                   text: `Gögn: ${feature.attributes.gogn}`,
                               },
-                              {
-                                type: "text",
-                                text: `Heiti: ${feature.attributes.heiti}`,
-                            },
-                            {
-                              type: "text",
-                              text: `Krafa: ${feature.attributes.krafa}`,
-                          },
-                            {
-                              type: "text",
-                              text: `Stutt: ${feature.attributes.stutt}`, 
-                          },
                           ],
                       },
-                        opacity: 0.7,
+                        opacity: 0.8,
                     });
-
                     obnLayer.add(singleFeatureOBNLayer); // Add the FeatureLayer to the GroupLayer
                 });
             });
         });
 
         // Örnefni //To speed loading up -  https://developers.arcgis.com/javascript/latest/sample-code/layers-featurelayer-large-collection/
-        // Define a renderer that displays only the text labels
-        const labelRenderer = {
-            type: "simple", // Use a simple renderer
-            symbol: {
-            type: "text", // Use text symbol for rendering labels
-            color: "black", // Set the text color
-            haloColor: "white", // Set halo (background) color for better visibility
-            haloSize: 1, // Adjust the halo size if needed
-            font: { // Define font properties for the text label
-                size: 20, // Set the font size
-                family: "Arial" // Set the font family
-                // Add other font properties if required
-            },
-            labelPlacement: "above-center", // Adjust label placement as per your preference
-            labelExpressionInfo: {
-                expression: "$feature.ornefni" // Replace 'labelField' with the field name containing label text
-            }
-            }
-        };
-
-        const ornefni = new GeoJSONLayer({
-            url: "https://gis.lmi.is/geoserver/IS_50V/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=IS_50V%3Aornefni_flakar&maxFeatures=100000&outputFormat=application%2Fjson",
-            copyright: "Landmælingar Íslands IS50V",
-            renderer: labelRenderer,
-            visible: false, 
-            title: "Örnefni",
-            });
 
         // Örnefni Flákar
         // Create a labeling renderer for the ornefni attribute in polygons
@@ -703,7 +626,6 @@ define([
                 sveitarfelagLayer,
                 wmsLayer,
                 sceneLayer,
-                //ornefni,
                 ornefniLayer,
                 vatnafarLayer,
                 obnLayer,

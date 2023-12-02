@@ -4,6 +4,7 @@ require([
     "modules/weatherDaylight",
     "modules/measurementWidget",
     "modules/loadLayers",
+    "modules/layerEditor",
     //"modules/cameraPosition",
     "esri/config",
     "esri/WebMap",
@@ -33,6 +34,7 @@ require([
     WeatherDaylight,
     MeasurementWidget,
     LoadLayers,
+    layerEditor,
     //CameraPosition,
     esriConfig,
     WebMap,
@@ -63,7 +65,9 @@ require([
     const mapView = MapConfig.setupScene(map); // Insert map and Capture the returned mapView
     WeatherDaylight.setupWeatherDaylight(mapView);
     MeasurementWidget.setupMeasurementWidget(mapView);
-    BasicWidgets.setupBasicWidgets(mapView);          
+    BasicWidgets.setupBasicWidgets(mapView);
+    layerEditor.editLayer(map, mapView);
+
 
     /////////////// IDEAS TO ADD ///////////////
     //https://developers.arcgis.com/javascript/latest/sample-code/sketch-3d/
@@ -103,6 +107,10 @@ require([
         togglePanel("daylightPanel");
     });
 
+    document.getElementById("editorBtn").addEventListener("click", function() {
+      togglePanel("editorPanel");
+    });
+
     // Toggle pannels, except that problematic measurements buttons
     function togglePanel(panelId) {
         if (activePanel) {
@@ -124,11 +132,11 @@ require([
     mapView.ui.add(editor, "bottom-right");
     */
   
-    /*
+  /*
   // Add legend
     const legend = new Legend ({
         view: mapView
     });
-    mapView.ui.add(legend, "bottom-right");
-    */
+    mapView.ui.add(legend, "bottom-right");*/
+    
 });
