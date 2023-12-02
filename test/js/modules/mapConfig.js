@@ -22,7 +22,6 @@ define([
   "esri/widgets/Expand",
   //"esri/core/promiseUtils",
   //"esri/core/reactiveUtils",
-  //"esri/geometry/ElevationLayer"  
   "esri/layers/GeoJSONLayer", //Map and GeoJSON layer is needed for my experiment with adding Json layers.....
   //"esri/layers/SceneLayers",
   "esri/layers/FeatureLayer",
@@ -48,8 +47,7 @@ define([
     //TimeSlider,
     Expand,
     //promiseUtils,
-    //reactiveUtils,
-    //ElevationLayer    
+    //reactiveUtils,   
     GeoJSONLayer,
     //SceneLayers,
     FeatureLayer,
@@ -93,6 +91,12 @@ define([
         // or us the option to define center instead of extent
         //center: [-18.80500, 65.02700],
         //zoom: 7
+        // Set camera intial position
+        camera: {
+          position: [-21.9, 65.7, 30000],
+          heading: 0,
+          tilt: 50
+        },
         // Turns off atmosphere and stars settings
         environment: {
           weather: {
@@ -108,7 +112,7 @@ define([
           }*/
         }
       });
-        
+
         // Read URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const x = parseFloat(urlParams.get('x'));

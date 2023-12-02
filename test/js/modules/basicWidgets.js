@@ -105,12 +105,7 @@ define([
 const layerListContainer = document.getElementById("layer-list");
   
   
-        // Initialize the Search widget
-        const search = new Search({
-          view: mapView,
-          container: "search-container"
-        });
-        
+
       },
     };
   });

@@ -5,6 +5,8 @@ require([
     "modules/measurementWidget",
     "modules/loadLayers",
     "modules/layerEditor",
+    "modules/searchWidget",
+    "modules/elevationWidget",
     //"modules/cameraPosition",
     "esri/config",
     "esri/WebMap",
@@ -34,7 +36,9 @@ require([
     WeatherDaylight,
     MeasurementWidget,
     LoadLayers,
-    layerEditor,
+    LayerEditor,
+    SearchWidget,
+    ElevationWidget,
     //CameraPosition,
     esriConfig,
     WebMap,
@@ -66,7 +70,9 @@ require([
     WeatherDaylight.setupWeatherDaylight(mapView);
     MeasurementWidget.setupMeasurementWidget(mapView);
     BasicWidgets.setupBasicWidgets(mapView);
-    layerEditor.editLayer(map, mapView);
+    SearchWidget.setupSearchWidgets(map, mapView);
+    LayerEditor.editLayer(map, mapView);
+    ElevationWidget.setupElevation(map, mapView);
 
 
     /////////////// IDEAS TO ADD ///////////////
