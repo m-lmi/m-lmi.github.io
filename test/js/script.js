@@ -6,7 +6,7 @@ require([
     "modules/loadLayers",
     "modules/layerEditor",
     "modules/searchWidget",
-    "modules/elevationWidget",
+    "modules/mouseElevation",
     //"modules/cameraPosition",
     "esri/config",
     "esri/WebMap",
@@ -38,7 +38,7 @@ require([
     LoadLayers,
     LayerEditor,
     SearchWidget,
-    ElevationWidget,
+    MouseElevation,
     //CameraPosition,
     esriConfig,
     WebMap,
@@ -72,7 +72,7 @@ require([
     BasicWidgets.setupBasicWidgets(mapView);
     SearchWidget.setupSearchWidgets(map, mapView);
     LayerEditor.editLayer(map, mapView);
-    ElevationWidget.setupElevation(map, mapView);
+    MouseElevation.setupMouseElevation(mapView); 
 
 
     /////////////// IDEAS TO ADD ///////////////

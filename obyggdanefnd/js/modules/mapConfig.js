@@ -93,6 +93,12 @@ define([
         // or us the option to define center instead of extent
         //center: [-18.80500, 65.02700],
         //zoom: 7
+        // Set camera initial position
+        camera: {
+          position: [-21.9, 65.7, 30000],
+          heading: 0,
+          tilt: 50
+        },
         // Turns off atmosphere and stars settings
         environment: {
           weather: {

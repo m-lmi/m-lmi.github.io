@@ -94,6 +94,7 @@ define([
         view: mapView,
         container: "editor-container",
         featureLayers: obnDynamicLayer // Include only the "test" feature layer
+        
         });
     
         // Add the Editor widget to the top-right of the view

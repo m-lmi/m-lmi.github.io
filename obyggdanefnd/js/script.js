@@ -5,6 +5,7 @@ require([
   "modules/measurementWidget",
   "modules/loadLayers",
   "modules/layerEditor",
+  "modules/mouseElevation",
   //"modules/cameraPosition",
   "esri/config",
   "esri/WebMap",
@@ -34,7 +35,8 @@ require([
   WeatherDaylight,
   MeasurementWidget,
   LoadLayers,
-  layerEditor,
+  LayerEditor,
+  MouseElevation,
   //CameraPosition,
   esriConfig,
   WebMap,
@@ -66,7 +68,8 @@ require([
   WeatherDaylight.setupWeatherDaylight(mapView);
   MeasurementWidget.setupMeasurementWidget(mapView);
   BasicWidgets.setupBasicWidgets(mapView);  
-  layerEditor.editLayer(map, mapView);        
+  LayerEditor.editLayer(map, mapView);     
+  MouseElevation.setupMouseElevation(mapView);   
 
   /////////////// IDEAS TO ADD ///////////////
   //https://developers.arcgis.com/javascript/latest/sample-code/sketch-3d/

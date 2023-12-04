@@ -28,7 +28,6 @@ define([
                 exactMatch: false,
                 outFields: ["ornefni"],
                 name: "Örnefni punktar",
-                //placeholder: "example: 3708"
               },
             {
               layer: ornefniLinur,
@@ -37,7 +36,6 @@ define([
               exactMatch: false,
               outFields: ["ornefni"],
               name: "Örnefni línur",
-              //placeholder: "example: 3708"
             },
             {
                 layer: ornefniFlakar,
@@ -46,7 +44,6 @@ define([
                 exactMatch: false,
                 outFields: ["ornefni"],
                 name: "Örnefni flákar",
-                //placeholder: "example: 3708"
               },
           ]
           });
