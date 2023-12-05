@@ -5,6 +5,7 @@ require([
   "modules/measurementWidget",
   "modules/loadLayers",
   "modules/layerEditor",
+  "modules/searchWidget",
   "modules/mouseElevation",
   //"modules/cameraPosition",
   "esri/config",
@@ -36,6 +37,7 @@ require([
   MeasurementWidget,
   LoadLayers,
   LayerEditor,
+  SearchWidget,
   MouseElevation,
   //CameraPosition,
   esriConfig,
@@ -69,7 +71,8 @@ require([
   MeasurementWidget.setupMeasurementWidget(mapView);
   BasicWidgets.setupBasicWidgets(mapView);  
   LayerEditor.editLayer(map, mapView);     
-  MouseElevation.setupMouseElevation(mapView);   
+  MouseElevation.setupMouseElevation(mapView);
+  SearchWidget.setupSearchWidgets(map, mapView);   
 
   /////////////// IDEAS TO ADD ///////////////
   //https://developers.arcgis.com/javascript/latest/sample-code/sketch-3d/

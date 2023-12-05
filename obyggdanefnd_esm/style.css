@@ -9,38 +9,6 @@ html, body,
   position: relative;
 }
 
-#toolbarDiv {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  cursor: default;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-}
-
-#infoDiv {
-  position: absolute;
-  top: 15px;
-  left: 60px;
-}
-#infoDiv input {
-  border: none;
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px;
-}
-
-.esri-widget--button.active,
-.esri-widget--button.active:hover,
-.esri-widget--button.active:focus {
-  cursor: default;
-  background-color: #999696;
-}
-.esri-widget--button.active path,
-.esri-widget--button.active:hover path,
-.esri-widget--button.active:focus path {
-  fill: #E4E4E4;
-}
-
 
 body {
   display: flex;
@@ -134,27 +102,6 @@ calcite-loader {
     display: none; /* Initially hidden */
     overflow: auto;
   }
-
-  /* Styling for the basemap items */
-.basemap-item {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.basemap-thumbnail {
-  width: 80px; /* Set the width of the thumbnail */
-  height: 80px; /* Set the height of the thumbnail */
-  margin-right: 10px; /* Add some space between the thumbnail and text */
-}
-
-.basemap-title {
-  flex: 1; /* Let the title take the remaining space */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
   
   .floating-list { /*Layer list*/
     position: absolute;
@@ -236,29 +183,3 @@ calcite-loader {
     display: none; /* Initially hidden */
     overflow: auto;
   }
-
-    /* Adjust the size of the legend container */
-    .esri-legend {
-      font-size: 10px; /* Modify the font size as needed */
-      width: 100px; /* Adjust the width of the legend */
-      /* You can adjust other CSS properties as needed */
-    }
-  
-    /* Adjust the legend title size */
-    .esri-legend__title {
-      font-size: 10px; /* Modify the font size of the title */
-      /* You can adjust other CSS properties as needed */
-    }
-  
-    /* Adjust the size of the legend items */
-    .esri-legend__layer {
-      font-size: 10px; /* Modify the font size of the legend items */
-      /* You can adjust other CSS properties as needed */
-    }
-  
-    /* Adjust the size of the symbols within the legend */
-    .esri-legend__symbol {
-      width: 10px; /* Modify the width of the symbols */
-      height: 10px; /* Modify the height of the symbols */
-      /* You can adjust other CSS properties as needed */
-    }

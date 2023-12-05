@@ -1,3 +1,4 @@
+//import setupMouseElevation from "./modules/mouseElevation"
 require([
     "modules/mapConfig",
     "modules/basicWidgets",
@@ -72,7 +73,11 @@ require([
     BasicWidgets.setupBasicWidgets(mapView);
     SearchWidget.setupSearchWidgets(map, mapView);
     LayerEditor.editLayer(map, mapView);
-    MouseElevation.setupMouseElevation(mapView); 
+    MouseElevation.setupMouseElevation(mapView);
+
+    ////// Import example
+    //const zElement = setupMouseElevation(mapView);
+    //document.getElementById("viewDiv").appendChild(zElement);
 
 
     /////////////// IDEAS TO ADD ///////////////
@@ -95,15 +100,23 @@ require([
 
       document.getElementById("searchBtn").addEventListener("click", function() {
         togglePanel("searchPanel");
-      });      
-
-    document.getElementById("distanceBtn").addEventListener("click", function() {
+      });   
+    
+      document.getElementById("distanceBtn").addEventListener("click", function() {
         togglePanel("distancePanel");
       });
-  
-    document.getElementById("areaBtn").addEventListener("click", function() {
+
+      document.getElementById("clearDistanceBtn").addEventListener("click", function() {
+        togglePanel("distancePanel");
+      });
+
+      document.getElementById("areaBtn").addEventListener("click", function() {
         togglePanel("areaPanel");
-    });
+      });      
+      
+      document.getElementById("clearAreaBtn").addEventListener("click", function() {
+        togglePanel("areaPanel");
+      });
 
     document.getElementById("weatherBtn").addEventListener("click", function() {
         togglePanel("weatherPanel");
@@ -130,19 +143,4 @@ require([
             activePanel = null;
         }
         }
-
-    /*
-    const editor = new Editor({
-      view: mapView,
-    });
-    mapView.ui.add(editor, "bottom-right");
-    */
-  
-  /*
-  // Add legend
-    const legend = new Legend ({
-        view: mapView
-    });
-    mapView.ui.add(legend, "bottom-right");*/
-    
 });

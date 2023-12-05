@@ -3,112 +3,65 @@
 ***********************************/
 //
 
-define([
-    "esri/widgets/DirectLineMeasurement3D",
-    "esri/widgets/AreaMeasurement3D",
-    "esri/widgets/Expand",
-    "esri/core/promiseUtils"
-  ], function(DirectLineMeasurement3D, AreaMeasurement3D, Expand, promiseUtils) {
+define(["esri/widgets/Measurement"], function(Measurement,) {
     return {
       setupMeasurementWidget: function(mapView) {
-  
-        let activeWidget = null;
-  
-        const distance = new DirectLineMeasurement3D({
-          view: mapView,
-          container: "distance-container"
-        });
-  
-        const area = new AreaMeasurement3D({
-          view: mapView,  
-          container: "area-container"
-        });
-  
+  // Set the activeView to the 2D MapView
+  let activeView = mapView;
 
-  /*
-  document
-  .getElementById("distanceBtn")
-  .addEventListener("click", (event) => {
-    setActiveWidget(null);
-    if (!event.target.classList.contains("active")) {
-      setActiveWidget("distance");
-    } else {
-      setActiveButton(null);
-    }
+  // Create new instance of the Measurement widget
+  const measurement = new Measurement({
+    view: activeView,
   });
-  
-  document
-  .getElementById("areaBtn")
-  .addEventListener("click", (event) => {
-    setActiveWidget(null);
-    if (!event.target.classList.contains("active")) {
-      setActiveWidget("area");
-    } else {
-      setActiveButton(null);
-    }
+
+  // Set-up event handlers for buttons and click events
+  const distanceButton = document.getElementById('distanceBtn');
+  const areaButton = document.getElementById('areaBtn');
+  const clearButtonD = document.getElementById('clearDistanceBtn');
+  const clearButtonA = document.getElementById('clearAreaBtn');
+
+
+  distanceButton.addEventListener("click", () => {
+    document.getElementById("distancePanel").appendChild(clearButtonD);
+    distanceMeasurement();
+    activeView.ui.add(measurement, "distance-container");
   });
-  
-  function setActiveWidget(type) {
-  switch (type) {
-    case "distance":
-      activeWidget = new DirectLineMeasurement3D({
-        view: mapView,      
-        container: "distance-container"
-      });
-  
-      // skip the initial 'new measurement' button
-      activeWidget.viewModel.start().catch((error) => {
-        if (promiseUtils.isAbortError(error)) {
-          return; // don't display abort errors
-        }
-        throw error; // throw other errors since they are of interest
-      });
-  
-      mapView.ui.add(activeWidget, "top-right");
-      setActiveButton(document.getElementById("distanceBtn"));
-      break;
-  
-  
-    case "area":
-      activeWidget = new AreaMeasurement3D({
-        view: mapView,
-        container:"area-container"
-      });
-  
-      // skip the initial 'new measurement' button
-      activeWidget.viewModel.start().catch((error) => {
-        if (promiseUtils.isAbortError(error)) {
-          return; // don't display abort errors
-        }
-        throw error; // throw other errors since they are of interest
-      });
-  
-      mapView.ui.add(activeWidget, "top-right");
-      setActiveButton(document.getElementById("areaBtn"));
-      break;
-    case null:
-      if (activeWidget) {
-        mapView.ui.remove(activeWidget);
-        activeWidget.destroy();
-        activeWidget = null;
-      }
-      break;
+
+  areaButton.addEventListener("click", () => {
+    document.getElementById("areaPanel").appendChild(clearButtonA);
+    areaMeasurement();
+    activeView.ui.add(measurement, "area-container");
+  });
+
+  clearButtonD.addEventListener("click", () => {
+    clearMeasurements();
+  });
+  clearButtonA.addEventListener("click", () => {
+    clearMeasurements();
+  });
+
+  // Call the appropriate DistanceMeasurement2D or DirectLineMeasurement3D
+  function distanceMeasurement() {
+    measurement.activeTool = "direct-line";
+    measurement.container = "distance-container";
+    distanceButton.classList.add("active");
+    areaButton.classList.remove("active");
   }
+
+  // Call the appropriate AreaMeasurement2D or AreaMeasurement3D
+  function areaMeasurement() {
+    measurement.activeTool = "area";
+    measurement.container = "area-container";
+    distanceButton.classList.remove("active");
+    areaButton.classList.add("active");
   }
-  
-  // add the toolbar for the measurement widgets
-  function setActiveButton(selectedButton) {
-    // focus the view to activate keyboard shortcuts for sketching
-    mapView.focus();
-    const elements = document.getElementsByClassName("active");
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].classList.remove("active");
-    }
-    if (selectedButton) {
-      selectedButton.classList.add("active");
-    }
-    }
-    */
+
+  // Clears all measurements
+  function clearMeasurements() {
+    distanceButton.classList.remove("active");
+    areaButton.classList.remove("active");
+    measurement.clear();
+  }
       }
     };
-  });//the end of measurementWidgets.js  
+  }); //the end of measurementWidgets.js  

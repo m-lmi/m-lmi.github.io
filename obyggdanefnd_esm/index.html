@@ -5,23 +5,10 @@
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Óbyggðanefnd 3D</title>
   <link rel="icon" type="image" href="https://obyggdanefnd.is/wp-content/uploads/obn-logo-textalaust-300x300.jpg">
-   
-  <!-- Configure modules and widgets -->
-  <script>
-    var dojoConfig = {
-      packages: [
-      {
-          name: "modules",
-          //location: location.pathname.replace(/\/[^/]+$/, "") + "/js/modules"
-          location: location.origin + location.pathname + "js/modules"
-        }
-      ]
-    };
-  </script>  
 
   <!-- ArcGIS JS 4 -->
   <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
-  <script src="https://js.arcgis.com/4.28/"></script>
+  <script type="module" src="https://js.arcgis.com/4.28/"></script>
   <script type="module" src="https://js.arcgis.com/calcite-components/1.0.3/calcite.esm.js"></script>
   <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.3/calcite.css" />
 
@@ -33,7 +20,7 @@
 
   <!-- own scripts and styles-->
   <link rel="stylesheet" href="style.css">
-  <script  src="js/script.js"></script>
+  <script type="module" src="./js/script.js"></script>
 
 </head>
 
@@ -53,7 +40,7 @@
           <calcite-action-bar layout="horizontal" position="start" expand-disabled="true" expanded="false" slot="action-bar">
             <calcite-action 
               id="basemapsBtn"  
-              data-action-id="basemaps"
+              data-action-id="basemaps" 
               text="Grunnkort" 
               text-enabled 
               icon="basemap">
@@ -136,15 +123,11 @@
           <div id="distance-container">
             <h6 id="head-widget">Measure distance</h6>
           </div>
-          <button id="clearDistanceBtn" class="esri-widget--button esri-interactive esri-icon-trash" title="Clear Measurements">
-          </button>
         </div>
         <div id="areaPanel" class="floating-measure">
           <div id="area-container">
             <h6 id="head-widget">Measure area</h6>
           </div>
-          <button id="clearAreaBtn" class="esri-widget--button esri-interactive esri-icon-trash" title="Clear Measurements">
-          </button>
         </div>
         <div id="weatherPanel" class="floating-widget">
           <div id="weather-container"></div>
@@ -155,8 +138,6 @@
         <div id="editorPanel" class="floating-editor">
           <div id="editor-container"></div>
         </div>
-        <!--button id="clear" class="esri-widget--button esri-interactive esri-icon-trash" title="Clear Measurements">
-        </button-->
       </div> <!-- Div for viewDiv -->
     </calcite-shell> <!-- Shell for the header, panels and map -->
 </body>
