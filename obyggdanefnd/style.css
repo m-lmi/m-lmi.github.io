@@ -251,6 +251,12 @@ calcite-loader {
   overflow-y: auto;
 }
 
+.modal-content img {
+  width: 100px; /* Set the width of the image */
+  height: auto; /* Maintain aspect ratio */
+  margin: 0px; /* Adjust margin as needed */
+}
+
 /* Close button */
 .close {
   color: #aaa;
