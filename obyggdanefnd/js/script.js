@@ -7,7 +7,6 @@ require([
   "modules/layerEditor",
   "modules/searchWidget",
   "modules/mouseElevation",
-  //"modules/cameraPosition",
   "esri/config",
   "esri/WebMap",
   "esri/views/SceneView",
@@ -18,7 +17,7 @@ require([
   "esri/widgets/Home",
   "esri/widgets/Weather",
   "esri/widgets/Daylight",
-  "esri/widgets/LayerList", //Layer list to turn on/off layers visibility
+  "esri/widgets/LayerList",
   //"esri/widgets/DirectLineMeasurement3D",
   //"esri/widgets/AreaMeasurement3D",
   //"esri/widgets/TimeSlider",
@@ -27,7 +26,7 @@ require([
   //"esri/core/promiseUtils",
   //"esri/core/reactiveUtils",
   //"esri/geometry/ElevationLayer"  
-  "esri/layers/GeoJSONLayer", //Map and GeoJSON layer is needed for my experiment with adding Json layers.....
+  "esri/layers/GeoJSONLayer",
   //"esri/layers/SceneLayers",
   "esri/layers/FeatureLayer",
 ], (
@@ -39,7 +38,6 @@ require([
   LayerEditor,
   SearchWidget,
   MouseElevation,
-  //CameraPosition,
   esriConfig,
   WebMap,
   SceneView,
@@ -69,10 +67,11 @@ require([
   const mapView = MapConfig.setupScene(map); // Insert map and Capture the returned mapView
   WeatherDaylight.setupWeatherDaylight(mapView);
   MeasurementWidget.setupMeasurementWidget(mapView);
+  SearchWidget.setupSearchWidgets(map, mapView); 
   BasicWidgets.setupBasicWidgets(mapView);  
   LayerEditor.editLayer(map, mapView);     
   MouseElevation.setupMouseElevation(mapView);
-  SearchWidget.setupSearchWidgets(map, mapView);   
+  
 
   /////////////// IDEAS TO ADD ///////////////
   //https://developers.arcgis.com/javascript/latest/sample-code/sketch-3d/
@@ -104,6 +103,14 @@ require([
       togglePanel("areaPanel");
   });
 
+  document.getElementById("clearDistanceBtn").addEventListener("click", function() {
+    togglePanel("distancePanel");
+  });
+  
+  document.getElementById("clearAreaBtn").addEventListener("click", function() {
+    togglePanel("areaPanel");
+  });
+
   document.getElementById("weatherBtn").addEventListener("click", function() {
       togglePanel("weatherPanel");
     });
@@ -116,7 +123,7 @@ require([
     togglePanel("editorPanel");
   });
 
-  // Toggle pannels, except that problematic measurements buttons
+  // Toggle pannels
   function togglePanel(panelId) {
       if (activePanel) {
           document.getElementById(activePanel).style.display = "none";
@@ -129,19 +136,4 @@ require([
           activePanel = null;
       }
       }
-
-  /*
-  const editor = new Editor({
-    view: mapView,
-  });
-  mapView.ui.add(editor, "bottom-right");
-  */
-
-  /*
-// Add legend
-  const legend = new Legend ({
-      view: mapView
-  });
-  mapView.ui.add(legend, "bottom-right");
-  */
 });

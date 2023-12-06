@@ -2,56 +2,61 @@
 * Add measurement widget
 ***********************************/
 //
-
 define(["esri/widgets/Measurement"], function(Measurement,) {
     return {
-      setupMeasurementWidget: function(mapView) {
-  // Set the activeView to the 2D MapView
-  let activeView = mapView;
+      setupMeasurementWidget: function(view) {
 
-  // Create new instance of the Measurement widget
-  const measurement = new Measurement({
-    view: activeView,
+  // Create new instance of the Measurement widget for distance
+  const measurementDistance = new Measurement({
+    view: view,
   });
 
-  // Set-up event handlers for buttons and click events
+  // Create new instance of the Measurement widget for area
+  const measurementArea = new Measurement({
+    view: view,
+  })
+
+  // Get buttons from html
   const distanceButton = document.getElementById('distanceBtn');
   const areaButton = document.getElementById('areaBtn');
-  const clearButtonD = document.getElementById('clearDistanceBtn');
-  const clearButtonA = document.getElementById('clearAreaBtn');
+  const clearDistanceButton = document.getElementById('clearDistanceBtn');
+  const clearAreaButton = document.getElementById('clearAreaBtn');
 
-
+  // Set-up event handlers for buttons and click events
   distanceButton.addEventListener("click", () => {
-    document.getElementById("distancePanel").appendChild(clearButtonD);
+    document.getElementById("distancePanel").appendChild(clearDistanceButton);
     distanceMeasurement();
-    activeView.ui.add(measurement, "distance-container");
   });
 
   areaButton.addEventListener("click", () => {
-    document.getElementById("areaPanel").appendChild(clearButtonA);
+    document.getElementById("areaPanel").appendChild(clearAreaButton);
     areaMeasurement();
-    activeView.ui.add(measurement, "area-container");
   });
 
-  clearButtonD.addEventListener("click", () => {
-    clearMeasurements();
-  });
-  clearButtonA.addEventListener("click", () => {
+  clearDistanceButton.addEventListener("click", () => {
     clearMeasurements();
   });
 
-  // Call the appropriate DistanceMeasurement2D or DirectLineMeasurement3D
+  clearAreaButton.addEventListener("click", () => {
+    clearMeasurements();
+  });
+
+  // Call the appropriate DistanceMeasurement3D
   function distanceMeasurement() {
-    measurement.activeTool = "direct-line";
-    measurement.container = "distance-container";
+    view.ui.remove(measurementDistance);
+    measurementDistance.activeTool = "direct-line";
+    measurementDistance.container = "distance-container";
+    view.ui.add(measurementDistance, "distance-container");
     distanceButton.classList.add("active");
     areaButton.classList.remove("active");
   }
 
-  // Call the appropriate AreaMeasurement2D or AreaMeasurement3D
+  // Call the appropriate AreaMeasurement3D 
   function areaMeasurement() {
-    measurement.activeTool = "area";
-    measurement.container = "area-container";
+    view.ui.remove(measurementArea);
+    measurementArea.activeTool = "area";
+    measurementArea.container = "area-container";
+    view.ui.add(measurementArea, "area-container");
     distanceButton.classList.remove("active");
     areaButton.classList.add("active");
   }
@@ -60,7 +65,8 @@ define(["esri/widgets/Measurement"], function(Measurement,) {
   function clearMeasurements() {
     distanceButton.classList.remove("active");
     areaButton.classList.remove("active");
-    measurement.clear();
+    measurementDistance.clear();
+    measurementArea.clear();
   }
       }
     };

@@ -197,11 +197,25 @@ calcite-loader {
     overflow: auto;
   }
 
-  .floating-measure {
+  .floating-distance {
     position: absolute;
     z-index: 100;
     top: 0px;
-    right: 65px;
+    right: 75px;
+    width: 250px;
+    min-height: 260px;
+    max-height: fit-content;
+    background-color: white;
+    border: 1px solid #ccc;
+    display: none; /* Initially hidden */
+    overflow: auto;
+  }
+
+  .floating-area {
+    position: absolute;
+    z-index: 1000;
+    top: 0px;
+    right: 50px;
     width: 250px;
     min-height: 260px;
     max-height: fit-content;

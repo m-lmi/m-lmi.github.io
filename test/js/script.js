@@ -106,13 +106,13 @@ require([
         togglePanel("distancePanel");
       });
 
+      document.getElementById("areaBtn").addEventListener("click", function() {
+        togglePanel("areaPanel");
+      });    
+
       document.getElementById("clearDistanceBtn").addEventListener("click", function() {
         togglePanel("distancePanel");
       });
-
-      document.getElementById("areaBtn").addEventListener("click", function() {
-        togglePanel("areaPanel");
-      });      
       
       document.getElementById("clearAreaBtn").addEventListener("click", function() {
         togglePanel("areaPanel");
@@ -130,7 +130,7 @@ require([
       togglePanel("editorPanel");
     });
 
-    // Toggle pannels, except that problematic measurements buttons
+    // Toggle pannels
     function togglePanel(panelId) {
         if (activePanel) {
             document.getElementById(activePanel).style.display = "none";
