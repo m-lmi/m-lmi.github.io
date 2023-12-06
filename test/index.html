@@ -38,6 +38,61 @@
 </head>
 
 <body>
+   <!-- splash screen--> 
+   <modal id="splashModal" class="modal drag-area">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 class="modal-title ">Óbyggðanefnd þrívíddarkort</h2>
+      <!-- ... -->
+      <h4 class="modal-disclaimer-title">Fyrirvari</h4>
+      <p class="modal-disclaimer">Þetta þrívíddarkort, sem ber heitið "Óbyggðanefnd þrívíddarkort," sýnir gögn sem tengjast umræðufundum óbyggðanefndar á Vestfjörðum.
+
+        Þrívíddarkortið býður upp á mörg verkfæri til að einfalda ákvarðanatöku og hafa sjónrænt samhengi af svæðum á Íslandi sem erfitt og kostnaðarsamt er að nálgast.
+        
+        Þótt við leggjum áherslu á nákvæmni gagnanna ábyrgjumst við ekki réttmæti þeirra upplýsinga sem birtast 
+        á kortinu. <br /><br />
+        Tiltæk verkfæri leyfa, mælingar í þrívídd, veður- og dagsbirtuhermi, marga möguleika til að sýna lög til að skilgreina mörk eins og ár, vötn og sveitarfélagsmörk, verkfæri til að breyta lagi í beinni og háþróuð leitartæki fyrir örnefni. Smá vísir neðst til hægri á kortinu sýnir hæðina á músarstaðnum.
+        Mikið úrval grunnkorta gerir notandanum kleift að finna það sem hentar best fyrir notkun þeirra.<br /><br />
+        Notkun þessa korts er á ábyrgð notanda.<br /><br />
+        Við óskum þér ánægjulegrar upplifunar og góðrar vinnu með þetta þrívíddarkort.
+        </p>
+      <!-- ... -->
+      <h4 class="modal-guide-title">Leiðbeiningar</h4>
+      <p class="modal-guide">
+        Leiðbeiningar: <a href="https://leidbeiningar.lmi.is/files/Kortasj%C3%A1-user%20guide%20-%203D_IS.pdf" class="modal-link" target="_blank">Ýttu hér</a><br />
+      </p>  
+      <!-- ... -->     
+      <h4 class="modal-guide-title">Viðbótarupplýsingar:</h4>
+      <ul class="modal-info-list">
+        <li><strong>Gagnagrunnur:</strong> Gögnin eru veitt af Óbyggðanefnd og Landmælingum Ísland./li>
+        <li><strong>Uppfærslur:</strong> Kortið er endurnýjað ársfjórðungslega.</li>
+        <li><strong>Takmörkun á notkun: </strong> Vinsamlegast sjáið fyrirvarann um notkunartakmarkanir.</li>
+        <li><strong>Eiginleikar:</strong> Kortið býður upp á mælitól, veðurhermi, dagsbirtuhermi, og breytingartól.</li>
+        <li><strong>Aðrar upplýsingar:</strong> Nánari upplýsingar um verkefni frá óbyggðanefnd má finna á 
+          <a class= "modal-link" href="https://www.obyggdanefnd.is/" target="_blank">Óbyggðanefnd vefsíðunni</a></li>
+      </ul>
+      <!-- ... -->
+      <!-- Trigger text/icon -->
+      <span class="modal-tooltip-trigger">Músarstjórn 🖱️</span>
+      <!-- Tooltip container -->
+      <div class="modal-tooltip">
+        <img src="https://ftp.lmi.is/.stm/michaela/Thumbs/mpuse.png" alt="Mouse Navigation Guide"> 
+        <script>
+          // Get the tooltip and its trigger
+          const tooltip = document.querySelector('.modal-tooltip');
+          const trigger = document.querySelector('.modal-tooltip-trigger');
+          // Show tooltip on hover
+          trigger.addEventListener('mouseover', function() {
+            tooltip.style.display = 'block';
+          });
+          // Hide tooltip when mouse leaves
+          trigger.addEventListener('mouseout', function() {
+            tooltip.style.display = 'none';
+          });
+        </script>
+      </div>
+    </div>
+  </modal>
     <!-- Map with header, actiona bars and widgets-->
     <calcite-shell content-behind>
       <!-- header: project logo, map title and nav-button-->

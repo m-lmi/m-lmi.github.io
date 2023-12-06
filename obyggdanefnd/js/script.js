@@ -7,6 +7,7 @@ require([
   "modules/layerEditor",
   "modules/searchWidget",
   "modules/mouseElevation",
+  "modules/splashScreen",
   "esri/config",
   "esri/WebMap",
   "esri/views/SceneView",
@@ -38,6 +39,7 @@ require([
   LayerEditor,
   SearchWidget,
   MouseElevation,
+  SplashScreen,
   esriConfig,
   WebMap,
   SceneView,
@@ -71,6 +73,7 @@ require([
   BasicWidgets.setupBasicWidgets(mapView);  
   LayerEditor.editLayer(map, mapView);     
   MouseElevation.setupMouseElevation(mapView);
+  SplashScreen.showSplashScreen(mapView);
   
 
   /////////////// IDEAS TO ADD ///////////////

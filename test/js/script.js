@@ -8,7 +8,7 @@ require([
     "modules/layerEditor",
     "modules/searchWidget",
     "modules/mouseElevation",
-    //"modules/cameraPosition",
+    "modules/splashScreen",
     "esri/config",
     "esri/WebMap",
     "esri/views/SceneView",
@@ -40,7 +40,7 @@ require([
     LayerEditor,
     SearchWidget,
     MouseElevation,
-    //CameraPosition,
+    SplashScreen,
     esriConfig,
     WebMap,
     SceneView,
@@ -74,6 +74,8 @@ require([
     SearchWidget.setupSearchWidgets(map, mapView);
     LayerEditor.editLayer(map, mapView);
     MouseElevation.setupMouseElevation(mapView);
+    SplashScreen.showSplashScreen(mapView);
+
 
     ////// Import example
     //const zElement = setupMouseElevation(mapView);
