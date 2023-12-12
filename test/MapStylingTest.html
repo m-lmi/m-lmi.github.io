@@ -2,9 +2,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>Edit features in 3D with the Editor widget | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.28/"></script>
+    <title>Intro to SceneView - Create a 3D map | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
     <style>
       html,
       body,
@@ -15,292 +13,163 @@
         width: 100%;
       }
     </style>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.28/"></script>
+
     <script>
-      require([  "esri/Map", "esri/layers/FeatureLayer", "esri/layers/support/TileInfo", "esri/layers/WebTileLayer", "esri/WebScene", "esri/views/SceneView", "esri/widgets/Editor"], (
-        Map,
-        FeatureLayer,
-        TileInfo,
-        WebTileLayer,
-        WebScene,
-        SceneView,
-        Editor
-      ) => {
-
-        // Create a map from the referenced webscene item id
-        const webscene = new WebScene({
-          portalItem: {
-            id: "ad3a0bfc93cd4fbfa37b0fd339c80a3e"
-          }
-        });
-
-          // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
-          const map = new Map({
-            basemap: "satellite",
-            ground: "world-elevation",
-            //layers:[],
-          });
-
-        // Create a layer with visualVariables to use interactive handles for size and rotation
-        /*
-        const recreationLayer = new FeatureLayer({
-          title: "Recreation",
-          url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/EditableFeatures3D/FeatureServer/1",
-          elevationInfo: {
-            mode: "absolute-height"
-          },
-          renderer: {
-            type: "unique-value", // autocasts as new UniqueValueRenderer()
-            field: "TYPE",
-            visualVariables: [
-              {
-                // size can be modified with the interactive handle
-                type: "size",
-                field: "SIZE",
-                axis: "height",
-                valueUnit: "meters"
-              },
-              {
-                // rotation can be modified with the interactive handle
-                type: "rotation",
-                field: "ROTATION"
-              }
-            ],
-            uniqueValueInfos: [
-              {
-                value: "1",
-                label: "Slide",
-                symbol: {
-                  type: "point-3d", // autocasts as new PointSymbol3D()
-                  symbolLayers: [
-                    {
-                      type: "object",
-                      resource: {
-                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Slide.glb"
-                      }
-                    }
-                  ],
-                  styleOrigin: {
-                    styleName: "EsriRecreationStyle",
-                    name: "Slide"
-                  }
-                }
-              },
-              {
-                value: "2",
-                label: "Swing",
-                symbol: {
-                  type: "point-3d", // autocasts as new PointSymbol3D()
-                  symbolLayers: [
-                    {
-                      type: "object",
-                      resource: {
-                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Swing.glb"
-                      }
-                    }
-                  ],
-                  styleOrigin: {
-                    styleName: "EsriRecreationStyle",
-                    name: "Swing"
-                  }
-                }
-              }
-            ]
-          }
-        });
-
-        webscene.add(recreationLayer);*/
+      require(["esri/Map", 
+      "esri/views/SceneView", 
+      "esri/widgets/Home",
+      "esri/layers/WFSLayer",
+      "esri/layers/ogc/wfsUtils", 
+      "esri/widgets/LayerList",
+      "esri/geometry/geometryEngine",
+      "esri/layers/FeatureLayer",
+      "esri/Graphic",
+      "esri/geometry/SpatialReference",
+      "esri/geometry/Point",
+    ], (Map, SceneView, Home, WFSLayer, wfsUtils, LayerList, GeometryEngine, FeatureLayer, Graphic, SpatialReference, Point) => {
         
-        /*
-          // Create a layer with visualVariables to use interactive handles for size and rotation
-          const testLayer = new FeatureLayer({
-          title: "Test",
-          url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/testEditable/FeatureServer/0",
-          editable: true,
-          elevationInfo: {
-            mode: "absolute-height"
-          },
-          renderer: {
-            type: "unique-value", // autocasts as new UniqueValueRenderer()
-            field: "TYPE",
-            visualVariables: [
-              {
-                // size can be modified with the interactive handle
-                type: "size",
-                field: "SIZE",
-                axis: "height",
-                valueUnit: "meters"
-              },
-              {
-                // rotation can be modified with the interactive handle
-                type: "rotation",
-                field: "ROTATION"
-              }
-            ],
-            uniqueValueInfos: [
-              {
-                value: "1",
-                label: "Slide",
-                symbol: {
-                  type: "point-3d", // autocasts as new PointSymbol3D()
-                  symbolLayers: [
-                    {
-                      type: "object",
-                      resource: {
-                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Slide.glb"
-                      }
-                    }
-                  ],
-                  styleOrigin: {
-                    styleName: "EsriRecreationStyle",
-                    name: "Slide"
-                  }
-                }
-              },
-              {
-                value: "2",
-                label: "Swing",
-                symbol: {
-                  type: "point-3d", // autocasts as new PointSymbol3D()
-                  symbolLayers: [
-                    {
-                      type: "object",
-                      resource: {
-                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Swing.glb"
-                      }
-                    }
-                  ],
-                  styleOrigin: {
-                    styleName: "EsriRecreationStyle",
-                    name: "Swing"
-                  }
-                }
-              }
-            ]
-          }
-        });
-        webscene.add(testLayer);
-        */
-
-        const polygonLayer = new FeatureLayer({
-          title: "Test",
-          url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/TestPolygon/FeatureServer/",
-          editable: true,
-          elevationInfo: {
-            mode: "on-the-ground"
-          },
-          renderer: {
-            type: "simple", // Change the renderer type to 'simple'
-            symbol: {
-              type: "polygon-3d", // Specify 'polygon-3d' symbol type
-              symbolLayers: [
-                {
-                  type: "fill", // Use 'extrude' symbol layer for polygon extrusion
-                  material: {
-                    color: [255, 0, 0, 0.7] // Set the color and transparency for the polygons
-                  },/* for extrude mode
-                  edges: {
-                    type: "solid", // Specify solid edges
-                    color: [50, 50, 50, 0.5] // Set edge color and transparency
-                  },
-                  size: 10 // Adjust extrusion height as needed
-                  */
-                }
-              ]
-            }
-          }
-        });
-        map.add(polygonLayer);
-
-              
-        const demTileInfo = new TileInfo({
-          spatialReference: {
-            wkid: 3057 // Set the WKID for EPSG:3057 projection
-          },
-          origin: {
-            x: 0,
-            y: 0
-          },
-          lods: [
-            { level: 0, resolution: 4096 },
-            { level: 1, resolution: 2048 },
-            { level: 2, resolution: 1024},
-            { level: 3, resolution: 512 },
-            { level: 4, resolution: 256 },
-            { level: 5, resolution: 128 },
-            { level: 6, resolution: 64 },
-            { level: 7, resolution: 32 },
-            { level: 8, resolution: 16 },
-            { level: 9, resolution: 8 },
-            { level: 10, resolution: 4 },
-            { level: 11, resolution: 2 },
-            { level: 12, resolution: 1 },
-            { level: 13, resolution: 0.5 },
-            { level: 14, resolution: 0.25 },
-            { level: 15, resolution: 0.125 },
-            { level: 16, resolution: 0.0625 },
-            // Add other levels as per your requirement
-          ],
-          size: [512, 512] // Tile size
+      const map = new Map({
+          basemap: "satellite",
+            ground: "world-elevation",
         });
 
-          // Web Tile Layer DEM
-          const demLayer = new WebTileLayer({
-            urlTemplate: "https://gis.lmi.is/mapcache/isn93/tms/1.0.0/IslandsDEMDaylight@EPSG:3057/{z}/{x}/{-y}.png",
-            //copyright: 'Map data from &copy; <a href="https://www.loftmyndir.is/" target="_blank">Loftmyndir</a> Map design by &copy; <a href="http://opentopomap.org/" target="_blank">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank">CC-BY-SA</a>) contributors'
-            title: "ÍslandsDEM",
-            spatialReference: {
-              wkid: 3057 // Set the WKID for EPSG:3057 projection
-            },
-            tileInfo: demTileInfo,
-          });
-          map.add(demLayer)
-
-      
-      // The clipping extent for the scene
-      const drangaExtent = {
-        // autocasts as new Extent()
-        xmax: -21,
-        xmin: -23.5,
-        ymax: 66.5,
-        ymin: 65.5,
-        spatialReference: {
-          // autocasts as new SpatialReference()
-          wkid: 4326
-        }
-      };
-  
-      // Make new 3D SceneView
         const view = new SceneView({
-          container: "viewDiv", //This your main container in HTML for all the widgets
+          container: "viewDiv",
           map: map,
-          viewingMode: "global", //opion "local" to make cropped 2D
-          extent: drangaExtent,
-          environment: {
-            weather: {
-              type: "cloudy", // autocasts as new CloudyWeather({ cloudCover: 1 })
-              cloudCover: 0.2
-            },
-            atmosphere: {
-              quality: "high"
-            },
+          camera: {
+          position: [-21.9, 64, 8000],
+          heading: 0,
+          tilt: 10
           }
         });
-/*
-        const view0 = new SceneView({
-          container: "viewDiv",
-          qualityProfile: "high",
-          map: webscene
-        });*/
 
-        view.when(() => {
-          view.popupEnabled = false; //disable popups
-          // Create the Editor
-          const editor = new Editor({
-            view: view
-          });
-          // Add widget to top-right of the view
-          view.ui.add(editor, "top-right");
+      // Multipoint features are not supported in 3D sceneView
+      // https://developers.arcgis.com/javascript/latest/api-reference/esri-views-SceneView.html#events
+      // https://developers.arcgis.com/javascript/latest/sample-code/sandbox/?sample=layers-featurelayer-large-collection/
+  
+      async function multiPointToPoint(layer) {
+        return new Promise((resolve, reject) => {
+          layer.load().then(() => {
+            // Query all features from the WFSLayer
+            layer.queryFeatures().then((response) => {
+              const features = response.features;
+              // Create a new FeatureLayer to hold the converted single point features
+              const singlePointLayer = new FeatureLayer({
+                source: [], // Empty source initially
+                fields: layer.fields, // Copy fields from the original layer
+                objectIdField: layer.objectIdField, // Object ID field from the original layer
+                geometryType: "point", // Geometry type for the features
+                spatialReference: layer.spatialReference // Spatial reference for the features
+              });
+              // Iterate through the retrieved features and convert Multipoint to Point features
+              const singlePointFeatures = features.map((feature) => {
+                const multipointGeometry = feature.geometry;
+                const singlePointGeometries = multipointGeometry.points.map((point) => {
+                  return new Point({
+                    x: point[0], // Longitude (X-coordinate) of the point
+                    y: point[1], // Latitude (Y-coordinate) of the point
+                    spatialReference: multipointGeometry.spatialReference // Spatial reference of the point
+                  });
+                });
+                // Create individual point features from the Multipoint
+                return singlePointGeometries.map((geometry) => {
+                  return new Graphic({
+                    geometry: geometry,
+                    attributes: feature.attributes, // Copy attributes from the original feature
+                  });
+                });
+              }).flat(); // Flatten the array of point features
+              // Add the single point features to the new FeatureLayer
+              singlePointLayer.source.addMany(singlePointFeatures);
+              resolve(singlePointLayer); // Resolve the promise with the created FeatureLayer
+            }).catch(reject); // Reject the promise if there is an error querying features
+          }).catch(reject); // Reject the promise if there is an error loading the layer
         });
+      }
+
+      // Usage example:
+      const ornefniMultipointLayer = new WFSLayer({
+        url: "https://gis.lmi.is/geoserver/wfs", // URL to your WFS endpoint
+        name: "ornefni_punktar", // Name of the FeatureType
+        copyright: "Landmælingar Íslands"
+      });
+
+      async function loadOrnefniPointLayer(map) {
+        try {
+          const ornefniPointLayer = await multiPointToPoint(ornefniMultipointLayer);
+
+                ornefniPointLayer.renderer = {
+                      type: "simple", // autocasts as new SimpleRenderer()
+                      symbol: {
+                        type: "simple-marker",
+                        style: "circle", // or "square", "cross", etc., based on your preference
+                        color: [0, 0, 0, 0.7],
+                        size: 4,
+                      }, // Apply the defined symbol to the renderer
+                    };
+                ornefniPointLayer.outFields = ["*"];
+                ornefniPointLayer.labelingInfo = labelingInfo = [
+                  {
+                    // When using callouts on labels, "above-center" is the only allowed position
+                    labelPlacement: "above-center",
+                    labelExpressionInfo: {
+                      value: "{ornefni}"
+                    },
+                    symbol: {
+                      type: "label-3d", // autocasts as new LabelSymbol3D()
+                      symbolLayers: [
+                        {
+                          type: "text", // autocasts as new TextSymbol3DLayer()
+                          material: {
+                            color: "black"
+                          },
+                          halo: {
+                            color: [255, 255, 255, 0.7],
+                            size: 2
+                          },
+                          size: 10
+                        }
+                      ],
+                      // Labels need a small vertical offset that will be used by the callout
+                      verticalOffset: {
+                        screenLength: 50,
+                        maxWorldLength: 2000,
+                        minWorldLength: 30
+                      },
+                      // The callout has to have a defined type (currently only line is possible)
+                      // The size, the color and the border color can be customized
+                      callout: {
+                        type: "line", // autocasts as new LineCallout3D()
+                        size: 0.5,
+                        color: [0, 0, 0],
+                        border: {
+                          color: [255, 255, 255, 0.7]
+                        }
+                      }
+                    }
+                  }
+                ];
+
+          // Add the resulting FeatureLayer to the map
+          map.add(ornefniPointLayer);
+          await ornefniPointLayer.when(); // Wait for the layer to load
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
+      // Call the asynchronous function
+      loadOrnefniPointLayer(map);
+
+        const homeBtn = new Home({
+          view: view  
+        });
+  
+        view.ui.add(homeBtn, "top-left");
+        view.ui.move("zoom", "top-left"); //bottom-right
       });
     </script>
   </head>

@@ -1,4 +1,8 @@
 // Setting up the camera info.
+// Coded using AMD structure --> need to change to ESM
+// Needs a 3d scene view to work and needs to be added to the function
+//require(["modules/mouseElevation"], (MouseElevation) => {
+//  MouseElevation.setupMouseElevation(view);});
 define(["esri/layers/ElevationLayer",], function(ElevationLayer) {
   return {
       setupMouseElevation: function(mapView) {

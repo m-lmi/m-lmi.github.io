@@ -1,64 +1,40 @@
 // mapConfig.js  Define the webScene and setting the environment
 define([
-    "esri/config",
-    "esri/WebMap",
-    "esri/views/SceneView",
     "esri/Map",
-    "esri/WebScene",
-    "esri/Basemap",
-    "esri/widgets/Legend",
-    "esri/widgets/Weather",
-    "esri/widgets/Daylight",
-    "esri/widgets/LayerList",
-    "esri/widgets/Expand",
-    //"esri/geometry/ElevationLayer"
-    "esri/symbols/LabelSymbol3D",
-    "esri/symbols/TextSymbol3DLayer",
-    "esri/symbols/LineSymbol3D",
-    "esri/symbols/Symbol3D",
     "esri/layers/GroupLayer",  
-    "esri/widgets/LayerList",
-    "esri/layers/support/LabelClass",
     "esri/layers/GeoJSONLayer",
     "esri/layers/SceneLayer",
     "esri/layers/FeatureLayer",
-    "esri/layers/OGCFeatureLayer",
     "esri/layers/WMSLayer",
     "esri/layers/WFSLayer",
     "esri/renderers/UniqueValueRenderer",
     "esri/layers/WebTileLayer",
     "esri/geometry/SpatialReference",
     "esri/layers/support/TileInfo",
+    "esri/layers/ogc/wfsUtils", 
+    "esri/geometry/geometryEngine",
+    "esri/Graphic",
+    "esri/layers/GraphicsLayer",
+    "esri/geometry/Point",
+    "modules/multipointToPoint",
     ], function(
-      esriConfig,
-      WebMap,
-      SceneView,
       Map,
-      WebScene, 
-      Basemap,
-      Legend,
-      Weather, 
-      Daylight, 
-      LayerList,
-      Expand,
-      //ElevationLayer
-      LabelSymbol3D,
-      TextSymbol3DLayer,
-      LineSymbol3D,
-      Symbol3D,
       GroupLayer, 
-      LayerList, 
-      LabelClass,
       GeoJSONLayer,
       SceneLayer,
       FeatureLayer,
-      OGCFeatureLayer,
       WMSLayer,
       WFSLayer,
       UniqueValueRenderer,
       WebTileLayer,
       SpatialReference, 
       TileInfo,
+      wfsUtils, 
+      GeometryEngine, 
+      Graphic, 
+      GraphicsLayer,
+      Point,
+      MultipointToPoint,
       ) {
       return {
         setupLayers: function() {
@@ -403,92 +379,6 @@ define([
           ]
         });
 
-        // Örnefni punktar
-        /*
-        const ornefniPunktar = new GeoJSONLayer({
-          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_punktar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_punktar&outputFormat=json",
-          copyright: "Landmælingar Íslands IS50V",
-          visible: true, 
-          title: "Örnefni punktar",
-          //elevationInfo: {mode: "on-the-ground"}, //https://developers.arcgis.com/javascript/latest/api-reference/esri-layers-FeatureLayer.html#elevationInfo
-          renderer: {
-            type: "simple", // autocasts as new SimpleRenderer()
-            symbol: {
-              type: "point-3d", // autocasts as new PointSymbol3D()
-              symbolLayers: [
-                {
-                  type: "icon", // autocasts as new IconSymbol3DLayer()
-                  resource: {
-                    primitive: "circle"
-                  },
-                  material: {
-                    color: "black"
-                  },
-                  size: 4
-                }
-              ]
-            }
-          },
-          outFields: ["*"],
-          // Add labels with callouts of type line to the icons
-          labelingInfo: [
-            {
-              // When using callouts on labels, "above-center" is the only allowed position
-              labelPlacement: "above-center",
-              labelExpressionInfo: {
-                value: "{ornefni}"
-              },
-              symbol: {
-                type: "label-3d", // autocasts as new LabelSymbol3D()
-                symbolLayers: [
-                  {
-                    type: "text", // autocasts as new TextSymbol3DLayer()
-                    material: {
-                      color: "black"
-                    },
-                    halo: {
-                      color: [255, 255, 255, 0.7],
-                      size: 2
-                    },
-                    size: 10
-                  }
-                ],
-                // Labels need a small vertical offset that will be used by the callout
-                verticalOffset: {
-                  screenLength: 50,
-                  maxWorldLength: 2000,
-                  minWorldLength: 30
-                },
-                // The callout has to have a defined type (currently only line is possible)
-                // The size, the color and the border color can be customized
-                callout: {
-                  type: "line", // autocasts as new LineCallout3D()
-                  size: 0.5,
-                  color: [0, 0, 0],
-                  border: {
-                    color: [255, 255, 255, 0.7]
-                  }
-                }
-              }
-            }
-          ]
-        });
-        /*
-        const ornefniPunktar = new GeoJSONLayer({
-          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_punktar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_punktar&outputFormat=json",
-          copyright: "Landmælingar Íslands IS50V",
-          visible: true, 
-          title: "Örnefni punktar",
-          //renderer: rendererOrnefniP,
-          });*/
-
-        // Create a GroupLayer to contain örnefni
-        const ornefniLayer = new GroupLayer({
-          title: "Örnefni",
-          visible: false,
-          layers: [ornefniFlakar, ornefniLinur,] //ornefniPunktar],
-         });
-
         // Loftmyndir XYZ
         /*
         const tileInfo = new TileInfo({
@@ -584,7 +474,6 @@ define([
             //tileInfo: demTileInfo,
           });*/
 
-
         // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
         const map = new Map({
             basemap: "satellite",
@@ -593,14 +482,25 @@ define([
                 sveitarfelagLayer,
                 wmsLayer,
                 sceneLayer,
-                ornefniLayer,
                 vatnafarLayer,
                 obnLayer,
                 //loftmyndirLayer,
                 //demLayer
             ],
             });
-        
+
+        // Add point layer of örnefni to map
+        MultipointToPoint.convertToPoint(map);
+
+        // Create a GroupLayer to contain örnefni
+        const ornefniLayer = new GroupLayer({
+          title: "Örnefni",
+          visible: false,
+          layers: [ornefniFlakar, ornefniLinur],
+          });
+
+          map.add(ornefniLayer)
+
         return map;
         }    
       };

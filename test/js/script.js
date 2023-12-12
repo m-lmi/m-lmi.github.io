@@ -9,6 +9,7 @@ require([
     "modules/searchWidget",
     "modules/mouseElevation",
     "modules/splashScreen",
+    "modules/multipointToPoint",
     "esri/config",
     "esri/WebMap",
     "esri/views/SceneView",
@@ -41,6 +42,7 @@ require([
     SearchWidget,
     MouseElevation,
     SplashScreen,
+    MultipointToPoint,
     esriConfig,
     WebMap,
     SceneView,
@@ -88,6 +90,7 @@ require([
     //https://developers.arcgis.com/javascript/latest/sample-code/overview-map/
     //https://developers.arcgis.com/javascript/latest/sample-code/views-switch-2d-3d/
     //https://developers.arcgis.com/javascript/latest/sample-code/layers-featurelayer-shapefile/
+    //https://developers.arcgis.com/javascript/latest/sample-code/sandbox/?sample=layers-featurelayer-large-collection/
 
 
     let activePanel = null;

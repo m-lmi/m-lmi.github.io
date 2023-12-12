@@ -2,11 +2,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>Sketch in 3D | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
-
+    <title>Edit features in 3D with the Editor widget | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
     <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/4.28/"></script>
-
     <style>
       html,
       body,
@@ -16,418 +14,252 @@
         height: 100%;
         width: 100%;
       }
-
-      #sketchPanel {
-        width: 200px;
-        padding: 10px;
-        background-color: rgba(255, 255, 255, 0.8);
-      }
-
-      .esri-button {
-        margin: 2px;
-      }
-
-      #configurationDiv {
-        padding: 10px;
-        text-align: left;
-        width: 250px;
-      }
-
-      #configurationInfoDiv {
-        padding: 7px;
-        text-align: left;
-      }
-
-      #snappingctrlkey {
-        display: inline;
-      }
-
-      #actionbuttons,
-      #edgeoperationbuttons {
-        display: none;
-      }
-
-      .update-options {
-        display: flex;
-        flex-direction: row;
-      }
-
-      .edge-button,
-      .shape-button {
-        flex: 1;
-        border-style: solid;
-        border-width: 1px;
-        border-image: none;
-      }
-
-      .edge-button-selected,
-      .shape-button-selected {
-        background: #4c4c4c;
-        color: #fff;
-      }
     </style>
     <script>
-      require([
-        "esri/Map",
-        "esri/views/SceneView",
-        "esri/layers/GraphicsLayer",
-        "esri/widgets/Sketch/SketchViewModel",
-        "esri/widgets/Expand",
-        "esri/core/reactiveUtils"
-      ], (Map, SceneView, GraphicsLayer, SketchViewModel, Expand, reactiveUtils) => {
-        // the layer where the graphics are sketched
-        const graphicsLayer = new GraphicsLayer({
-          elevationInfo: { mode: "on-the-ground" },
-          title: "Sketch GraphicsLayer"
-        });
+      require([  "esri/Map", "esri/layers/FeatureLayer", "esri/layers/support/TileInfo", "esri/layers/WebTileLayer", "esri/WebScene", "esri/views/SceneView", "esri/widgets/Editor"], (
+        Map,
+        FeatureLayer,
+        TileInfo,
+        WebTileLayer,
+        WebScene,
+        SceneView,
+        Editor
+      ) => {
 
-        const map = new Map({
-          basemap: "satellite",
-          layers: [graphicsLayer],
-          ground: "world-elevation"
-        });
+        // Create a map from the referenced webscene item id
+        /*const webscene = new WebScene({
+          portalItem: {
+            id: "ad3a0bfc93cd4fbfa37b0fd339c80a3e"
+          }
+        });*/
 
-        const view = new SceneView({
-          container: "viewDiv",
-          map: map,
-          camera: {
-            position: [9.76504392, 46.43538764, 2073.31548],
-            heading: 226.79,
-            tilt: 88.35
+          // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
+          const map = new Map({
+            basemap: "satellite",
+            ground: "world-elevation",
+            //layers:[],
+          });
+
+        // Create a layer with visualVariables to use interactive handles for size and rotation
+        /*
+        const recreationLayer = new FeatureLayer({
+          title: "Recreation",
+          url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/EditableFeatures3D/FeatureServer/1",
+          elevationInfo: {
+            mode: "absolute-height"
           },
-          qualityProfile: "high"
-        });
-
-        const blue = [82, 82, 122, 0.9];
-        const white = [255, 255, 255, 0.8];
-
-
-        // point symbol used for sketching points of interest
-        const point = {
-          type: "point-3d",
-          symbolLayers: [
-            {
-              type: "icon",
-              size: "30px",
-              resource: { primitive: "kite" },
-              outline: {
-                color: blue,
-                size: "3px"
+          renderer: {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            field: "TYPE",
+            visualVariables: [
+              {
+                // size can be modified with the interactive handle
+                type: "size",
+                field: "SIZE",
+                axis: "height",
+                valueUnit: "meters"
               },
-              material: {
-                color: white
+              {
+                // rotation can be modified with the interactive handle
+                type: "rotation",
+                field: "ROTATION"
               }
-            }
-          ]
-        };
-
-        // Set-up event handlers for buttons and click events
-        const enabledcheckbox = document.getElementById("enabledcheckbox");
-        const startbuttons = document.getElementById("startbuttons");
-        const actionbuttons = document.getElementById("actionbuttons");
-        const edgeoperationbuttons = document.getElementById("edgeoperationbuttons");
-        const tooltipOptionsheckbox = document.getElementById("tooltipOptionsheckbox");
-        const configurationInfoDiv = document.getElementById("configurationInfoDiv");
-        const labelOptionscheckbox = document.getElementById("labelOptionscheckbox");
-        const selfsnappingcheckbox = document.getElementById("selfsnappingcheckbox");
-        const snappingctrlkey = document.getElementById("snappingctrlkey");
-        const featuresnappingcheckbox = document.getElementById("featuresnappingcheckbox");
-
-        // load the default value from the snapping checkbox
-        let snappingcheckboxsavedstate = enabledcheckbox.checked ? true : false;
-
-        // define the SketchViewModel and pass in the symbols for each geometry type
-        // set the snappingOptions.selfEnabled to the default state
-        const sketchViewModel = new SketchViewModel({
-          layer: graphicsLayer,
-          view: view,
-          pointSymbol: point,
-          tooltipOptions: { enabled: true },
-          labelOptions: { enabled: true },
-          defaultUpdateOptions: {
-            tool: "reshape"
+            ],
+            uniqueValueInfos: [
+              {
+                value: "1",
+                label: "Slide",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Slide.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Slide"
+                  }
+                }
+              },
+              {
+                value: "2",
+                label: "Swing",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Swing.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Swing"
+                  }
+                }
+              }
+            ]
           }
         });
 
-        // after drawing the geometry, enter the update mode to update the geometry
-        // and the deactivate the buttons
-        sketchViewModel.on("create", (event) => {
-          if (event.state === "complete") {
-            startbuttons.style.display = "inline";
-            actionbuttons.style.display = "none";
-            sketchViewModel.update(event.graphic);
-          }
-          if (event.state === "cancel") {
-            startbuttons.style.display = "inline";
-            actionbuttons.style.display = "none";
+        webscene.add(recreationLayer);*/
+        
+        /*
+          // Create a layer with visualVariables to use interactive handles for size and rotation
+          const testLayer = new FeatureLayer({
+          title: "Test",
+          url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/testEditable/FeatureServer/0",
+          editable: true,
+          elevationInfo: {
+            mode: "absolute-height"
+          },
+          renderer: {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            field: "TYPE",
+            visualVariables: [
+              {
+                // size can be modified with the interactive handle
+                type: "size",
+                field: "SIZE",
+                axis: "height",
+                valueUnit: "meters"
+              },
+              {
+                // rotation can be modified with the interactive handle
+                type: "rotation",
+                field: "ROTATION"
+              }
+            ],
+            uniqueValueInfos: [
+              {
+                value: "1",
+                label: "Slide",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Slide.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Slide"
+                  }
+                }
+              },
+              {
+                value: "2",
+                label: "Swing",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Swing.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Swing"
+                  }
+                }
+              }
+            ]
           }
         });
-
-        sketchViewModel.on("update", (event) => {
-          if (event.state === "start") {
-            startbuttons.style.display = "none";
-            actionbuttons.style.display = "inline";
-            if (event.graphics[0].geometry.type === "polygon" || event.graphics[0].geometry.type === "polyline") {
-              edgeoperationbuttons.style.display = "inline";
-            }
-          }
-          if (event.state === "complete") {
-            startbuttons.style.display = "inline";
-            actionbuttons.style.display = "none";
-            edgeoperationbuttons.style.display = "none";
-          }
+        webscene.add(testLayer);
+        */
+              
+        const demTileInfo = new TileInfo({
+          spatialReference: {
+            wkid: 3057 // Set the WKID for EPSG:3057 projection
+          },
+          origin: {
+            x: 0,
+            y: 0
+          },
+          lods: [
+            { level: 0, resolution: 4096 },
+            { level: 1, resolution: 2048 },
+            { level: 2, resolution: 1024},
+            { level: 3, resolution: 512 },
+            { level: 4, resolution: 256 },
+            { level: 5, resolution: 128 },
+            { level: 6, resolution: 64 },
+            { level: 7, resolution: 32 },
+            { level: 8, resolution: 16 },
+            { level: 9, resolution: 8 },
+            { level: 10, resolution: 4 },
+            { level: 11, resolution: 2 },
+            { level: 12, resolution: 1 },
+            { level: 13, resolution: 0.5 },
+            { level: 14, resolution: 0.25 },
+            { level: 15, resolution: 0.125 },
+            { level: 16, resolution: 0.0625 },
+            // Add other levels as per your requirement
+          ],
+          size: [512, 512] // Tile size
         });
 
-        /**********************************************
-         * Drawing UI with configuration
-         *********************************************/
-
-        const drawButtons = Array.prototype.slice.call(document.getElementsByClassName("starttool"));
-        const cancelBtn = document.getElementById("cancel");
-        const doneBtn = document.getElementById("done");
-
-        // set event listeners to activate sketching graphics
-        drawButtons.forEach((btn) => {
-          btn.addEventListener("click", (event) => {
-            // to activate sketching the create method is called passing in the geometry type
-            // from the data-type attribute of the html element
-            sketchViewModel.create(event.target.getAttribute("data-type"));
-            startbuttons.style.display = "none";
-            actionbuttons.style.display = "inline";
+          // Web Tile Layer DEM
+          const demLayer = new WebTileLayer({
+            urlTemplate: "https://gis.lmi.is/mapcache/isn93/tms/1.0.0/IslandsDEMDaylight@EPSG:3057/{z}/{x}/{-y}.png",
+            //copyright: 'Map data from &copy; <a href="https://www.loftmyndir.is/" target="_blank">Loftmyndir</a> Map design by &copy; <a href="http://opentopomap.org/" target="_blank">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank">CC-BY-SA</a>) contributors'
+            title: "ÍslandsDEM",
+            spatialReference: {
+              wkid: 3057 // Set the WKID for EPSG:3057 projection
+            },
+            tileInfo: demTileInfo,
           });
-        });
+          map.add(demLayer)
 
-        cancelBtn.addEventListener("click", (event) => {
-          sketchViewModel.cancel();
-        });
-        doneBtn.addEventListener("click", (event) => {
-          if (sketchViewModel.updateGraphics.length !== 0) {
-            sketchViewModel.complete();
-          } else {
-            sketchViewModel.cancel();
-          }
-        });
-
-        view.ui.add("sketchPanel", "top-right");
-
-        // default values for edge/move operations
-        let edgeType = "split";
-        let shapeType = "move";
-
-        // Handling the configuration for edge operation
-        const noneEdgeBtn = document.getElementById("none-edge-button");
-        const splitEdgeBtn = document.getElementById("split-edge-button");
-        const offsetEdgeBtn = document.getElementById("offset-edge-button");
-        noneEdgeBtn.onclick = edgeChangedClickHandler;
-        splitEdgeBtn.onclick = edgeChangedClickHandler;
-        offsetEdgeBtn.onclick = edgeChangedClickHandler;
-
-        function edgeChangedClickHandler(event) {
-          edgeType = event.target.value;
-
-          // handle the buttons
-          const buttons = document.getElementsByClassName("edge-button");
-          for (const button of buttons) {
-            button.classList.remove("edge-button-selected");
-          }
-          this.classList.add("edge-button-selected");
-          restartUpdateMode({
-            reshapeOptions: {
-              edgeOperation: edgeType,
-              shapeOperation: shapeType
-            }
-          });
+      
+      // The clipping extent for the scene
+      const drangaExtent = {
+        // autocasts as new Extent()
+        xmax: -21,
+        xmin: -23.5,
+        ymax: 66.5,
+        ymin: 65.5,
+        spatialReference: {
+          // autocasts as new SpatialReference()
+          wkid: 4326
         }
-
-        // Handling the configuration for move operation
-        const noneShapeButton = document.getElementById("none-shape-button");
-        const moveShapeButton = document.getElementById("move-shape-button");
-        noneShapeButton.onclick = shapeChangedClickHandler;
-        moveShapeButton.onclick = shapeChangedClickHandler;
-
-        function shapeChangedClickHandler(event) {
-          shapeType = event.target.value;
-
-          // handle the buttons
-          const buttons = document.getElementsByClassName("shape-button");
-          for (const button of buttons) {
-            button.classList.remove("shape-button-selected");
-          }
-          this.classList.add("shape-button-selected");
-          restartUpdateMode({
-            reshapeOptions: {
-              edgeOperation: edgeType,
-              shapeOperation: shapeType
-            }
-          });
-        }
-
-        function restartUpdateMode(updateOptions) {
-          sketchViewModel.defaultUpdateOptions = {
-            ...sketchViewModel.defaultUpdateOptions,
-            ...updateOptions
-          };
-
-          if (sketchViewModel.activeTool) {
-            if (
-              sketchViewModel.activeTool === "transform" ||
-              sketchViewModel.activeTool === "move" ||
-              sketchViewModel.activeTool === "reshape"
-            ) {
-              updateOptions.tool = sketchViewModel.activeTool;
-              sketchViewModel.update(sketchViewModel.updateGraphics.toArray(), updateOptions);
-            }
-          }
-        }
-
-        /**********************************************
-         * Configuration UI for snapping
-         *********************************************/
-
-        reactiveUtils.watch(
-          () => sketchViewModel.snappingOptions.enabled,
-          (snappingEnabled) => {
-            enabledcheckbox.checked = snappingEnabled;
-          }
-        );
-
-        enabledcheckbox.checked = sketchViewModel.snappingOptions.enabled;
-        enabledcheckbox.addEventListener("change", (event) => {
-          sketchViewModel.snappingOptions.enabled = event.target.checked ? true : false;
-        });
-
-        tooltipOptionsheckbox.checked = sketchViewModel.tooltipOptions.enabled;
-        tooltipOptionsheckbox.addEventListener("change", (event) => {
-          sketchViewModel.tooltipOptions.enabled = event.target.checked ? true : false;
-        });
-
-        labelOptionscheckbox.checked = sketchViewModel.labelOptions.enabled;
-        labelOptionscheckbox.addEventListener("change", (event) => {
-          sketchViewModel.labelOptions.enabled = event.target.checked ? true : false;
-        });
-
-        selfsnappingcheckbox.checked = sketchViewModel.snappingOptions.selfEnabled;
-        selfsnappingcheckbox.addEventListener("change", (event) => {
-          sketchViewModel.snappingOptions.selfEnabled = event.target.checked ? true : false;
-        });
-
-        featuresnappingcheckbox.checked = sketchViewModel.snappingOptions.featureEnabled;
-        featuresnappingcheckbox.addEventListener("change", (event) => {
-          sketchViewModel.snappingOptions.featureEnabled = event.target.checked ? true : false;
-        });
-
-        const configurationExpand = new Expand({
-          expandIcon: "gear",
-          expandTooltip: "Show configuration",
-          expanded: false,
-          view: view,
-          content: document.getElementById("configurationDiv")
-        });
-
-        // observe the if the CTRL-key got pressed to give the user a visual feedback
-        // the logic itself for toggling snapping is in the SketchViewModel
-        view.on(["key-down"], (ev) => {
-          if (ev.key === "Control") {
-            snappingctrlkey.style.fontWeight = "bold";
-            snappingctrlkey.style.color = "royalblue";
-          }
-        });
-        view.on(["key-up"], (ev) => {
-          if (ev.key === "Control") {
-            snappingctrlkey.style.fontWeight = "normal";
-            snappingctrlkey.style.color = "black";
+      };
+  
+      // Make new 3D SceneView
+        const view = new SceneView({
+          container: "viewDiv", //This your main container in HTML for all the widgets
+          map: map,
+          viewingMode: "global", //opion "local" to make cropped 2D
+          extent: drangaExtent,
+          environment: {
+            weather: {
+              type: "cloudy", // autocasts as new CloudyWeather({ cloudCover: 1 })
+              cloudCover: 0.2
+            },
+            atmosphere: {
+              quality: "high"
+            },
           }
         });
 
-        view.ui.add(configurationExpand, "bottom-right");
-
-        configurationInfoDiv.addEventListener("click", (event) => {
-          configurationExpand.expand();
-        });
-        view.ui.add("configurationInfoDiv", "bottom-right");
       });
     </script>
   </head>
 
   <body>
     <div id="viewDiv"></div>
-    <div id="sketchPanel" class="esri-widget">
-      <div id="startbuttons">
-        <button id="point" data-type="point" class="esri-button starttool">Draw a point of interest</button>
-        <button id="line" data-type="polyline" class="esri-button starttool">Draw a route</button>
-        <button id="extrudedPolygon" data-type="polygon" class="esri-button starttool">Draw a building</button>
-      </div>
-      <div id="actionbuttons">
-        <button id="cancel" class="esri-button">Cancel</button>
-        <button id="done" class="esri-button">Done</button>
-      </div>
-      <div id="edgeoperationbuttons">
-        <br />Select the edge operation:
-        <div class="update-options" id="edge">
-          <button class="esri-widget--button edge-button" id="none-edge-button" value="none">None</button>
-          <button class="esri-widget--button edge-button edge-button-selected" id="split-edge-button" value="split">
-            Split
-          </button>
-          <button class="esri-widget--button edge-button" id="offset-edge-button" value="offset">Offset</button>
-        </div>
-        Select the move operation:
-        <div class="update-options" id="shape">
-          <button class="esri-widget--button shape-button" id="none-shape-button" value="none">None</button>
-          <button class="esri-widget--button shape-button shape-button-selected" id="move-shape-button" value="move">
-            Move
-          </button>
-        </div>
-      </div>
-    </div>
-    <div id="configurationDiv" class="esri-widget">
-      <table id="configurationTable">
-        <tbody>
-          <tr>
-            <td>
-              <label><b>Tooltip/Label </b></label>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="tooltipOptionscheckbox" id="tooltipOptionscheckboxlabel"> - Tooltip</label>
-            </td>
-            <td><input type="checkbox" id="tooltipOptionsheckbox" /></td>
-          </tr>
-          <tr>
-            <td>
-              <label for="labelOptionscheckbox" id="labelOptionscheckboxlabel"> - Label</label>
-            </td>
-            <td><input type="checkbox" id="labelOptionscheckbox" /></td>
-          </tr>
-          <tr>
-            <td>
-              <label for="enabledcheckbox" id="enabledcheckboxlabel"
-                ><b
-                  >Snapping enabled (
-                  <div id="snappingctrlkey">CTRL-key</div>
-                  )</b
-                ></label
-              >
-            </td>
-            <td><input type="checkbox" id="enabledcheckbox" checked /></td>
-          </tr>
-          <tr>
-            <td>
-              <label for="selfsnappingcheckbox" id="selfsnappingcheckboxlabel"> - self snapping</label>
-            </td>
-            <td><input type="checkbox" id="selfsnappingcheckbox" /></td>
-          </tr>
-          <tr>
-            <td>
-              <label for="featuresnappingcheckbox" id="featuresnappingcheckboxlabel"> - feature snapping</label>
-            </td>
-            <td><input type="checkbox" id="featuresnappingcheckbox" /></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div id="configurationInfoDiv" class="esri-widget">
-      <b>Open configuration <span>&#8594;</span></b>
-    </div>
   </body>
 </html>
