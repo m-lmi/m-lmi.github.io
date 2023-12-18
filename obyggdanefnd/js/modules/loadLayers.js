@@ -1,60 +1,33 @@
-// mapConfig.js  Define the webScene and setting the environment
+/***********************************
+* Load most of the basic layers
+***********************************/
+// author:Landmælingar Íslands
 define([
-    "esri/config",
     "esri/WebMap",
     "esri/views/SceneView",
     "esri/Map",
-    "esri/WebScene",
-    //"esri/widgets/Search",
-    "esri/widgets/Legend",
-    //"esri/widgets/Home",
-    "esri/widgets/Weather",
-    "esri/widgets/Daylight",
-    "esri/widgets/LayerList", //Layer list to turn on/off layers visibility
-    //"esri/widgets/DirectLineMeasurement3D",
-    //"esri/widgets/AreaMeasurement3D",
-    //"esri/widgets/TimeSlider",
-    "esri/widgets/Expand",
-    //"esri/core/promiseUtils",
-    //"esri/core/reactiveUtils",
-    //"esri/geometry/ElevationLayer"
+    //"esri/WebScene",
     "esri/layers/GroupLayer",  
-    "esri/widgets/LayerList",
-    "esri/layers/GeoJSONLayer", //Map and GeoJSON layer is needed for my experiment with adding Json layers.....
+    "esri/layers/GeoJSONLayer",
     "esri/layers/SceneLayer",
     "esri/layers/FeatureLayer",
     "esri/layers/OGCFeatureLayer",
     "esri/layers/WMSLayer",
     "esri/layers/WFSLayer",
-    "esri/renderers/UniqueValueRenderer",
+    "modules/multipointToPoint",
     ], function(
-      esriConfig,
       WebMap,
       SceneView,
       Map,
-      WebScene, 
-      //Search,
-      Legend,
-      //Home,
-      Weather, 
-      Daylight, 
-      LayerList,
-      //DirectLineMeasurement3D,
-      //AreaMeasurement3D,
-      //TimeSlider,
-      Expand,
-      //promiseUtils,
-      //reactiveUtils,
-      //ElevationLayer   
+      //WebScene, 
       GroupLayer, 
-      LayerList, 
       GeoJSONLayer,
       SceneLayer,
       FeatureLayer,
       OGCFeatureLayer,
       WMSLayer,
       WFSLayer,
-      UniqueValueRenderer
+      MultipointToPoint,
       ) {
       return {
         setupLayers: function() {
@@ -69,22 +42,39 @@ define([
 
         // Print the names of all sublayers used for rendering.
         const wmsLayer = new WMSLayer({
-        url: "https://gis.lmi.is/geoserver/IS_50V/wms?service=WMS&version=1.1.0",
-        title: "Landmælingar Íslands IS 50V",
-        visible: false, 
-        sublayers: [{
-            name: "IS_50V:samgongur_linur", // layer to filter out from WMS
-            title: "Samgöngur línur", // title for in legend
-            },
+          url: "https://gis.lmi.is/geoserver/IS_50V/wms?service=WMS&version=1.1.0",
+          title: "Landmælingar Íslands IS 50V",
+          visible: false, 
+          sublayers: [
             {
-            name: "IS_50V:vatnafar_linur", // Layer to filter out from WMS
-            title: "Vatnafar línur", // title for in legend
-            },
+              name: "IS_50V:ornefni_punktar", // Layer to filter out from WMS
+              title: "Örnefni punktar", // title for in legend
+              lengedUrl: ""}, // Url for legend image as png
             {
             name: "IS_50V:ornefni_linur", // Layer to filter out from WMS
             title: "Örnefni línur", // title for in legend
-            },
-        ]}); 
+            lengedUrl: ""}, // Url for legend image as png
+            {
+            name: "IS_50V:ornefni_flakar", // Layer to filter out from WMS
+            title: "Örnefni flákar", // title for in legend
+            lengedUrl: ""}, // Url for legend image as png
+            {
+            name: "IS_50V:samgongur_linur", // layer to filter out from WMS
+            title: "Samgöngur línur", // title for in legend
+            legendUrl: ""}, // Url for legend image as png
+            {
+            name: "IS_50V:vatnafar_punktar", // Layer to filter out from WMS
+            title: "Vatnafar punktar", // title for in legend
+            lengedUrl: ""}, // Url for legend image as png
+            {
+              name: "IS_50V:vatnafar_linur", // Layer to filter out from WMS
+              title: "Vatnafar línur", // title for in legend
+              lengedUrl: ""}, // Url for legend image as png
+            {
+            name: "IS_50V:vatnafar_flakar", // Layer to filter out from WMS
+            title: "Vatnafar flákar", // title for in legend
+            lengedUrl: ""}, // Url for legend image as png
+          ]}); 
         
         // Vatnafar Línur
         const vatnafarLinur = new GeoJSONLayer({
@@ -194,130 +184,102 @@ define([
             }
             });
 
-        // Add Feature layers
-        const templateObyggdanefnd = {
-            title: "{heiti}",
-            fieldInfos: [
-              {
-                fieldName: 'heiti',
-              }
-            ]
-          };
-
-        // Constructing the renderer
-        const rendererObyggdanefnd = {
-          type: "unique-value",
-          field: "fid",
-          symbol: {
-            type: "simple-line",
-            style: "solid",
-            color: "black",
-            width: 3,
-          
-          },
-          uniqueValueInfos: [
-        { value:1, symbol: {type: "simple-line", color: "red", width: 5,}},
-        { value:2, symbol: {type: "simple-line", color: "green", width: 3}},
-        { value:3, symbol: {type: "simple-line", color: "gold", width: 3}},
-        { value:4, symbol: {type: "simple-line", color: "indigo", width: 3}},
-        { value:5, symbol: {type: "simple-line", color: "blue", width: 3}},
-        { value:6, symbol: {type: "simple-line", color: "fuchsia", width: 3}},
-        { value:7, symbol: {type: "simple-line", color: "darkorange", width: 3}},
-        { value:8, symbol: {type: "simple-line", color: "chartreuse", width: 3}},
-        { value:9, symbol: {type: "simple-line", color: "aqua", width: 3}},
-          ],
-          defaultSymbol: {
-              type: "simple-line",
-              color: "white", // Default color if value doesn't match any uniqueValueInfos
-              opacity: 0.2, // Opacity set to 70% (0.7)
-              style: "solid",
-              color: "black",
-              width: 3
-              
-            }
-        };
-
-// Create the FeatureLayer with multiple polygons
-const obnLoadLayer = new FeatureLayer({
-    url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer",
-});
-
-// Create a GroupLayer to contain individual polygons
-const obnLayer = new GroupLayer({
-    title: "Óbyggðanefnd",
-    visible: true
-});
-obnLayer.elevationInfo ={
-    mode: "on-the-ground",
-};
-
-// Fetch features from the FeatureLayer and create individual FeatureLayers for each polygon
-obnLoadLayer.load().then(() => {
-  // Get the features
-  obnLoadLayer.queryFeatures().then((result) => {
-      const features = result.features;
-
-      // Create a FeatureLayer for each individual polygon
-      features.forEach((feature, index) => {
-          const singleFeatureOBNLayer = new FeatureLayer({
-              source: [feature], // Provide the individual feature
-              objectIdField: "fid", // Replace with your object ID field
-              title: `Mörk ${index + 1}: ${feature.attributes.athugasemdir}`, // Title for the layer
-              visible: true, // Set initial visibility as needed
-              // Add any other properties or configurations for the layer
-              renderer: {
-                type: "unique-value",
-                field: "fid",
-                symbol: {
-                  type: "simple-line",
-                  style: "solid",
-                  color: "black",
-                  width: 3,
-                },
-                uniqueValueInfos: [
-              { value:1, symbol: {type: "simple-line", color: "red", width: 5,}},
-              { value:2, symbol: {type: "simple-line", color: "green", width: 3}},
-              { value:3, symbol: {type: "simple-line", color: "gold", width: 3}},
-              { value:4, symbol: {type: "simple-line", color: "indigo", width: 3}},
-              { value:5, symbol: {type: "simple-line", color: "blue", width: 3}},
-              { value:6, symbol: {type: "simple-line", color: "fuchsia", width: 3}},
-              { value:7, symbol: {type: "simple-line", color: "darkorange", width: 3}},
-              { value:8, symbol: {type: "simple-line", color: "chartreuse", width: 3}},
-              { value:9, symbol: {type: "simple-line", color: "aqua", width: 3}},
-                ],
-                defaultSymbol: {
-                    type: "simple-line",
-                    color: "white", // Default color if value doesn't match any uniqueValueInfos
-                    opacity: 0.2, // Opacity set to 70% (0.7)
-                    style: "solid",
-                    color: "black",
-                    width: 3
-                    
-                  }
-              },
-              popupTemplate: {
-                title: `Mörk ${index + 1}: ${feature.attributes.athugasemdir}`,
-                content: [
-                    {
-                        type: "text", // Use "text" for simple text display
-                        text: `Gögn: ${feature.attributes.gogn}`,
-                    },
-                ],
-            },
-              opacity: 0.7,
-          });
-          obnLayer.add(singleFeatureOBNLayer); // Add the FeatureLayer to the GroupLayer
+        // Add Feature layer Obyggðanefnd
+        // Create the FeatureLayer with multiple polygons
+        const obnLoadLayer = new FeatureLayer({
+          url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer",
       });
-  });
-});
+
+      // Create a GroupLayer to contain individual polygons
+      const obnLayer = new GroupLayer({
+          title: "Óbyggðanefnd óbreytt",
+          visible: false,
+          editable: false,
+          elevationInfo: {mode: "on-the-ground",}
+      });
+
+      // Fetch features from the FeatureLayer and create individual FeatureLayers for each polygon
+      obnLoadLayer.load().then(() => {
+          // Get the features
+          obnLoadLayer.queryFeatures().then((result) => {
+              const features = result.features;
+
+              // Create a FeatureLayer for each individual polygon
+              features.forEach((feature, index) => {
+                  const singleFeatureOBNLayer = new FeatureLayer({
+                      source: [feature], // Provide the individual feature
+                      objectIdField: "fid", // Replace with your object ID field
+                      title: `Mörk ${index + 1}: ${feature.attributes.athugasemdir}`, // Title for the layer
+                      visible: true, // Set initial visibility as needed
+                      editable: false,
+                      // Add any other properties or configurations for the layer
+                      renderer: {
+                        type: "unique-value",
+                        field: "fid",
+                        symbol: {
+                          type: "simple-line",
+                          style: "solid",
+                          color: "black",
+                          width: 3,
+                        },
+                        uniqueValueInfos: [
+                      { value:1, symbol: {type: "simple-line", color: "red", width: 6,}},
+                      { value:2, symbol: {type: "simple-line", color: "green", width: 3}},
+                      { value:3, symbol: {type: "simple-line", color: "gold", width: 3}},
+                      { value:4, symbol: {type: "simple-line", color: "indigo", width: 3}},
+                      { value:5, symbol: {type: "simple-line", color: "blue", width: 3}},
+                      { value:6, symbol: {type: "simple-line", color: "fuchsia", width: 3}},
+                      { value:7, symbol: {type: "simple-line", color: "darkorange", width: 3}},
+                      { value:8, symbol: {type: "simple-line", color: "chartreuse", width: 3}},
+                      { value:9, symbol: {type: "simple-line", color: "aqua", width: 3}},
+                        ],
+                        defaultSymbol: {
+                            type: "simple-line",
+                            color: "white", // Default color if value doesn't match any uniqueValueInfos
+                            opacity: 0.8, // Opacity set to 70% (0.7)
+                            style: "solid",
+                            color: "black",
+                            width: 3
+                            
+                          }
+                      },
+                      popupTemplate: {
+                        title: `Mörk ${index + 1}: ${feature.attributes.athugasemdir}`,
+                        content: [
+                            {
+                                type: "text", // Use "text" for simple text display
+                                text: `Gögn: ${feature.attributes.gogn}`,
+                            },
+                        ],
+                    },
+                      opacity: 0.8,
+                  });
+                  obnLayer.add(singleFeatureOBNLayer); // Add the FeatureLayer to the GroupLayer
+              });
+          });
+      });
+
+
+        // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
+        const map = new Map({
+            basemap: "satellite",
+            ground: "world-elevation",
+            layers:[
+                morkSveitarfelag,
+                wmsLayer,
+                sceneLayer,
+                vatnafarLayer,
+                obnLayer,
+            ],
+            });
 
         // Örnefni
-
         // Define a renderer that displays only the text labels
         const ornefniFlakar = new GeoJSONLayer({
           url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_flakar&outputFormat=json",
           copyright: "Landmælingar Íslands IS50V",
           visible: true, 
+          editable: false,
           title: "Örnefni flakar",
           elevationInfo: {mode: "on-the-ground"},
           renderer: {
@@ -388,6 +350,7 @@ obnLoadLayer.load().then(() => {
           url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_linur/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_linur&outputFormat=json",
           copyright: "Landmælingar Íslands IS50V",
           visible: true, 
+          editable: false,
           title: "Örnefni línur",
           elevationInfo: {mode: "on-the-ground"},
           renderer: {
@@ -458,95 +421,17 @@ obnLoadLayer.load().then(() => {
         });
 
         // Örnefni punktar
-        
-        const ornefniPunktar = new GeoJSONLayer({
-          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_punktar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_punktar&outputFormat=json",
-          copyright: "Landmælingar Íslands IS50V",
-          visible: true, 
-          title: "Örnefni punktar",
-          //elevationInfo: {mode: "on-the-ground"}, //https://developers.arcgis.com/javascript/latest/api-reference/esri-layers-FeatureLayer.html#elevationInfo
-          renderer: {
-            type: "simple", // autocasts as new SimpleRenderer()
-            symbol: {
-              type: "point-3d", // autocasts as new PointSymbol3D()
-              symbolLayers: [
-                {
-                  type: "icon", // autocasts as new IconSymbol3DLayer()
-                  resource: {
-                    primitive: "circle"
-                  },
-                  material: {
-                    color: "black"
-                  },
-                  size: 4
-                }
-              ]
-            }
-          },
-          outFields: ["*"],
-          // Add labels with callouts of type line to the icons
-          labelingInfo: [
-            {
-              // When using callouts on labels, "above-center" is the only allowed position
-              labelPlacement: "above-center",
-              labelExpressionInfo: {
-                value: "{ornefni}"
-              },
-              symbol: {
-                type: "label-3d", // autocasts as new LabelSymbol3D()
-                symbolLayers: [
-                  {
-                    type: "text", // autocasts as new TextSymbol3DLayer()
-                    material: {
-                      color: "black"
-                    },
-                    halo: {
-                      color: [255, 255, 255, 0.7],
-                      size: 2
-                    },
-                    size: 10
-                  }
-                ],
-                // Labels need a small vertical offset that will be used by the callout
-                verticalOffset: {
-                  screenLength: 50,
-                  maxWorldLength: 2000,
-                  minWorldLength: 30
-                },
-                // The callout has to have a defined type (currently only line is possible)
-                // The size, the color and the border color can be customized
-                callout: {
-                  type: "line", // autocasts as new LineCallout3D()
-                  size: 0.5,
-                  color: [0, 0, 0],
-                  border: {
-                    color: [255, 255, 255, 0.7]
-                  }
-                }
-              }
-            }
-          ]
-        });
+        MultipointToPoint.convertToPoint(map);
 
+        // Create a GroupLayer to contain örnefni
         const ornefniLayer = new GroupLayer({
           title: "Örnefni",
           visible: false,
-          layers: [ornefniFlakar, ornefniLinur, ornefniPunktar],
-         });
+          editable: false,
+          layers: [ornefniFlakar, ornefniLinur],
+          });
 
-        // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
-        const map = new Map({
-            basemap: "satellite",
-            ground: "world-elevation",
-            layers:[
-                morkSveitarfelag,
-                wmsLayer,
-                sceneLayer,
-                ornefniLayer,
-                vatnafarLayer,
-                obnLayer,
-            ],
-            });
+        map.add(ornefniLayer, 4)
         
         return map;
         }    

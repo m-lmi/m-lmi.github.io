@@ -1,3 +1,7 @@
+/***********************************
+* Initalize all the widgets and scripts
+***********************************/
+// author:Landmælingar Íslands
 require([
   "modules/mapConfig",
   "modules/basicWidgets",
@@ -8,28 +12,6 @@ require([
   "modules/searchWidget",
   "modules/mouseElevation",
   "modules/splashScreen",
-  "esri/config",
-  "esri/WebMap",
-  "esri/views/SceneView",
-  "esri/Map",
-  "esri/WebScene",
-  //"esri/widgets/Search",
-  "esri/widgets/Legend",
-  "esri/widgets/Home",
-  "esri/widgets/Weather",
-  "esri/widgets/Daylight",
-  "esri/widgets/LayerList",
-  //"esri/widgets/DirectLineMeasurement3D",
-  //"esri/widgets/AreaMeasurement3D",
-  //"esri/widgets/TimeSlider",
-  "esri/widgets/Expand",
-  "esri/widgets/Editor",
-  //"esri/core/promiseUtils",
-  //"esri/core/reactiveUtils",
-  //"esri/geometry/ElevationLayer"  
-  "esri/layers/GeoJSONLayer",
-  //"esri/layers/SceneLayers",
-  "esri/layers/FeatureLayer",
 ], (
   MapConfig,
   BasicWidgets,
@@ -40,52 +22,22 @@ require([
   SearchWidget,
   MouseElevation,
   SplashScreen,
-  esriConfig,
-  WebMap,
-  SceneView,
-  Map,
-  WebScene, 
-  //Search,
-  Legend,
-  Home,
-  Weather, 
-  Daylight, 
-  LayerList,
-  //DirectLineMeasurement3D,
-  //AreaMeasurement3D,
-  //TimeSlider,
-  Expand,
-  Editor,
-  //promiseUtils,
-  //reactiveUtils,
-  //ElevationLayer    
-  GeoJSONLayer,
-  //SceneLayers,
-  FeatureLayer,
 ) => {
   
-    // Initialize the map, widgets, etc.
+  // Initialize the map, widgets, etc.
   const map = LoadLayers.setupLayers(); // define all layers in the map
-  const mapView = MapConfig.setupScene(map); // Insert map and Capture the returned mapView
-  WeatherDaylight.setupWeatherDaylight(mapView);
-  MeasurementWidget.setupMeasurementWidget(mapView);
-  SearchWidget.setupSearchWidgets(map, mapView); 
-  BasicWidgets.setupBasicWidgets(mapView);  
-  LayerEditor.editLayer(map, mapView);     
-  MouseElevation.setupMouseElevation(mapView);
-  SplashScreen.showSplashScreen(mapView);
-  
-
-  /////////////// IDEAS TO ADD ///////////////
-  //https://developers.arcgis.com/javascript/latest/sample-code/sketch-3d/
-  //https://developers.arcgis.com/javascript/latest/sample-code/widgets-elevation-profile/
-  //https://developers.arcgis.com/javascript/latest/sample-code/overview-map/
-  //https://developers.arcgis.com/javascript/latest/sample-code/views-switch-2d-3d/
-  //https://developers.arcgis.com/javascript/latest/sample-code/layers-featurelayer-shapefile/
-
+  const view = MapConfig.setupScene(map); // Insert map and Capture the returned view
+  WeatherDaylight.setupWeatherDaylight(view);
+  MeasurementWidget.setupMeasurementWidget(view);
+  SearchWidget.setupSearchWidgets(map, view); 
+  BasicWidgets.setupBasicWidgets(view);  
+  LayerEditor.editLayer(map,view);     
+  MouseElevation.setupMouseElevation(view);
+  SplashScreen.showSplashScreen(view);
 
   let activePanel = null;
 
+  // Event listeners
   document.getElementById("basemapsBtn").addEventListener("click", function() {
       togglePanel("basemapsPanel");
     });

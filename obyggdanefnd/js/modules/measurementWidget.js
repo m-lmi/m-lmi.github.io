@@ -1,7 +1,7 @@
 /***********************************
 * Add measurement widget
 ***********************************/
-//
+// author:Landmælingar Íslands
 define(["esri/widgets/Measurement"], function(Measurement,) {
   return {
     setupMeasurementWidget: function(view) {

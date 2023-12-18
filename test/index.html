@@ -170,6 +170,14 @@
             icon="layers-editable">
             <calcite-tooltip slot="tooltip" reference-element="info-action" overlay-positioning="fixed" placement="bottom">Breyta</calcite-tooltip>
           </calcite-action>
+          <calcite-action
+          id="wfsconnectionBtn"
+          data-action-id="wfsconnection"
+          text="WFS tenging"
+          text-enabled
+          icon="gis-server">
+          <calcite-tooltip slot="tooltip" reference-element="info-action" overlay-positioning="fixed" placement="bottom">WFS tenging</calcite-tooltip>
+        </calcite-action>
           </calcite-action-bar> 
         </div>
         <!-- Custom Floating Panels -->
@@ -178,6 +186,27 @@
         </div>
         <div id="layersPanel" class="floating-list">
           <div id="layers-container"></div>
+        </div>
+        <div id="wfsconnectionPanel" class="floating-wfsconnection">
+          <div id="wfsconnection-container"></div>
+          <div style="padding: 12px">
+            <calcite-label status="idle" scale="s">
+              OGC WFS endpoint
+              <calcite-input
+                id="endpoint"
+                type="text"
+                status="idle"
+                value="https://gis.is/geoserver/ows"
+              ></calcite-input>
+            </calcite-label>
+            <calcite-button scale="s" slot="input-action" id="getCapabilities"> GetCapabilities </calcite-button>
+          </div>
+          <calcite-loader id="loader" type="indeterminate" hidden="true"></calcite-loader>
+          <calcite-notice id="warning" kind="warning" icon="exclamation-mark-triangle" width="full">
+            <div slot="title">Unsupported WFS</div>
+            <div slot="message">The WFS service must support WFS 2.0.0 and have GeoJSON output format enabled.</div>
+          </calcite-notice>
+          <div id="listArea"></div>
         </div>
       </header>
       <!-- the main map window -->

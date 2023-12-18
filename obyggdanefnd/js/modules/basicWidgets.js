@@ -1,10 +1,12 @@
-// Setting up the basic map widgets  like the home button, scale bar, zoom, and basemap gallery.
+/***********************************
+* Add Basemap gallery to allow for additional basemaps
+***********************************/
+// author:Landmælingar Íslands
 define([
     "esri/widgets/Home",
     "esri/widgets/BasemapGallery",
     "esri/widgets/LayerList",
-    "esri/widgets/Search",
-  ], function(Home, BasemapGallery, LayerList, Search) {
+  ], function(Home, BasemapGallery, LayerList) {
     return {
       setupBasicWidgets: function(mapView) {
         const homeBtn = new Home({
@@ -12,7 +14,7 @@ define([
         });
   
         mapView.ui.add(homeBtn, "top-left");
-        mapView.ui.move("zoom", "top-left"); //bottom-right
+        mapView.ui.move("zoom", "top-left");
   
         const basemaps = new BasemapGallery({
           view: mapView,

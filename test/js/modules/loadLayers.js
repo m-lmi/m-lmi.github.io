@@ -1,3 +1,28 @@
+/* Layers that can be added to a 3D Scene
+
+Elevation Layers:
+ElevationLayer: Represents elevation data used to visualize terrain in the scene.
+TileLayer: Can be used to visualize terrain elevation by specifying a tile service.
+
+Imagery Layers:
+ImageryLayer: Displays images as a layer in the scene, including satellite imagery, aerial photographs, etc.
+WebTileLayer: Displays tile-based images retrieved from a URL template.
+
+Scene Layers:
+SceneLayer: Represents 3D objects, buildings, points, and other scene-specific data.
+PointCloudLayer: Displays a point cloud in the scene.
+
+Feature Layers:
+FeatureLayer: Displays features as graphics in the scene, often used to represent vector-based data.
+GeoJSONLayer: Displays GeoJSON data as a layer in the scene.
+
+Base Map Layers:
+Basemap: Provides a base map layer for the scene, including streets, topographic maps, imagery, etc.
+
+Utility Layers:
+GraphicsLayer: Displays graphics in the scene, useful for drawing points, lines, polygons, etc.
+GroupLayer: Groups multiple layers together to organize content in the scene. */
+
 // mapConfig.js  Define the webScene and setting the environment
 define([
     "esri/Map",
@@ -57,12 +82,28 @@ define([
             title: "Samgöngur línur", // title for in legend
             legendUrl: ""}, // Url for legend image as png
             {
-            name: "IS_50V:vatnafar_linur", // Layer to filter out from WMS
-            title: "Vatnafar línur", // title for in legend
+            name: "IS_50V:vatnafar_punktar", // Layer to filter out from WMS
+            title: "Vatnafar punktar", // title for in legend
             lengedUrl: ""}, // Url for legend image as png
+            {
+              name: "IS_50V:vatnafar_linur", // Layer to filter out from WMS
+              title: "Vatnafar línur", // title for in legend
+              lengedUrl: ""}, // Url for legend image as png
+            {
+            name: "IS_50V:vatnafar_flakar", // Layer to filter out from WMS
+            title: "Vatnafar flákar", // title for in legend
+            lengedUrl: ""}, // Url for legend image as png
+            {
+              name: "IS_50V:ornefni_punktar", // Layer to filter out from WMS
+              title: "Örnefni punktar", // title for in legend
+              lengedUrl: ""}, // Url for legend image as png
             {
             name: "IS_50V:ornefni_linur", // Layer to filter out from WMS
             title: "Örnefni línur", // title for in legend
+            lengedUrl: ""}, // Url for legend image as png
+            {
+            name: "IS_50V:ornefni_flakar", // Layer to filter out from WMS
+            title: "Örnefni flákar", // title for in legend
             lengedUrl: ""}, // Url for legend image as png
         ]}); 
         
@@ -231,249 +272,6 @@ define([
             });
         });
 
-        // Örnefni //To speed loading up -  https://developers.arcgis.com/javascript/latest/sample-code/layers-featurelayer-large-collection/
-
-        // Örnefni Flákar
-        // Create a labeling renderer for the ornefni attribute in polygons
-
-        const ornefniFlakar = new GeoJSONLayer({
-          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_flakar&outputFormat=json",
-          copyright: "Landmælingar Íslands IS50V",
-          visible: true, 
-          title: "Örnefni flakar",
-          elevationInfo: {mode: "on-the-ground"},
-          renderer: {
-            type: "simple", // autocasts as new SimpleRenderer()
-            symbol: {
-              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-              symbolLayers: [
-                {
-                  type: "fill", // autocasts as new FillSymbol3DLayer()
-                  material: {
-                    color: [255, 255, 255, 0.3], // Set the color of the polygons
-                  },
-                  outline: {
-                    color: "black", // Set the outline color of the polygons
-                    size: 0.5 // Set the outline size of the polygons
-                  }
-                }
-              ]
-            }
-          },
-          outFields: ["*"],
-          // Add labels with callouts of type line to the icons
-          labelingInfo: [
-            {
-              // When using callouts on labels, "above-center" is the only allowed position
-              labelPlacement: "above-center",
-              labelExpressionInfo: {
-                value: "{ornefni}"
-              },
-              symbol: {
-                type: "label-3d", // autocasts as new LabelSymbol3D()
-                symbolLayers: [
-                  {
-                    type: "text", // autocasts as new TextSymbol3DLayer()
-                    material: {
-                      color: "black"
-                    },
-                    halo: {
-                      color: [255, 255, 255, 0.7],
-                      size: 2
-                    },
-                    size: 10
-                  }
-                ],
-                // Labels need a small vertical offset that will be used by the callout
-                verticalOffset: {
-                  screenLength: 50,
-                  maxWorldLength: 2000,
-                  minWorldLength: 30
-                },
-                // The callout has to have a defined type (currently only line is possible)
-                // The size, the color and the border color can be customized
-                callout: {
-                  type: "line", // autocasts as new LineCallout3D()
-                  size: 0.5,
-                  color: [0, 0, 0],
-                  border: {
-                    color: [255, 255, 255, 0.7]
-                  }
-                }
-              }
-            }
-          ]
-        });
-
-        // Örnefni línur
-        const ornefniLinur = new GeoJSONLayer({
-          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_linur/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_linur&outputFormat=json",
-          copyright: "Landmælingar Íslands IS50V",
-          visible: true, 
-          title: "Örnefni línur",
-          elevationInfo: {mode: "on-the-ground"},
-          renderer: {
-            type: "simple", // autocasts as new SimpleRenderer()
-            symbol: {
-              type: "line-3d", // Define the symbol type as line-3d
-              symbolLayers: [
-                {
-                  type: "line",
-                  material: {
-                    color: [0, 0, 0, 0.7] // Set the color of the lines
-                  },
-                  size: 3 // Set the size of the lines (thicker line)
-                },
-                {
-                  type: "line", // Define the symbol layer type as line
-                  material: {
-                    color: [255, 255, 255, 0.7] // Set the color of the lines
-                  },
-                  size: 2, // Set the size of the lines
-                }
-              ]
-            }
-          },
-          outFields: ["*"],
-          // Add labels with callouts of type line to the icons
-          labelingInfo: [
-            {
-              // When using callouts on labels, "above-center" is the only allowed position
-              labelPlacement: "above-center",
-              labelExpressionInfo: {
-                value: "{ornefni}"
-              },
-              symbol: {
-                type: "label-3d", // autocasts as new LabelSymbol3D()
-                symbolLayers: [
-                  {
-                    type: "text", // autocasts as new TextSymbol3DLayer()
-                    material: {
-                      color: "black"
-                    },
-                    halo: {
-                      color: [255, 255, 255, 0.7],
-                      size: 2
-                    },
-                    size: 10
-                  }
-                ],
-                // Labels need a small vertical offset that will be used by the callout
-                verticalOffset: {
-                  screenLength: 50,
-                  maxWorldLength: 2000,
-                  minWorldLength: 30
-                },
-                // The callout has to have a defined type (currently only line is possible)
-                // The size, the color and the border color can be customized
-                callout: {
-                  type: "line", // autocasts as new LineCallout3D()
-                  size: 0.5,
-                  color: [0, 0, 0],
-                  border: {
-                    color: [255, 255, 255, 0.7]
-                  }
-                }
-              }
-            }
-          ]
-        });
-
-        // Loftmyndir XYZ
-        /*
-        const tileInfo = new TileInfo({
-          spatialReference: {
-            wkid: 3057 // Set the WKID for EPSG:3057 projection
-          },
-          origin: {
-            x: -161616,
-            y: -72.00000049173832
-          },
-          lods: [
-            { level: 0, resolution: 4096 },
-            { level: 1, resolution: 2048 },
-            { level: 2, resolution: 1024},
-            { level: 3, resolution: 512 },
-            { level: 4, resolution: 256 },
-            { level: 5, resolution: 128 },
-            { level: 6, resolution: 64 },
-            { level: 7, resolution: 32 },
-            { level: 8, resolution: 16 },
-            { level: 9, resolution: 8 },
-            { level: 10, resolution: 4 },
-            { level: 11, resolution: 2 },
-            { level: 12, resolution: 1 },
-            { level: 13, resolution: 0.5 },
-            { level: 14, resolution: 0.25 },
-            { level: 15, resolution: 0.125 },
-            { level: 16, resolution: 0.0625 },
-            // Add other levels as per your requirement
-          ],
-          size: [512, 512] // Tile size
-        });*/
-
-        /*
-        const loftmyndirLayer = new WebTileLayer({
-          urlTemplate: "https://ms.map.is/mapcache/tms/1.0.0/myndkort_512@isn93_512/{z}/{x}/{-y}.jpg",
-          title: "Loftmyndir",
-          copyright: 'Map data from &copy; <a href="https://www.loftmyndir.is/" target="_blank">Loftmyndir</a>',
-          spatialReference: {
-            wkid: 3057 // Set the WKID for EPSG:3057 projection
-          },
-          //tileInfo: tileInfo, // Set the custom tile information
-          //crossOrigin: null, // Set the cross-origin policy
-          // Define the extent if needed
-          // extent: {
-          //   xmin: 0,
-          //   ymin: 0,
-          //   xmax: 39913400.685578495,
-          //   ymax: 40074944.685578
-          // }
-        });*/
-        
-        /*
-        const demTileInfo = new TileInfo({
-          spatialReference: {
-            wkid: 3057 // Set the WKID for EPSG:3057 projection
-          },
-          origin: {
-            x: -161616,
-            y: -72.00000049173832
-          },
-          lods: [
-            { level: 0, resolution: 4096 },
-            { level: 1, resolution: 2048 },
-            { level: 2, resolution: 1024},
-            { level: 3, resolution: 512 },
-            { level: 4, resolution: 256 },
-            { level: 5, resolution: 128 },
-            { level: 6, resolution: 64 },
-            { level: 7, resolution: 32 },
-            { level: 8, resolution: 16 },
-            { level: 9, resolution: 8 },
-            { level: 10, resolution: 4 },
-            { level: 11, resolution: 2 },
-            { level: 12, resolution: 1 },
-            { level: 13, resolution: 0.5 },
-            { level: 14, resolution: 0.25 },
-            { level: 15, resolution: 0.125 },
-            { level: 16, resolution: 0.0625 },
-            // Add other levels as per your requirement
-          ],
-          size: [256, 256] // Tile size
-        });*/
-/*
-          // Web Tile Layer DEM
-          const demLayer = new WebTileLayer({
-            urlTemplate: "https://gis.lmi.is/mapcache/tms/1.0.0/IslandsDEMDaylight@EPSG:3057/{z}/{x}/{-y}.png",
-            //copyright: 'Map data from &copy; <a href="https://www.loftmyndir.is/" target="_blank">Loftmyndir</a> Map design by &copy; <a href="http://opentopomap.org/" target="_blank">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank">CC-BY-SA</a>) contributors'
-            title: "ÍslandsDEM",
-            spatialReference: {
-              wkid: 3057 // Set the WKID for EPSG:3057 projection
-            },
-            //tileInfo: demTileInfo,
-          });*/
-
         // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
         const map = new Map({
             basemap: "satellite",
@@ -489,6 +287,153 @@ define([
             ],
             });
 
+        // Örnefni //To speed loading up -  https://developers.arcgis.com/javascript/latest/sample-code/layers-featurelayer-large-collection/
+
+        // Örnefni Flákar
+        // Create a labeling renderer for the ornefni attribute in polygons
+            const ornefniFlakar = new GeoJSONLayer({
+              url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_flakar&outputFormat=json",
+              copyright: "Landmælingar Íslands IS50V",
+              visible: true, 
+              title: "Örnefni flakar",
+              elevationInfo: {mode: "on-the-ground"},
+              renderer: {
+                type: "simple", // autocasts as new SimpleRenderer()
+                symbol: {
+                  type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "fill", // autocasts as new FillSymbol3DLayer()
+                      material: {
+                        color: [255, 255, 255, 0.3], // Set the color of the polygons
+                      },
+                      outline: {
+                        color: "black", // Set the outline color of the polygons
+                        size: 0.5 // Set the outline size of the polygons
+                      }
+                    }
+                  ]
+                }
+              },
+              outFields: ["*"],
+              // Add labels with callouts of type line to the icons
+              labelingInfo: [
+                {
+                  // When using callouts on labels, "above-center" is the only allowed position
+                  labelPlacement: "above-center",
+                  labelExpressionInfo: {
+                    value: "{ornefni}"
+                  },
+                  symbol: {
+                    type: "label-3d", // autocasts as new LabelSymbol3D()
+                    symbolLayers: [
+                      {
+                        type: "text", // autocasts as new TextSymbol3DLayer()
+                        material: {
+                          color: "black"
+                        },
+                        halo: {
+                          color: [255, 255, 255, 0.7],
+                          size: 2
+                        },
+                        size: 10
+                      }
+                    ],
+                    // Labels need a small vertical offset that will be used by the callout
+                    verticalOffset: {
+                      screenLength: 50,
+                      maxWorldLength: 2000,
+                      minWorldLength: 30
+                    },
+                    // The callout has to have a defined type (currently only line is possible)
+                    // The size, the color and the border color can be customized
+                    callout: {
+                      type: "line", // autocasts as new LineCallout3D()
+                      size: 0.5,
+                      color: [0, 0, 0],
+                      border: {
+                        color: [255, 255, 255, 0.7]
+                      }
+                    }
+                  }
+                }
+              ]
+            });
+    
+            // Örnefni línur
+            const ornefniLinur = new GeoJSONLayer({
+              url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_linur/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_linur&outputFormat=json",
+              copyright: "Landmælingar Íslands IS50V",
+              visible: true, 
+              title: "Örnefni línur",
+              elevationInfo: {mode: "on-the-ground"},
+              renderer: {
+                type: "simple", // autocasts as new SimpleRenderer()
+                symbol: {
+                  type: "line-3d", // Define the symbol type as line-3d
+                  symbolLayers: [
+                    {
+                      type: "line",
+                      material: {
+                        color: [0, 0, 0, 0.7] // Set the color of the lines
+                      },
+                      size: 3 // Set the size of the lines (thicker line)
+                    },
+                    {
+                      type: "line", // Define the symbol layer type as line
+                      material: {
+                        color: [255, 255, 255, 0.7] // Set the color of the lines
+                      },
+                      size: 2, // Set the size of the lines
+                    }
+                  ]
+                }
+              },
+              outFields: ["*"],
+              // Add labels with callouts of type line to the icons
+              labelingInfo: [
+                {
+                  // When using callouts on labels, "above-center" is the only allowed position
+                  labelPlacement: "above-center",
+                  labelExpressionInfo: {
+                    value: "{ornefni}"
+                  },
+                  symbol: {
+                    type: "label-3d", // autocasts as new LabelSymbol3D()
+                    symbolLayers: [
+                      {
+                        type: "text", // autocasts as new TextSymbol3DLayer()
+                        material: {
+                          color: "black"
+                        },
+                        halo: {
+                          color: [255, 255, 255, 0.7],
+                          size: 2
+                        },
+                        size: 10
+                      }
+                    ],
+                    // Labels need a small vertical offset that will be used by the callout
+                    verticalOffset: {
+                      screenLength: 50,
+                      maxWorldLength: 2000,
+                      minWorldLength: 30
+                    },
+                    // The callout has to have a defined type (currently only line is possible)
+                    // The size, the color and the border color can be customized
+                    callout: {
+                      type: "line", // autocasts as new LineCallout3D()
+                      size: 0.5,
+                      color: [0, 0, 0],
+                      border: {
+                        color: [255, 255, 255, 0.7]
+                      }
+                    }
+                  }
+                }
+              ]
+            });
+
         // Add point layer of örnefni to map
         MultipointToPoint.convertToPoint(map);
 
@@ -499,7 +444,7 @@ define([
           layers: [ornefniFlakar, ornefniLinur],
           });
 
-          map.add(ornefniLayer)
+          map.add(ornefniLayer,4)
 
         return map;
         }    

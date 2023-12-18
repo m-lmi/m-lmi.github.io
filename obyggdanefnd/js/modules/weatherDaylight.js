@@ -1,7 +1,7 @@
 /***********************************
 * Add weather and day widget
 ***********************************/
-//
+// author:Landmælingar Íslands
 
 define([
     "esri/widgets/Weather",

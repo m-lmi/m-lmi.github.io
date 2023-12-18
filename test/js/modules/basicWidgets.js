@@ -8,7 +8,8 @@ define([
     "esri/widgets/BasemapGallery",
     "esri/widgets/LayerList",
     "esri/widgets/Search",
-  ], function(Home, WebTileLayer, SpatialReference, TileInfo, Basemap, BasemapGallery, LayerList, Search) {
+    "esri/widgets/ScaleBar",
+  ], function(Home, WebTileLayer, SpatialReference, TileInfo, Basemap, BasemapGallery, LayerList, Search, ScaleBar) {
     return {
       setupBasicWidgets: function(mapView) {
         const homeBtn = new Home({
@@ -100,6 +101,12 @@ define([
           selectionEnabled: true,
           container: "layers-container"
         }); 
+
+        /*const scaleBar = new ScaleBar({
+          view: mapView,
+          unit: "dual"
+        });
+        mapView.ui.add(scaleBar, "bottom-right");*/
 
         // Assuming you have defined your rendererObyggdanefnd previously
 const layerListContainer = document.getElementById("layer-list");

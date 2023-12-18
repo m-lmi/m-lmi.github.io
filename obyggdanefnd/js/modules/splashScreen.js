@@ -1,7 +1,7 @@
 /****************************************************
 * run splash screen and it as info into action bar
 *******************************************************/
-// author:LMI
+// author:Landmælingar Íslands
 
 define([], function() {
     return {
@@ -12,7 +12,6 @@ define([], function() {
             var modal = document.getElementById("splashModal");
             var modalContent = document.querySelector(".modal-content");
             var span = document.getElementsByClassName("close")[0];
-           // var offsetX, offsetY, isDragging = false; //prepared for future adjustment, i.e. window draging
         
             // Center the modal initially
             modalContent.style.left = "50%";
@@ -39,10 +38,6 @@ define([], function() {
             showSplashScreen();
             // the function run splash screen
         });
-        
-
-        // Call the modal from info-button
-        //document.getElementById('infoButton').addEventListener('click', showSplashScreen);
         }
     };
   });

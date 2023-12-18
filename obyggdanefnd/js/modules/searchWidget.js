@@ -1,4 +1,7 @@
-// Setting up the search widget
+/***********************************
+* Add Search widget with örnefni search
+***********************************/
+// author:Landmælingar Íslands
 define([
     "esri/widgets/Search", "esri/layers/GeoJSONLayer",
   ], function(Search, GeoJSONLayer) {

@@ -9,7 +9,7 @@ require([
     "modules/searchWidget",
     "modules/mouseElevation",
     "modules/splashScreen",
-    "modules/multipointToPoint",
+    "modules/wfsConnector",
     "esri/config",
     "esri/WebMap",
     "esri/views/SceneView",
@@ -42,7 +42,7 @@ require([
     SearchWidget,
     MouseElevation,
     SplashScreen,
-    MultipointToPoint,
+    wfsConnector,
     esriConfig,
     WebMap,
     SceneView,
@@ -77,6 +77,7 @@ require([
     LayerEditor.editLayer(map, mapView);
     MouseElevation.setupMouseElevation(mapView);
     SplashScreen.showSplashScreen(mapView);
+    wfsConnector.setupWFSConnections(map, mapView)
 
 
     ////// Import example
@@ -133,6 +134,10 @@ require([
 
     document.getElementById("editorBtn").addEventListener("click", function() {
       togglePanel("editorPanel");
+    });
+
+    document.getElementById("wfsconnectionBtn").addEventListener("click", function() {
+      togglePanel("wfsconnectionPanel");
     });
 
     // Toggle pannels

@@ -1,4 +1,7 @@
-// Setting up the camera info.
+/***********************************
+* Add elevation information of the ground at mouse location
+***********************************/
+// author:Landmælingar Íslands
 define(["esri/layers/ElevationLayer",], function(ElevationLayer) {
   return {
       setupMouseElevation: function(mapView) {
@@ -8,7 +11,7 @@ define(["esri/layers/ElevationLayer",], function(ElevationLayer) {
       zElement.id = "mouseZ";
       zElement.style.position = "absolute";
       zElement.style.bottom = "20px";
-      zElement.style.right = "5px"; //left = "20px"
+      zElement.style.right = "5px";
       zElement.style.backgroundColor = "#fffb";
       zElement.style.padding = "5px";
       zElement.style.zIndex = "1000";

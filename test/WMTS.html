@@ -1,0 +1,108 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no" />
+    <title>LayerList widget | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+    </style>
+
+    <script src="https://js.arcgis.com/4.28/"></script>
+
+    <script>
+      require(["esri/Map", 
+      "esri/views/SceneView", 
+      "esri/views/MapView",
+      "esri/widgets/Home",
+      "esri/layers/WFSLayer",
+      "esri/layers/ogc/wfsUtils", 
+      "esri/widgets/LayerList",
+      "esri/geometry/geometryEngine",
+      "esri/layers/FeatureLayer",
+      "esri/Graphic",
+      "esri/geometry/SpatialReference",
+      "esri/geometry/Point",
+      "esri/layers/WebTileLayer",
+      "esri/layers/support/TileInfo",
+      "esri/layers/WMTSLayer",
+      "esri/layers/TileLayer"],
+      (Map, SceneView, MapView, Home, WFSLayer, wfsUtils, LayerList, GeometryEngine, FeatureLayer, Graphic, SpatialReference, Point, WebTileLayer, TileInfo, WMTSLayer, TileLayer) => {
+
+        const map = new Map({
+          basemap: "satellite",
+          ground: "world-elevation",
+          spatialReference: 3857
+        });
+
+        const icelandExtent = {
+        // autocasts as new Extent()
+        xmax: -1480719,
+        xmin: -2816227,
+        ymax: 10022117,
+        ymin: 9163577,
+        spatialReference: 3857,
+      };
+
+        /*const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          camera: {
+          position: [-21.9, 64, 80000],
+          heading: 0,
+          tilt: 50
+          },
+          extent: icelandExtent,
+          spatialReference: {
+          wkid: 3857
+        }
+        });*/
+
+        const view = new SceneView({
+          container: "viewDiv",
+          map: map,
+          camera: {
+          position: [-21.9, 64, 80000],
+          heading: 0,
+          tilt: 50
+          },
+          spatialReference: {wkid: 3857},
+          viewingMode: "local", //opion "local" to make cropped 2D
+        });
+
+        const layer = new WMTSLayer({
+          url: "https://gis.lmi.is/mapcache/web-mercator/wmts",
+          title: "test",
+          activeLayer: {
+          id: "DEM"},
+          spatialReference: {wkid: 3857},
+        })
+        map.add(layer)
+
+        view.when(() => {
+        console.log("view wkid: ", view.spatialReference.wkid)
+        console.log("layer wkid: ", layer.spatialReference.wkid)
+        view.extent = layer.fullExtent;
+        const layerList = new LayerList({
+          view: view
+        });
+        view.ui.add(layerList, "bottom-left");
+      });
+      });
+    </script>
+  </head>
+
+  <body class="calcite">
+    <div id="viewDiv"></div>
+  </body>
+</html>

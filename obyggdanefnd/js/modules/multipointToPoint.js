@@ -1,22 +1,20 @@
-define(["esri/Map", 
-"esri/views/SceneView", 
-"esri/widgets/Home",
+/***********************************
+* Convert Multipoint from WFS to single point and add to map()
+***********************************/
+// author:Landmælingar Íslands
+define([
 "esri/layers/WFSLayer",
-"esri/layers/ogc/wfsUtils", 
-"esri/widgets/LayerList",
-"esri/geometry/geometryEngine",
 "esri/layers/FeatureLayer",
 "esri/Graphic",
-"esri/geometry/SpatialReference",
 "esri/geometry/Point",
-      ], function(Map, SceneView, Home, WFSLayer, wfsUtils, LayerList, GeometryEngine, FeatureLayer, Graphic, SpatialReference, Point
+      ], function(WFSLayer, FeatureLayer, Graphic, Point
         ) {return {
           convertToPoint: function(map) {
 
-// Usage example:
+// Add WFS Layer toconvert to single point
 const ornefniMultipointLayer = new WFSLayer({
-    url: "https://gis.lmi.is/geoserver/wfs", // URL to your WFS endpoint
-    name: "ornefni_punktar", // Name of the FeatureType
+    url: "https://gis.lmi.is/geoserver/wfs",
+    name: "ornefni_punktar", 
     copyright: "Landmælingar Íslands"
   });
 
@@ -120,7 +118,7 @@ async function loadOrnefniPointLayer(map) {
           ];
 
     // Add the resulting FeatureLayer to the map
-    map.add(ornefniPointLayer,5);
+    map.add(ornefniPointLayer,5); // 5 is the index of the layer position in map
     await ornefniPointLayer.when(); // Wait for the layer to load
   } catch (error) {
     console.error("Error:", error);
