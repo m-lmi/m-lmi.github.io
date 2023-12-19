@@ -10,6 +10,7 @@ require([
     "modules/mouseElevation",
     "modules/splashScreen",
     "modules/wfsConnector",
+    "modules/mapsLMI",
     "esri/config",
     "esri/WebMap",
     "esri/views/SceneView",
@@ -43,6 +44,7 @@ require([
     MouseElevation,
     SplashScreen,
     wfsConnector,
+    MapsLMI,
     esriConfig,
     WebMap,
     SceneView,
@@ -77,7 +79,8 @@ require([
     LayerEditor.editLayer(map, mapView);
     MouseElevation.setupMouseElevation(mapView);
     SplashScreen.showSplashScreen(mapView);
-    wfsConnector.setupWFSConnections(map, mapView)
+    wfsConnector.setupWFSConnections(map, mapView);
+    MapsLMI.setupMapsLMI(map, mapView);
 
 
     ////// Import example
@@ -98,6 +101,10 @@ require([
 
     document.getElementById("basemapsBtn").addEventListener("click", function() {
         togglePanel("basemapsPanel");
+      });
+
+      document.getElementById("mapsBtn").addEventListener("click", function() {
+        togglePanel("mapsPanel");
       });
       
       document.getElementById("layersBtn").addEventListener("click", function() {

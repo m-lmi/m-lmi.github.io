@@ -72,7 +72,8 @@ define([
         selectionEnabled: true,
         container: "maps-container"
       });
-      mapsList.operationalItems.add(wmsImagery);
+      mapsList.operationalItems.push(wmsImagery)
+      const layerListContainer = document.getElementById("maps-list");
       },
     };
   });

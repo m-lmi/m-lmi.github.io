@@ -114,6 +114,14 @@
               <calcite-tooltip slot="tooltip" reference-element="info-action" placement="bottom">Grunnkort</calcite-tooltip>
             </calcite-action>
             <calcite-action
+            id="mapsBtn" 
+            data-action-id="maps" 
+            text="Kort" 
+            text-enabled 
+            icon="layer-map" >
+            <calcite-tooltip slot="tooltip" reference-element="info-action" placement="bottom">Kort</calcite-tooltip>
+          </calcite-action>
+            <calcite-action
               id="layersBtn" 
               data-action-id="layers" 
               text="Gögn" 
@@ -183,6 +191,9 @@
         <!-- Custom Floating Panels -->
         <div id="basemapsPanel" class="floating-basemap">
           <div id="basemaps-container"></div>
+        </div>
+        <div id="mapsPanel" class="floating-maps">
+          <div id="maps-container"></div>
         </div>
         <div id="layersPanel" class="floating-list">
           <div id="layers-container"></div>

@@ -126,6 +126,19 @@ calcite-loader {
   white-space: nowrap;
 }
 
+.floating-maps { /*Layer list*/
+  position: absolute;
+  z-index: 100;
+  top: 65px;
+  right: 65px;
+  width: 300px;
+  height: fit-content;
+  background-color: white;
+  border: 1px solid #ccc;
+  display: none; /* Initially hidden */
+  overflow: auto;
+}
+
   .floating-list { /*Layer list*/
     position: absolute;
     z-index: 100;
