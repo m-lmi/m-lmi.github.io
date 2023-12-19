@@ -31,52 +31,15 @@ define([
             url: "https://basemaps3d.arcgis.com/arcgis/rest/services/OpenStreetMap3D_Buildings_v1/SceneServer",
             title: "OpenStreetMaps 3D Buildings",
             visible: true,
-            copyright: "Data from ESRI"
+            copyright: "Map data <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Microsoft Building Footprints, Scene Layer by ESRI",
         });
 
-        // Print the names of all sublayers used for rendering.
-        const wmsLayer = new WMSLayer({
-          url: "https://gis.lmi.is/geoserver/IS_50V/wms?service=WMS&version=1.1.0",
-          title: "Landmælingar Íslands IS 50V",
-          copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
-          visible: false, 
-          sublayers: [
-            {
-              name: "IS_50V:ornefni_punktar", // Layer to filter out from WMS
-              title: "Örnefni punktar", // title for in legend
-              copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
-              lengedUrl: ""}, // Url for legend image as png
-            {
-            name: "IS_50V:ornefni_linur", // Layer to filter out from WMS
-            title: "Örnefni línur", // title for in legend
-            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
-            lengedUrl: ""}, // Url for legend image as png
-            {
-            name: "IS_50V:ornefni_flakar", // Layer to filter out from WMS
-            title: "Örnefni flákar", // title for in legend
-            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
-            lengedUrl: ""}, // Url for legend image as png
-            {
-            name: "IS_50V:samgongur_linur", // layer to filter out from WMS
-            title: "Samgöngur línur", // title for in legend
-            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
-            legendUrl: ""}, // Url for legend image as png
-            {
-            name: "IS_50V:vatnafar_punktar", // Layer to filter out from WMS
-            title: "Vatnafar punktar", // title for in legend
-            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
-            lengedUrl: ""}, // Url for legend image as png
-            {
-              name: "IS_50V:vatnafar_linur", // Layer to filter out from WMS
-              title: "Vatnafar línur", // title for in legend
-              copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
-              lengedUrl: ""}, // Url for legend image as png
-            {
-            name: "IS_50V:vatnafar_flakar", // Layer to filter out from WMS
-            title: "Vatnafar flákar", // title for in legend
-            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
-            lengedUrl: ""}, // Url for legend image as png
-          ]}); 
+        // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
+        const map = new Map({
+          basemap: "satellite",
+          ground: "world-elevation",
+          layers:[sceneLayer,],
+          });
         
         // Vatnafar Línur
         const vatnafarLinur = new GeoJSONLayer({
@@ -130,6 +93,7 @@ define([
             visible: false, // Set visibility of the group layer
             layers: [vatnafarLinur, vatnafarFlakar] // Add the GeoJSONLayers as sublayers
             });
+          map.add(vatnafarLayer)
 
         const morkSveitarfelag = new GeoJSONLayer({
             url: "https://gis.lmi.is/geoserver/IS_50V/mork_sveitarf_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:mork_sveitarf_flakar&outputFormat=json",
@@ -176,6 +140,7 @@ define([
                 field: "nrsveitarfelags"
             }
             });
+        map.add(morkSveitarfelag,0)
 
         // Add Feature layer Obyggðanefnd
         // Create the FeatureLayer with multiple polygons
@@ -254,20 +219,7 @@ define([
               });
           });
       });
-
-
-        // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
-        const map = new Map({
-            basemap: "satellite",
-            ground: "world-elevation",
-            layers:[
-                morkSveitarfelag,
-                wmsLayer,
-                sceneLayer,
-                vatnafarLayer,
-                obnLayer,
-            ],
-            });
+      map.add(obnLayer)
 
         // Örnefni
         // Define a renderer that displays only the text labels
@@ -427,8 +379,7 @@ define([
           editable: false,
           layers: [ornefniFlakar, ornefniLinur],
           });
-
-        map.add(ornefniLayer, 4)
+        map.add(ornefniLayer, 3)
 
         //Þjóðlenðumörk Drangajökuls
         const thjodlendumork_drangajokuls = new GeoJSONLayer({
@@ -497,6 +448,109 @@ define([
           },
         });
         map.add(krofur_rikisins_sv10b_layer)
+
+        // WMS of LMI
+        const wmsLayer = new WMSLayer({
+          url: "https://gis.lmi.is/geoserver/IS_50V/wms?service=WMS&version=1.1.0",
+          title: "Landmælingar Íslands IS 50V",
+          copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
+          visible: false, 
+          sublayers: [
+            {
+              name: "IS_50V:ornefni_punktar", // Layer to filter out from WMS
+              title: "Örnefni punktar", // title for in legend
+              copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
+              lengedUrl: ""}, // Url for legend image as png
+            {
+            name: "IS_50V:ornefni_linur", // Layer to filter out from WMS
+            title: "Örnefni línur", // title for in legend
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
+            lengedUrl: ""}, // Url for legend image as png
+            {
+            name: "IS_50V:ornefni_flakar", // Layer to filter out from WMS
+            title: "Örnefni flákar", // title for in legend
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
+            lengedUrl: ""}, // Url for legend image as png
+            {
+            name: "IS_50V:samgongur_linur", // layer to filter out from WMS
+            title: "Samgöngur línur", // title for in legend
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
+            legendUrl: ""}, // Url for legend image as png
+            {
+            name: "IS_50V:vatnafar_punktar", // Layer to filter out from WMS
+            title: "Vatnafar punktar", // title for in legend
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
+            lengedUrl: ""}, // Url for legend image as png
+            {
+              name: "IS_50V:vatnafar_linur", // Layer to filter out from WMS
+              title: "Vatnafar línur", // title for in legend
+              copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
+              lengedUrl: ""}, // Url for legend image as png
+            {
+            name: "IS_50V:vatnafar_flakar", // Layer to filter out from WMS
+            title: "Vatnafar flákar", // title for in legend
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
+            lengedUrl: ""}, // Url for legend image as png
+          ]}); 
+          map.add(wmsLayer,0)
+
+          const wmsImagery = new WMSLayer({
+            url: "https://gis.lmi.is/mapcache/web-mercator/wms?service=WMS&version=1.1.0",
+            title: "Landmælingar Íslands Kortar",
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
+            visible: true, 
+            sublayers: [{
+                name: "Bathymetry", // layer to filter out from WMS
+                title: "Bathymetry", // title for in legend
+                visible: false,
+                copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",}, // Url for legend image as png
+                {
+                name: "Ferdakort_750", // Layer to filter out from WMS
+                title: "Ferðakort 1:750.000", // title for in legend
+                visible: false,
+                copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",}, // Url for legend image as png
+                {
+                name: "LMI_Island_einfalt", // Layer to filter out from WMS
+                title: "LMÍ, Ísland, einfalt", // title for in legend
+                visible: false,
+                copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",}, // Url for legend image as png
+                {
+                name: "LMI_Kort", // Layer to filter out from WMS
+                title: "LMI Kort", // title for in legend
+                visible: false,
+                copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",}, // Url for legend image as png
+                {
+                name: "AMS", // Layer to filter out from WMS
+                title: "AMS 1:50.000", // title for in legend
+                visible: false,
+                copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",}, // Url for legend image as png
+                {
+                name: "LMI_raster:atlas", // Layer to filter out from WMS
+                title: "Atlas 1:100.000", // title for in legend
+                visible: false,
+                copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",}, // Url for legend image as png
+                {
+                name: "LMI_raster:Atlas_50", // Layer to filter out from WMS
+                title: "Herforingjaráðskort Dana, 1:50.000", // title for in legend
+                visible: false,
+                copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",}, // Url for legend image as png
+                {
+                name: "DEM", // Layer to filter out from WMS
+                title: "IslandsDEM", // title for in legend
+                visible: false,
+                copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",}, // Url for legend image as png
+                {
+                name: "IslandsDEMDaylight", // Layer to filter out from WMS
+                title: "IslandsDEM Daylight", // title for in legend
+                visible: false,
+                copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",}, // Url for legend image as png
+                {
+                name: "LMI_Landslag", // Layer to filter out from WMS
+                title: "LMI_Landslag", // title for in legend
+                visible: false,
+                copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",}, // Url for legend image as png
+            ]}); 
+            map.add(wmsImagery,0)
         
         return map;
         }    

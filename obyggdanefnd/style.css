@@ -122,8 +122,7 @@ calcite-loader {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-  
+}  
   .floating-list { /*Layer list*/
     position: absolute;
     z-index: 100;

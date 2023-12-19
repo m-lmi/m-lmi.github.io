@@ -119,7 +119,7 @@ async function loadOrnefniPointLayer(map) {
           ];
 
     // Add the resulting FeatureLayer to the map
-    map.add(ornefniPointLayer,5); // 5 is the index of the layer position in map
+    map.add(ornefniPointLayer,6); // 5 is the index of the layer position in map
     await ornefniPointLayer.when(); // Wait for the layer to load
   } catch (error) {
     console.error("Error:", error);

@@ -8,21 +8,21 @@ define([
     "esri/widgets/LayerList",
   ], function(Home, BasemapGallery, LayerList) {
     return {
-      setupBasicWidgets: function(mapView) {
+      setupBasicWidgets: function(view) {
         const homeBtn = new Home({
-          view: mapView  
+          view: view  
         });
   
-        mapView.ui.add(homeBtn, "top-left");
-        mapView.ui.move("zoom", "top-left");
+        view.ui.add(homeBtn, "top-left");
+        view.ui.move("zoom", "top-left");
   
         const basemaps = new BasemapGallery({
-          view: mapView,
+          view: view,
           container: "basemaps-container"
         });
   
         const layerList = new LayerList({
-          view: mapView,
+          view: view,
           selectionEnabled: true,
           container: "layers-container"
         });

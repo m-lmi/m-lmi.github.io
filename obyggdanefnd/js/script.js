@@ -35,6 +35,7 @@ require([
   MouseElevation.setupMouseElevation(view);
   SplashScreen.showSplashScreen(view);
 
+
   let activePanel = null;
 
   // Event listeners
