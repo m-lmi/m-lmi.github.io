@@ -3,10 +3,7 @@
 ***********************************/
 // author:Landmælingar Íslands
 define([
-    "esri/WebMap",
-    "esri/views/SceneView",
     "esri/Map",
-    //"esri/WebScene",
     "esri/layers/GroupLayer",  
     "esri/layers/GeoJSONLayer",
     "esri/layers/SceneLayer",
@@ -16,10 +13,7 @@ define([
     "esri/layers/WFSLayer",
     "modules/multipointToPoint",
     ], function(
-      WebMap,
-      SceneView,
-      Map,
-      //WebScene, 
+      Map, 
       GroupLayer, 
       GeoJSONLayer,
       SceneLayer,
@@ -44,42 +38,50 @@ define([
         const wmsLayer = new WMSLayer({
           url: "https://gis.lmi.is/geoserver/IS_50V/wms?service=WMS&version=1.1.0",
           title: "Landmælingar Íslands IS 50V",
+          copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
           visible: false, 
           sublayers: [
             {
               name: "IS_50V:ornefni_punktar", // Layer to filter out from WMS
               title: "Örnefni punktar", // title for in legend
+              copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
               lengedUrl: ""}, // Url for legend image as png
             {
             name: "IS_50V:ornefni_linur", // Layer to filter out from WMS
             title: "Örnefni línur", // title for in legend
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
             lengedUrl: ""}, // Url for legend image as png
             {
             name: "IS_50V:ornefni_flakar", // Layer to filter out from WMS
             title: "Örnefni flákar", // title for in legend
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
             lengedUrl: ""}, // Url for legend image as png
             {
             name: "IS_50V:samgongur_linur", // layer to filter out from WMS
             title: "Samgöngur línur", // title for in legend
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
             legendUrl: ""}, // Url for legend image as png
             {
             name: "IS_50V:vatnafar_punktar", // Layer to filter out from WMS
             title: "Vatnafar punktar", // title for in legend
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
             lengedUrl: ""}, // Url for legend image as png
             {
               name: "IS_50V:vatnafar_linur", // Layer to filter out from WMS
               title: "Vatnafar línur", // title for in legend
+              copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
               lengedUrl: ""}, // Url for legend image as png
             {
             name: "IS_50V:vatnafar_flakar", // Layer to filter out from WMS
             title: "Vatnafar flákar", // title for in legend
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
             lengedUrl: ""}, // Url for legend image as png
           ]}); 
         
         // Vatnafar Línur
         const vatnafarLinur = new GeoJSONLayer({
             url: "https://gis.lmi.is/geoserver/IS_50V/vatnafar_linur/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:vatnafar_linur&outputFormat=json",
-            copyright: "Landmælingar Íslands IS50V",
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
             visible: true, 
             title: "Vatnafar Línur",
             renderer: {
@@ -95,7 +97,7 @@ define([
         // Vatnafar Flákar
         const vatnafarFlakar = new GeoJSONLayer({
             url: "https://gis.lmi.is/geoserver/IS_50V/vatnafar_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:vatnafar_flakar&outputFormat=json",
-            copyright: "Landmælingar Íslands IS50V",
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
             visible: true, 
             title: "Vatnafar Flakar",
             renderer: {
@@ -124,23 +126,14 @@ define([
         // Group the Vatnafar layers into one grouped layer    
         const vatnafarLayer = new GroupLayer({
             title: "Vatnafar", // Title for the group layer
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
             visible: false, // Set visibility of the group layer
             layers: [vatnafarLinur, vatnafarFlakar] // Add the GeoJSONLayers as sublayers
             });
 
-        // Mörk Sveitarfélag
-        const templateSveitarfelag = {
-            title: "{sveitarfelag}",
-            fieldInfos: [
-              {
-                fieldName: 'sveitarfelag',
-              }
-            ]
-          };
-
         const morkSveitarfelag = new GeoJSONLayer({
             url: "https://gis.lmi.is/geoserver/IS_50V/mork_sveitarf_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:mork_sveitarf_flakar&outputFormat=json",
-            copyright: "Landmælingar Íslands IS50V",
+            copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
             visible: false, 
             popupTemplate: {
               title: "{sveitarfelag}",
@@ -188,11 +181,13 @@ define([
         // Create the FeatureLayer with multiple polygons
         const obnLoadLayer = new FeatureLayer({
           url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer",
+          copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
       });
 
       // Create a GroupLayer to contain individual polygons
       const obnLayer = new GroupLayer({
           title: "Óbyggðanefnd óbreytt",
+          copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
           visible: false,
           editable: false,
           elevationInfo: {mode: "on-the-ground",}
@@ -210,6 +205,7 @@ define([
                       source: [feature], // Provide the individual feature
                       objectIdField: "fid", // Replace with your object ID field
                       title: `Mörk ${index + 1}: ${feature.attributes.athugasemdir}`, // Title for the layer
+                      copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
                       visible: true, // Set initial visibility as needed
                       editable: false,
                       // Add any other properties or configurations for the layer
@@ -223,7 +219,7 @@ define([
                           width: 3,
                         },
                         uniqueValueInfos: [
-                      { value:1, symbol: {type: "simple-line", color: "red", width: 6,}},
+                      { value:1, symbol: {type: "simple-line", color: [139,0,139], width: 6,}},
                       { value:2, symbol: {type: "simple-line", color: "green", width: 3}},
                       { value:3, symbol: {type: "simple-line", color: "gold", width: 3}},
                       { value:4, symbol: {type: "simple-line", color: "indigo", width: 3}},
@@ -277,7 +273,7 @@ define([
         // Define a renderer that displays only the text labels
         const ornefniFlakar = new GeoJSONLayer({
           url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_flakar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_flakar&outputFormat=json",
-          copyright: "Landmælingar Íslands IS50V",
+          copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
           visible: true, 
           editable: false,
           title: "Örnefni flakar",
@@ -348,7 +344,7 @@ define([
         // Örnefni línur
         const ornefniLinur = new GeoJSONLayer({
           url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_linur/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_linur&outputFormat=json",
-          copyright: "Landmælingar Íslands IS50V",
+          copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
           visible: true, 
           editable: false,
           title: "Örnefni línur",
@@ -426,12 +422,81 @@ define([
         // Create a GroupLayer to contain örnefni
         const ornefniLayer = new GroupLayer({
           title: "Örnefni",
+          copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
           visible: false,
           editable: false,
           layers: [ornefniFlakar, ornefniLinur],
           });
 
         map.add(ornefniLayer, 4)
+
+        //Þjóðlenðumörk Drangajökuls
+        const thjodlendumork_drangajokuls = new GeoJSONLayer({
+          url: "https://gis.lmi.is/geoserver/obyggdanefnd/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=obyggdanefnd:thjodlendumork_drangajokuls&srsName=EPSG%3A4326&outputFormat=json",
+          title: "Þjóðlenðumörk Drangajökuls",
+          copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
+          visible: true, 
+          elevationInfo: {mode: "on-the-ground"},
+          popupTemplate: {
+            title: "Þjóðlenðumörk Drangajökuls",
+          },
+          renderer: {
+            type: "simple",
+            symbol: {
+              type: "simple-line", // Use simple-line for 2D lines
+              color: "red", // Set the color of the line
+              opacity: 0.8,
+              width: 5, // Adjust the width of the line
+              cap: "round",
+            }
+          },
+        });
+        map.add(thjodlendumork_drangajokuls);
+
+        // Mörk SV10B - SV10A
+        const morkSV10B10A = new GeoJSONLayer({
+          url: "https://gis.lmi.is/geoserver/obyggdanefnd/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=obyggdanefnd:mork-sv10b-sv10a&srsName=EPSG%3A4326&outputFormat=json",
+          copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
+          visible: true, 
+          title: "Mörk milli svæða SV10B-10A",
+          elevationInfo: {mode: "on-the-ground"},
+          popupTemplate: {
+            title: "Mörk milli svæða SV10B-10A",
+          },
+          renderer: {
+            type: "simple",
+            symbol: {
+              type: "simple-line", // Use simple-line for 2D lines
+              style: "dash",
+              color: "yellow", // Set the color of the line
+              opacity: 0.8,
+              width: 6, // Adjust the width of the line
+              cap: "round",
+            }
+          },
+          }); 
+        map.add(morkSV10B10A)
+
+        // Kröfur Rikisins SV10B
+        const krofur_rikisins_sv10b_layer = new GeoJSONLayer({
+          url: "https://gis.lmi.is/geoserver/obyggdanefnd/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=obyggdanefnd:krofur_rikisins_sv10b&srsName=EPSG%3A4326&outputFormat=json",
+          copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
+          visible: true, 
+          title: "Kröfur ríkisins á svæði 10B",
+          elevationInfo: {mode: "on-the-ground"},
+          popupTemplate: {
+            title: "Kröfur ríkisins á svæði 10B",
+          },
+          renderer: {
+            type: "simple", // Specify the renderer type as 'simple'
+            symbol: {
+              type: "simple-line",
+              color: "black", // Set the color to black [R, G, B]
+              width: 2
+            }
+          },
+        });
+        map.add(krofur_rikisins_sv10b_layer)
         
         return map;
         }    

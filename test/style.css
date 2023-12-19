@@ -89,12 +89,14 @@ calcite-loader {
   /*///////////////////////*/
  /*         WIDGETS       */
 /*///////////////////////*/
+
   /*Style for panels with widgets*/ 
-.floating-panel { /*Basemaps*/
+/* BASEMAP */
+.floating-basemap { /*Basemaps*/
     position: absolute;
     z-index: 100;
     top: 65px;
-    right: 100px;
+    right: 300px;
     width: 250px;
     height: 40%;
     background-color: white;
@@ -123,14 +125,14 @@ calcite-loader {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-  
+
   .floating-list { /*Layer list*/
     position: absolute;
     z-index: 100;
     top: 65px;
     right: 65px;
     width: 300px;
-    height: 75%;
+    height: fit-content;
     background-color: white;
     border: 1px solid #ccc;
     display: none; /* Initially hidden */
@@ -140,8 +142,8 @@ calcite-loader {
   .floating-widget {
     position: absolute;
     z-index: 100;
-    top: 70px;
-    right: 65px;
+    top: 0px;
+    right: 0px;
     width: fit-content;
     height: fit-content;
     background-color: white;
@@ -171,7 +173,7 @@ calcite-loader {
     top: 0px;
     right: 75px;
     width: 250px;
-    min-height: 260px;
+    min-height: fit-content;
     max-height: fit-content;
     background-color: white;
     border: 1px solid #ccc;
@@ -185,21 +187,8 @@ calcite-loader {
     top: 0px;
     right: 50px;
     width: 250px;
-    min-height: 260px;
+    min-height: fit-content;
     max-height: fit-content;
-    background-color: white;
-    border: 1px solid #ccc;
-    display: none; /* Initially hidden */
-    overflow: auto;
-  }
-
-  .floating-widget {
-    position: absolute;
-    z-index: 100;
-    top: 0px;
-    right: 0px;
-    width: fit-content;
-    height: fit-content;
     background-color: white;
     border: 1px solid #ccc;
     display: none; /* Initially hidden */
@@ -212,7 +201,7 @@ calcite-loader {
     top: 0px;
     right: 0px;
     width: fit-content;
-    height: 75%;
+    height: 40%;
     background-color: white;
     border: 1px solid #ccc;
     display: none; /* Initially hidden */

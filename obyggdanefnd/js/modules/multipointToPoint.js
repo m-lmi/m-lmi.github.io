@@ -65,6 +65,7 @@ async function loadOrnefniPointLayer(map) {
           ornefniPointLayer.title ="Örnefni punktar";
           ornefniPointLayer.visible = false;
           ornefniPointLayer.editable = false;
+          ornefniPointLayer.copyright = "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>";
           ornefniPointLayer.renderer = {
                 type: "simple", // autocasts as new SimpleRenderer()
                 symbol: {

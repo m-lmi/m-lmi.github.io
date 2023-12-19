@@ -26,6 +26,7 @@ define([
         const obnDynamicLayer = new FeatureLayer({
           title: "Óbyggðanefnd breytilegt",
           url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obnEditFeatures/FeatureServer/",
+          copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
           editable: true,
           visible: true,
           elevationInfo: {
@@ -41,7 +42,7 @@ define([
               width: 3,
             },
             uniqueValueInfos: [
-          { value:1, symbol: {type: "simple-line", color: "red", width: 6,}},
+          { value:1, symbol: {type: "simple-line", color: [139,0,139], width: 6,}},
           { value:2, symbol: {type: "simple-line", color: "green", width: 3}},
           { value:3, symbol: {type: "simple-line", color: "gold", width: 3}},
           { value:4, symbol: {type: "simple-line", color: "indigo", width: 3}},
@@ -72,22 +73,7 @@ define([
           opacity: 0.8,
           maxScale: 0
         });
-        
 
-         // Create the FeatureLayer with multiple polygons
-         const obnLoadLayer = new FeatureLayer({
-            url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer/",
-        });
-
-        // Create a GroupLayer to contain individual polygons
-        const obnEditGroup = new GroupLayer({
-            title: "Óbyggðanefnd óbreytt",
-            visible: false,
-            editable: false,
-            elevationInfo: {
-                mode: "on-the-ground"
-            }
-        });        
 
         // Create the Editor widget with the "test" feature layer
         const editor = new Editor({
