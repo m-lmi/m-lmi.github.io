@@ -256,7 +256,7 @@ define([
                       { value:1, symbol: {type: "simple-line", color: [139,0,139], width: 6,}},
                       { value:2, symbol: {type: "simple-line", color: "green", width: 3}},
                       { value:3, symbol: {type: "simple-line", color: "gold", width: 3}},
-                      { value:4, symbol: {type: "simple-line", color: "indigo", width: 3}},
+                      { value:4, symbol: {type: "simple-line", color: [50,0,200], width: 3}},
                       { value:5, symbol: {type: "simple-line", color: "blue", width: 3}},
                       { value:6, symbol: {type: "simple-line", color: "fuchsia", width: 3}},
                       { value:7, symbol: {type: "simple-line", color: "darkorange", width: 3}},
@@ -282,7 +282,7 @@ define([
                             },
                         ],
                     },
-                      opacity: 0.8,
+                      opacity: 1,
                   });
                   obnLayer.add(singleFeatureOBNLayer); // Add the FeatureLayer to the GroupLayer
               });
