@@ -5,11 +5,9 @@
 define([
     "esri/widgets/Editor",
     "esri/layers/FeatureLayer",
-    "esri/layers/GroupLayer",
     ], function(
       Editor,
       FeatureLayer,
-      GroupLayer,
       ) {
       return {
         editLayer: function(map, view) {

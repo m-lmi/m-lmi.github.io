@@ -371,9 +371,9 @@ define([
           title: "Örnefni línur",
           elevationInfo: {mode: "on-the-ground"},
           renderer: {
-            type: "simple", // autocasts as new SimpleRenderer()
+            type: "simple", 
             symbol: {
-              type: "line-3d", // Define the symbol type as line-3d
+              type: "line-3d", 
               symbolLayers: [
                 {
                   type: "line",
