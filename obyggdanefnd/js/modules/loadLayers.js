@@ -144,73 +144,73 @@ define([
 
         // Add Feature layer Obyggðanefnd
 
-                //Þjóðlenðumörk Drangajökuls
-                const thjodlendumork_drangajokuls = new GeoJSONLayer({
-                  url: "https://gis.lmi.is/geoserver/obyggdanefnd/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=obyggdanefnd:thjodlendumork_drangajokuls&srsName=EPSG%3A4326&outputFormat=json",
-                  title: "Þjóðlenðumörk Drangajökuls",
-                  copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
-                  visible: true, 
-                  elevationInfo: {mode: "on-the-ground"},
-                  popupTemplate: {
-                    title: "Þjóðlenðumörk Drangajökuls",
-                  },
-                  renderer: {
-                    type: "simple",
-                    symbol: {
-                      type: "simple-line", // Use simple-line for 2D lines
-                      color: "red", // Set the color of the line
-                      opacity: 0.8,
-                      width: 5, // Adjust the width of the line
-                      cap: "round",
-                    }
-                  },
-                });
-                map.add(thjodlendumork_drangajokuls);
-        
-                // Mörk SV10B - SV10A
-                const morkSV10B10A = new GeoJSONLayer({
-                  url: "https://gis.lmi.is/geoserver/obyggdanefnd/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=obyggdanefnd:mork-sv10b-sv10a&srsName=EPSG%3A4326&outputFormat=json",
-                  copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
-                  visible: true, 
-                  title: "Mörk milli svæða SV10B-10A",
-                  elevationInfo: {mode: "on-the-ground"},
-                  popupTemplate: {
-                    title: "Mörk milli svæða SV10B-10A",
-                  },
-                  renderer: {
-                    type: "simple",
-                    symbol: {
-                      type: "simple-line", // Use simple-line for 2D lines
-                      style: "dash",
-                      color: "yellow", // Set the color of the line
-                      opacity: 0.8,
-                      width: 6, // Adjust the width of the line
-                      cap: "round",
-                    }
-                  },
-                  }); 
-                map.add(morkSV10B10A)
-        
-                // Kröfur Rikisins SV10B
-                const krofur_rikisins_sv10b_layer = new GeoJSONLayer({
-                  url: "https://gis.lmi.is/geoserver/obyggdanefnd/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=obyggdanefnd:krofur_rikisins_sv10b&srsName=EPSG%3A4326&outputFormat=json",
-                  copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
-                  visible: true, 
-                  title: "Kröfur ríkisins á svæði 10B",
-                  elevationInfo: {mode: "on-the-ground"},
-                  popupTemplate: {
-                    title: "Kröfur ríkisins á svæði 10B",
-                  },
-                  renderer: {
-                    type: "simple", // Specify the renderer type as 'simple'
-                    symbol: {
-                      type: "simple-line",
-                      color: "black", // Set the color to black [R, G, B]
-                      width: 2
-                    }
-                  },
-                });
-                map.add(krofur_rikisins_sv10b_layer)
+        //Þjóðlenðumörk Drangajökuls
+        const thjodlendumork_drangajokuls = new GeoJSONLayer({
+          url: "https://gis.lmi.is/geoserver/obyggdanefnd/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=obyggdanefnd:thjodlendumork_drangajokuls&srsName=EPSG%3A4326&outputFormat=json",
+          title: "Þjóðlenðumörk Drangajökuls",
+          copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
+          visible: false, 
+          elevationInfo: {mode: "on-the-ground"},
+          popupTemplate: {
+            title: "Þjóðlenðumörk Drangajökuls",
+          },
+          renderer: {
+            type: "simple",
+            symbol: {
+              type: "simple-line", // Use simple-line for 2D lines
+              color: "red", // Set the color of the line
+              opacity: 0.8,
+              width: 5, // Adjust the width of the line
+              cap: "round",
+            }
+          },
+        });
+        map.add(thjodlendumork_drangajokuls);
+
+        // Mörk SV10B - SV10A
+        const morkSV10B10A = new GeoJSONLayer({
+          url: "https://gis.lmi.is/geoserver/obyggdanefnd/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=obyggdanefnd:mork-sv10b-sv10a&srsName=EPSG%3A4326&outputFormat=json",
+          copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
+          visible: false, 
+          title: "Mörk milli svæða SV10B-10A",
+          elevationInfo: {mode: "on-the-ground"},
+          popupTemplate: {
+            title: "Mörk milli svæða SV10B-10A",
+          },
+          renderer: {
+            type: "simple",
+            symbol: {
+              type: "simple-line", // Use simple-line for 2D lines
+              style: "dash",
+              color: "yellow", // Set the color of the line
+              opacity: 0.8,
+              width: 6, // Adjust the width of the line
+              cap: "round",
+            }
+          },
+          }); 
+        map.add(morkSV10B10A)
+
+        // Kröfur Rikisins SV10B
+        const krofur_rikisins_sv10b_layer = new GeoJSONLayer({
+          url: "https://gis.lmi.is/geoserver/obyggdanefnd/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=obyggdanefnd:krofur_rikisins_sv10b&srsName=EPSG%3A4326&outputFormat=json",
+          copyright: "<a href='https://obyggdanefnd.is/'>Óbyggðanefnd</a>",
+          visible: false, 
+          title: "Kröfur ríkisins á svæði 10B",
+          elevationInfo: {mode: "on-the-ground"},
+          popupTemplate: {
+            title: "Kröfur ríkisins á svæði 10B",
+          },
+          renderer: {
+            type: "simple", // Specify the renderer type as 'simple'
+            symbol: {
+              type: "simple-line",
+              color: "black", // Set the color to black [R, G, B]
+              width: 2
+            }
+          },
+        });
+        map.add(krofur_rikisins_sv10b_layer)
                 
         // Create the FeatureLayer with multiple polygons
         const obnLoadLayer = new FeatureLayer({
