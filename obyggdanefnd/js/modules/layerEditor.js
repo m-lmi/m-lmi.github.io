@@ -19,7 +19,7 @@ define([
           url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obnEditFeatures/FeatureServer/",
           copyright: "<a href='https://www.lmi.is/'>Landmælingar Íslands</a>",
           editable: true,
-          visible: true,
+          visible: false,
           elevationInfo: {
             mode: "on-the-ground"
           },
