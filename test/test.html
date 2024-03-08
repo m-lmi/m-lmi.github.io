@@ -1,13 +1,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="initial-scale=1,maximum-scale=1,user-scalable=no"
-    />
-    <title>
-      Create a local scene | Sample | ArcGIS Maps SDK for JavaScript 4.28
-    </title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Edit features in 3D with the Editor widget | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.28/"></script>
     <style>
       html,
       body,
@@ -18,234 +15,246 @@
         width: 100%;
       }
     </style>
-
-    <link
-      rel="stylesheet"
-      href="https://js.arcgis.com/4.28/esri/themes/light/main.css"
-    />
-    <script src="https://js.arcgis.com/4.28/"></script>
-
     <script>
-      require([
-        "esri/Map",
-        "esri/views/SceneView",
-        "esri/layers/FeatureLayer",
-        "esri/widgets/Home",
-        "esri/core/reactiveUtils"
-      ], (Map, SceneView, FeatureLayer, Home, reactiveUtils) => {
-        const quakesUrl =
-          "https://luk.vedur.is/arcgis/rest/services/skjalftar/skjalftar_isn93/FeatureServer/1";
-          
-        //https://developers.arcgis.com/javascript/latest/sample-code/sandbox/?sample=timeslider-filter
-        // https://luk.vedur.is/arcgis/rest/services/skjalftar/skjalftar_isn93/FeatureServer/1?f=pjson
-        // The clipping extent for the scene
-        const kansasExtent = {
-          // autocasts as new Extent()
-          xmax: 811854,
-          xmin: 252851,
-          ymax: 707776,
-          ymin: 302498,
-          spatialReference: {
-            // autocasts as new SpatialReference()
-            wkid: 3857
+      require([  "esri/Map", "esri/layers/FeatureLayer", "esri/layers/support/TileInfo", "esri/layers/WebTileLayer", "esri/WebScene", "esri/views/SceneView", "esri/widgets/Editor"], (
+        Map,
+        FeatureLayer,
+        TileInfo,
+        WebTileLayer,
+        WebScene,
+        SceneView,
+        Editor
+      ) => {
+
+        // Create a map from the referenced webscene item id
+        /*const webscene = new WebScene({
+          portalItem: {
+            id: "ad3a0bfc93cd4fbfa37b0fd339c80a3e"
           }
-        };
+        });*/
 
-        /********************************************************
-         * Renderer for symbolizing earthquakes below the surface
-         *
-         * Earthquakes will be symbolized as spheres. The size of
-         * each will coincide with the magnitude of the earthquake,
-         * while the color will indicate the date at which the
-         * earthquake occured. The more white the color, the older the
-         * earthquake. The deeper the red, the more recent the
-         * earthquake occurred.
-         *******************************************************/
+          // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
+          const map = new Map({
+            basemap: "satellite",
+            ground: "world-elevation",
+            //layers:[],
+          });
 
-        const quakesRenderer = {
-          type: "simple", // autocasts as new SimpleRenderer()
-          symbol: {
-            type: "point-3d", // autocasts as new PointSymbol3D()
-            symbolLayers: [
+        // Create a layer with visualVariables to use interactive handles for size and rotation
+        /*
+        const recreationLayer = new FeatureLayer({
+          title: "Recreation",
+          url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/EditableFeatures3D/FeatureServer/1",
+          elevationInfo: {
+            mode: "absolute-height"
+          },
+          renderer: {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            field: "TYPE",
+            visualVariables: [
               {
-                type: "object", // autocasts as new ObjectSymbol3DLayer()
-                resource: {
-                  primitive: "sphere"
+                // size can be modified with the interactive handle
+                type: "size",
+                field: "SIZE",
+                axis: "height",
+                valueUnit: "meters"
+              },
+              {
+                // rotation can be modified with the interactive handle
+                type: "rotation",
+                field: "ROTATION"
+              }
+            ],
+            uniqueValueInfos: [
+              {
+                value: "1",
+                label: "Slide",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Slide.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Slide"
+                  }
+                }
+              },
+              {
+                value: "2",
+                label: "Swing",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Swing.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Swing"
+                  }
                 }
               }
             ]
+          }
+        });
+
+        webscene.add(recreationLayer);*/
+        
+        /*
+          // Create a layer with visualVariables to use interactive handles for size and rotation
+          const testLayer = new FeatureLayer({
+          title: "Test",
+          url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/testEditable/FeatureServer/0",
+          editable: true,
+          elevationInfo: {
+            mode: "absolute-height"
           },
-          visualVariables: [
-            {
-              type: "color",
-              field: "date_evt",
-              stops: [
-                {
-                  // From mid-2013
-                  value: startDate.valueOf(),
-                  color: "white"
-                },
-                {
-                  value: endDate.valueOf(),
-                  color: "red"
-                }
-              ] // to Nov. 2015
-            },
-            {
-              type: "size",
-              field: "mag",
-              axis: "all",
-              stops: [
-                {
-                  value: 2,
-                  size: 100
-                },
-                {
-                  value: 5,
-                  size: 2000
-                }
-              ]
-            }
-          ]
-        };
-
-        /********************************************************
-         * Renderer for symbolizing earthquakes on the surface
-         *******************************************************/
-
-        // Quakes will be symbolized as circles
-        const surfaceSym = {
-          type: "point-3d", // autocasts as new PointSymbol3D()
-          symbolLayers: [
-            {
-              type: "icon", // autocasts as new IconSymbol3DLayer()
-              material: {
-                color: [179, 75, 75]
+          renderer: {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            field: "TYPE",
+            visualVariables: [
+              {
+                // size can be modified with the interactive handle
+                type: "size",
+                field: "SIZE",
+                axis: "height",
+                valueUnit: "meters"
               },
-              resource: {
-                primitive: "circle"
+              {
+                // rotation can be modified with the interactive handle
+                type: "rotation",
+                field: "ROTATION"
               }
-            }
-          ]
-        };
-
-        // Symbol size will vary depending on magnitude of the quake
-        const quakesSurfaceRenderer = {
-          type: "simple", // autocasts as new SimpleRenderer()
-          symbol: surfaceSym,
-          visualVariables: [
-            {
-              type: "size",
-              field: "mag",
-              axis: "all",
-              stops: [
-                {
-                  value: 2,
-                  size: 3
-                },
-                {
-                  value: 5,
-                  size: 50
+            ],
+            uniqueValueInfos: [
+              {
+                value: "1",
+                label: "Slide",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Slide.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Slide"
+                  }
                 }
-              ]
-            }
-          ]
-        };
-
-        /********************************************************
-         * The popupTemplate that will populate the content of the
-         * popup when an earthquake feature is selected
-         *******************************************************/
-
-        const quakeTemplate = {
-          // autocasts as new PopupTemplate()
-          title: "{place}",
-          content:
-            "<b>Date and time:</b> {date_evt}<br>" +
-            "<b>Magnitude (0-10): </b> {mag}<br>" +
-            "<b>Depth: </b> {depth} km<br>",
-          fieldInfos: [
-            {
-              fieldName: "date_evt",
-              format: {
-                dateFormat: "short-date-short-time"
+              },
+              {
+                value: "2",
+                label: "Swing",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Swing.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Swing"
+                  }
+                }
               }
-            }
-          ]
-        };
-
-        /********************************************************
-         * Create earthquakes layers (one on the surface and one
-         * below the surface to show actual location).
-         *******************************************************/
-
-        // Defines a layer for drawing the exact location of quakes below the surface
-        const quakesDepthLayer = new FeatureLayer({
-          url: quakesUrl,
-          // Show only quakes of magnitude 2.0 or higher
-          definitionExpression: "mag >= 2",
-          outFields: ["*"],
-          renderer: quakesRenderer,
-          popupTemplate: quakeTemplate,
-          returnZ: true,
-          elevationInfo: {
-            mode: "relative-to-ground"
+            ]
           }
         });
-
-        // Defines a layer for depicting quakes on the surface
-        const quakesSurfaceLayer = new FeatureLayer({
-          url: quakesUrl,
-          definitionExpression: "mag >= 2",
-          outFields: ["*"],
-          renderer: quakesSurfaceRenderer,
-          popupTemplate: quakeTemplate,
-          opacity: 0.6,
-          elevationInfo: {
-            mode: "on-the-ground"
-          }
-        });
-
-        /********************************************************************
-         * Create a map with the above defined layers and a topographic
-         * basemap. Setting the navigationConstraint on the ground to be of
-         * type "none" will allow the user to navigate the view's camera
-         * below the surface.
-         ********************************************************************/
-        const map = new Map({
-          basemap: "topo-vector",
-          layers: [
-            quakesDepthLayer,
-            quakesSurfaceLayer
+        webscene.add(testLayer);
+        */
+              
+        const demTileInfo = new TileInfo({
+          spatialReference: {
+            wkid: 3057 // Set the WKID for EPSG:3057 projection
+          },
+          origin: {
+            x: 0,
+            y: 0
+          },
+          lods: [
+            { level: 0, resolution: 4096 },
+            { level: 1, resolution: 2048 },
+            { level: 2, resolution: 1024},
+            { level: 3, resolution: 512 },
+            { level: 4, resolution: 256 },
+            { level: 5, resolution: 128 },
+            { level: 6, resolution: 64 },
+            { level: 7, resolution: 32 },
+            { level: 8, resolution: 16 },
+            { level: 9, resolution: 8 },
+            { level: 10, resolution: 4 },
+            { level: 11, resolution: 2 },
+            { level: 12, resolution: 1 },
+            { level: 13, resolution: 0.5 },
+            { level: 14, resolution: 0.25 },
+            { level: 15, resolution: 0.125 },
+            { level: 16, resolution: 0.0625 },
+            // Add other levels as per your requirement
           ],
-          ground: {
-            navigationConstraint: {
-              type: "none"
-            }
+          size: [512, 512] // Tile size
+        });
+
+          // Web Tile Layer DEM
+          const demLayer = new WebTileLayer({
+            urlTemplate: "https://gis.lmi.is/mapcache/isn93/tms/1.0.0/IslandsDEMDaylight@EPSG:3057/{z}/{x}/{-y}.png",
+            //copyright: 'Map data from &copy; <a href="https://www.loftmyndir.is/" target="_blank">Loftmyndir</a> Map design by &copy; <a href="http://opentopomap.org/" target="_blank">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank">CC-BY-SA</a>) contributors'
+            title: "ÍslandsDEM",
+            spatialReference: {
+              wkid: 3057 // Set the WKID for EPSG:3057 projection
+            },
+            tileInfo: demTileInfo,
+          });
+          map.add(demLayer)
+
+      
+      // The clipping extent for the scene
+      const drangaExtent = {
+        // autocasts as new Extent()
+        xmax: -21,
+        xmin: -23.5,
+        ymax: 66.5,
+        ymin: 65.5,
+        spatialReference: {
+          // autocasts as new SpatialReference()
+          wkid: 4326
+        }
+      };
+  
+      // Make new 3D SceneView
+        const view = new SceneView({
+          container: "viewDiv", //This your main container in HTML for all the widgets
+          map: map,
+          viewingMode: "global", //opion "local" to make cropped 2D
+          extent: drangaExtent,
+          environment: {
+            weather: {
+              type: "cloudy", // autocasts as new CloudyWeather({ cloudCover: 1 })
+              cloudCover: 0.2
+            },
+            atmosphere: {
+              quality: "high"
+            },
           }
         });
 
-        /********************************************************************
-         * Create a local scene in south central Kansas
-         *
-         * To create a local scene, you must set the viewingMode to "local".
-         * To define a small, localized area for the view, set
-         * the clippingArea property.
-         ********************************************************************/
-        const view = new SceneView({
-          container: "viewDiv",
-          map: map,
-          // Indicates to create a local scene
-          viewingMode: "local",
-          // Use the exent defined in clippingArea to define the bounds of the scene
-          clippingArea: kansasExtent,
-          extent: kansasExtent,
-          // Turns off atmosphere and stars settings
-          environment: {
-            atmosphereEnabled: false,
-            starsEnabled: false
-          }
-        });
       });
     </script>
   </head>

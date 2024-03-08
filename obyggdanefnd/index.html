@@ -162,6 +162,14 @@
               icon="brightness">
               <calcite-tooltip slot="tooltip" reference-element="info-action" overlay-positioning="fixed" placement="bottom">Dagsbirtuhermi</calcite-tooltip>
             </calcite-action>
+            <calcite-action
+            id="editorBtn"
+            data-action-id="editor"
+            text="Breyta"
+            text-enabled
+            icon="layers-editable">
+            <calcite-tooltip slot="tooltip" reference-element="info-action" overlay-positioning="fixed" placement="bottom">Breyta</calcite-tooltip>
+          </calcite-action>
           </calcite-action-bar> 
         </div>
         <!-- Custom Floating Panels -->
@@ -198,6 +206,9 @@
         <div id="daylightPanel" class="floating-widget">
           <div id="daylight-container"></div>
         </div> 
+        <div id="editorPanel" class="floating-editor">
+          <div id="editor-container"></div>
+        </div>
       </div> <!-- Div for viewDiv -->
     </calcite-shell> <!-- Shell for the header, panels and map -->
 </body>

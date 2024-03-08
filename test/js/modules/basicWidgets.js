@@ -107,17 +107,18 @@ define([
           selectionEnabled: true,
           container: "layers-container"
         }); 
-  
-  
-        // Initialize the Search widget
-        const search = new Search({
+
+        /*const scaleBar = new ScaleBar({
           view: mapView,
-          container: "search-container"
+          unit: "dual"
         });
+        mapView.ui.add(scaleBar, "bottom-right");*/
+
+        // Assuming you have defined your rendererObyggdanefnd previously
+const layerListContainer = document.getElementById("layer-list");
   
-      
-        
-        
+  
+
       },
     };
   });

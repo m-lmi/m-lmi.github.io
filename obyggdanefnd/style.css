@@ -192,6 +192,18 @@ calcite-loader {
     overflow: auto;
   }
 
+  .floating-editor {
+    position: absolute;
+    z-index: 100;
+    top: 0px;
+    right: 0px;
+    width: fit-content;
+    height: 40%;
+    background-color: white;
+    border: 1px solid #ccc;
+    display: none; /* Initially hidden */
+    overflow: auto;
+  }
 
    /*///////////////////////*/
   /*     SPLASH SCREEN     */

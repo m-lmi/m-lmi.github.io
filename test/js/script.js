@@ -1,10 +1,16 @@
+//import setupMouseElevation from "./modules/mouseElevation"
 require([
     "modules/mapConfig",
     "modules/basicWidgets",
     "modules/weatherDaylight",
     "modules/measurementWidget",
     "modules/loadLayers",
-    //"modules/cameraPosition",
+    "modules/layerEditor",
+    "modules/searchWidget",
+    "modules/mouseElevation",
+    "modules/splashScreen",
+    "modules/wfsConnector",
+    "modules/mapsLMI",
     "esri/config",
     "esri/WebMap",
     "esri/views/SceneView",
@@ -33,7 +39,12 @@ require([
     WeatherDaylight,
     MeasurementWidget,
     LoadLayers,
-    //CameraPosition,
+    LayerEditor,
+    SearchWidget,
+    MouseElevation,
+    SplashScreen,
+    wfsConnector,
+    MapsLMI,
     esriConfig,
     WebMap,
     SceneView,
@@ -63,7 +74,19 @@ require([
     const mapView = MapConfig.setupScene(map); // Insert map and Capture the returned mapView
     WeatherDaylight.setupWeatherDaylight(mapView);
     MeasurementWidget.setupMeasurementWidget(mapView);
-    BasicWidgets.setupBasicWidgets(mapView);          
+    BasicWidgets.setupBasicWidgets(mapView);
+    SearchWidget.setupSearchWidgets(map, mapView);
+    LayerEditor.editLayer(map, mapView);
+    MouseElevation.setupMouseElevation(mapView);
+    SplashScreen.showSplashScreen(mapView);
+    wfsConnector.setupWFSConnections(map, mapView);
+    MapsLMI.setupMapsLMI(map, mapView);
+
+
+    ////// Import example
+    //const zElement = setupMouseElevation(mapView);
+    //document.getElementById("viewDiv").appendChild(zElement);
+
 
     /////////////// IDEAS TO ADD ///////////////
     //https://developers.arcgis.com/javascript/latest/sample-code/sketch-3d/
@@ -71,12 +94,17 @@ require([
     //https://developers.arcgis.com/javascript/latest/sample-code/overview-map/
     //https://developers.arcgis.com/javascript/latest/sample-code/views-switch-2d-3d/
     //https://developers.arcgis.com/javascript/latest/sample-code/layers-featurelayer-shapefile/
+    //https://developers.arcgis.com/javascript/latest/sample-code/sandbox/?sample=layers-featurelayer-large-collection/
 
 
     let activePanel = null;
 
     document.getElementById("basemapsBtn").addEventListener("click", function() {
         togglePanel("basemapsPanel");
+      });
+
+      document.getElementById("mapsBtn").addEventListener("click", function() {
+        togglePanel("mapsPanel");
       });
       
       document.getElementById("layersBtn").addEventListener("click", function() {
@@ -85,15 +113,23 @@ require([
 
       document.getElementById("searchBtn").addEventListener("click", function() {
         togglePanel("searchPanel");
-      });      
-
-    document.getElementById("distanceBtn").addEventListener("click", function() {
+      });   
+    
+      document.getElementById("distanceBtn").addEventListener("click", function() {
         togglePanel("distancePanel");
       });
-  
-    document.getElementById("areaBtn").addEventListener("click", function() {
+
+      document.getElementById("areaBtn").addEventListener("click", function() {
         togglePanel("areaPanel");
-    });
+      });    
+
+      document.getElementById("clearDistanceBtn").addEventListener("click", function() {
+        togglePanel("distancePanel");
+      });
+      
+      document.getElementById("clearAreaBtn").addEventListener("click", function() {
+        togglePanel("areaPanel");
+      });
 
     document.getElementById("weatherBtn").addEventListener("click", function() {
         togglePanel("weatherPanel");
@@ -103,7 +139,15 @@ require([
         togglePanel("daylightPanel");
     });
 
-    // Toggle pannels, except that problematic measurements buttons
+    document.getElementById("editorBtn").addEventListener("click", function() {
+      togglePanel("editorPanel");
+    });
+
+    document.getElementById("wfsconnectionBtn").addEventListener("click", function() {
+      togglePanel("wfsconnectionPanel");
+    });
+
+    // Toggle pannels
     function togglePanel(panelId) {
         if (activePanel) {
             document.getElementById(activePanel).style.display = "none";
@@ -116,19 +160,4 @@ require([
             activePanel = null;
         }
         }
-
-    /*
-    const editor = new Editor({
-      view: mapView,
-    });
-    mapView.ui.add(editor, "bottom-right");
-    */
-  
-    /*
-  // Add legend
-    const legend = new Legend ({
-        view: mapView
-    });
-    mapView.ui.add(legend, "bottom-right");
-    */
 });
