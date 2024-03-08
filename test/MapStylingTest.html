@@ -1,170 +1,226 @@
 <html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>GeoJSONLayer | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
-
-  <style>
-    html,
-    body,
-    #viewDiv {
-      padding: 0;
-      margin: 0;
-      height: 100%;
-      width: 100%;
-    }
-
-  </style>
-
-  <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
-  <script src="https://js.arcgis.com/4.28/"></script>
-
-  <script>
-    require(["esri/Map", "esri/layers/GeoJSONLayer", "esri/views/MapView", "esri/renderers/UniqueValueRenderer", "esri/layers/FeatureLayer",], (
-      Map,
-      GeoJSONLayer,
-      MapView,
-      UniqueValueRenderer,
-      FeatureLayer
-    ) => {
-      // If GeoJSON files are not on the same domain as your website, a CORS enabled server
-      // or a proxy is required.
-      //const url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
-      const url ="https://gis.lmi.is/geoserver/IS_50V/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=IS_50V%3Amork_sveitarf_svaedi&maxFeatures=100000&outputFormat=application%2Fjson"
-      // Paste the url into a browser's address bar to download and view the attributes
-      // in the GeoJSON file. These attributes include:
-      // * mag - magnitude
-      // * type - earthquake or other event such as nuclear test
-      // * place - location of the event
-      // * time - the time of the event
-      // Use the Arcade Date() function to format time field into a human-readable format
-
-      const renderer = {
-  type: "unique-value",
-  field: "nrsveitarfelags",
-  symbol: {
-    type: "simple-fill",
-    color: [255, 255, 255, 0.1], // Set a transparent fill color
-    outline: {
-      color: "transparent" // Set a transparent outline color
-    }
-  },
-  uniqueValueInfos: [
-  { value:0, symbol: {type: "simple-fill", color: "dimgray"}},
-{ value:1000, symbol: {type: "simple-fill", color: "forestgreen"}},
-{ value:1100, symbol: {type: "simple-fill", color: "darkviolet"}},
-{ value:1300, symbol: {type: "simple-fill", color: "gold"}},
-{ value:1400, symbol: {type: "simple-fill", color: "mediumblue"}},
-{ value:1604, symbol: {type: "simple-fill", color: "dodgerblue"}},
-{ value:1606, symbol: {type: "simple-fill", color: "mediumseagreen"}},
-{ value:2000, symbol: {type: "simple-fill", color: "orangered"}},
-{ value:2300, symbol: {type: "simple-fill", color: "gray"}},
-{ value:2506, symbol: {type: "simple-fill", color: "deepskyblue"}},
-{ value:2510, symbol: {type: "simple-fill", color: "green"}},
-{ value:3000, symbol: {type: "simple-fill", color: "blueviolet"}},
-{ value:3506, symbol: {type: "simple-fill", color: "seagreen"}},
-{ value:3511, symbol: {type: "simple-fill", color: "springgreen"}},
-{ value:3609, symbol: {type: "simple-fill", color: "darkblue"}},
-{ value:3709, symbol: {type: "simple-fill", color: "coral"}},
-{ value:3713, symbol: {type: "simple-fill", color: "khaki"}},
-{ value:3714, symbol: {type: "simple-fill", color: "lightyellow"}},
-{ value:3716, symbol: {type: "simple-fill", color: "darkred"}},
-{ value:3811, symbol: {type: "simple-fill", color: "tomato"}},
-{ value:4100, symbol: {type: "simple-fill", color: "indianred"}},
-{ value:4200, symbol: {type: "simple-fill", color: "steelblue"}},
-{ value:4502, symbol: {type: "simple-fill", color: "darkgray"}},
-{ value:4604, symbol: {type: "simple-fill", color: "darkorchid"}},
-{ value:4607, symbol: {type: "simple-fill", color: "lightcoral"}},
-{ value:4803, symbol: {type: "simple-fill", color: "darkorange"}},
-{ value:4901, symbol: {type: "simple-fill", color: "dimgray"}},
-{ value:4902, symbol: {type: "simple-fill", color: "gainsboro"}},
-{ value:4911, symbol: {type: "simple-fill", color: "darkorange"}},
-{ value:5508, symbol: {type: "simple-fill", color: "moccasin"}},
-{ value:5609, symbol: {type: "simple-fill", color: "skyblue"}},
-{ value:5611, symbol: {type: "simple-fill", color: "blue"}},
-{ value:5613, symbol: {type: "simple-fill", color: "royalblue"}},
-{ value:5716, symbol: {type: "simple-fill", color: "orange"}},
-{ value:6000, symbol: {type: "simple-fill", color: "violet"}},
-{ value:6100, symbol: {type: "simple-fill", color: "firebrick"}},
-{ value:6250, symbol: {type: "simple-fill", color: "red"}},
-{ value:6400, symbol: {type: "simple-fill", color: "yellow"}},
-{ value:6513, symbol: {type: "simple-fill", color: "lightblue"}},
-{ value:6515, symbol: {type: "simple-fill", color: "lime"}},
-{ value:6601, symbol: {type: "simple-fill", color: "lemonchiffon"}},
-{ value:6602, symbol: {type: "simple-fill", color: "mediumorchid"}},
-{ value:6611, symbol: {type: "simple-fill", color: "mediumpurple"}},
-{ value:6613, symbol: {type: "simple-fill", color: "cadetblue"}},
-{ value:6710, symbol: {type: "simple-fill", color: "darkgreen"}},
-{ value:7300, symbol: {type: "simple-fill", color: "lightgray"}},
-{ value:7400, symbol: {type: "simple-fill", color: "purple"}},
-{ value:7502, symbol: {type: "simple-fill", color: "silver"}},
-{ value:7505, symbol: {type: "simple-fill", color: "forestgreen"}},
-{ value:8000, symbol: {type: "simple-fill", color: "darkviolet"}},
-{ value:8200, symbol: {type: "simple-fill", color: "gold"}},
-{ value:8401, symbol: {type: "simple-fill", color: "mediumblue"}},
-{ value:8508, symbol: {type: "simple-fill", color: "dodgerblue"}},
-{ value:8509, symbol: {type: "simple-fill", color: "mediumseagreen"}},
-{ value:8610, symbol: {type: "simple-fill", color: "orangered"}},
-{ value:8613, symbol: {type: "simple-fill", color: "gray"}},
-{ value:8614, symbol: {type: "simple-fill", color: "deepskyblue"}},
-{ value:8710, symbol: {type: "simple-fill", color: "green"}},
-{ value:8716, symbol: {type: "simple-fill", color: "blueviolet"}},
-{ value:8717, symbol: {type: "simple-fill", color: "seagreen"}},
-{ value:8719, symbol: {type: "simple-fill", color: "springgreen"}},
-{ value:8720, symbol: {type: "simple-fill", color: "darkblue"}},
-{ value:8721, symbol: {type: "simple-fill", color: "coral"}},
-{ value:8722, symbol: {type: "simple-fill", color: "khaki"}},
-
-  ],
-};
-
-      const geojsonLayer = new GeoJSONLayer({
-        url: url,
-        copyright: "USGS Earthquakes",
-        renderer: renderer,
-        orderBy: {
-          field: "mag"
-        }
-      });
-
- 
-        
-
-        const ornefniPunktar = new GeoJSONLayer({
-          url: "https://gis.lmi.is/geoserver/IS_50V/ornefni_punktar/wfs?request=GetFeature&service=WFS&version=1.1.0&typeName=IS_50V:ornefni_punktar&outputFormat=json",
-          copyright: "Landmælingar Íslands IS50V",
-          visible: true, 
-          title: "Örnefni punktar",
-          //renderer: rendererOrnefniP,
-          });
-
-              // Add Feature layers
-              const featureLayer = new FeatureLayer({
-        url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/obyggdanefnd_dranga_epsg3857/FeatureServer",
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Edit features in 3D with the Editor widget | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.28/"></script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <script>
+      require(["esri/layers/FeatureLayer", "esri/WebScene", "esri/views/SceneView", "esri/widgets/Editor"], (
+        FeatureLayer,
+        WebScene,
+        SceneView,
+        Editor
+      ) => {
+        // Create a map from the referenced webscene item id
+        const webscene = new WebScene({
+          portalItem: {
+            id: "ad3a0bfc93cd4fbfa37b0fd339c80a3e"
+          }
         });
 
-      const map = new Map({
-        basemap: "satellite",
-            ground: "world-elevation",
-        layers: [geojsonLayer, featureLayer, ornefniPunktar]
+        // Create a layer with visualVariables to use interactive handles for size and rotation
+        /*
+        const recreationLayer = new FeatureLayer({
+          title: "Recreation",
+          url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/EditableFeatures3D/FeatureServer/1",
+          elevationInfo: {
+            mode: "absolute-height"
+          },
+          renderer: {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            field: "TYPE",
+            visualVariables: [
+              {
+                // size can be modified with the interactive handle
+                type: "size",
+                field: "SIZE",
+                axis: "height",
+                valueUnit: "meters"
+              },
+              {
+                // rotation can be modified with the interactive handle
+                type: "rotation",
+                field: "ROTATION"
+              }
+            ],
+            uniqueValueInfos: [
+              {
+                value: "1",
+                label: "Slide",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Slide.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Slide"
+                  }
+                }
+              },
+              {
+                value: "2",
+                label: "Swing",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Swing.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Swing"
+                  }
+                }
+              }
+            ]
+          }
+        });
+
+        webscene.add(recreationLayer);*/
+
+                // Create a layer with visualVariables to use interactive handles for size and rotation
+                const testLayer = new FeatureLayer({
+          title: "Test",
+          url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/testEditable/FeatureServer/0",
+          editable: true,
+          elevationInfo: {
+            mode: "absolute-height"
+          },
+          renderer: {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            field: "TYPE",
+            visualVariables: [
+              {
+                // size can be modified with the interactive handle
+                type: "size",
+                field: "SIZE",
+                axis: "height",
+                valueUnit: "meters"
+              },
+              {
+                // rotation can be modified with the interactive handle
+                type: "rotation",
+                field: "ROTATION"
+              }
+            ],
+            uniqueValueInfos: [
+              {
+                value: "1",
+                label: "Slide",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Slide.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Slide"
+                  }
+                }
+              },
+              {
+                value: "2",
+                label: "Swing",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Swing.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Swing"
+                  }
+                }
+              }
+            ]
+          }
+        });
+        webscene.add(testLayer);
+
+        const polygonLayer = new FeatureLayer({
+          title: "Test",
+          url: "https://services.arcgis.com/oMbONQQmfNuIEo3g/arcgis/rest/services/TestPolygon/FeatureServer/",
+          editable: true,
+          elevationInfo: {
+            mode: "on-the-ground"
+          },
+          renderer: {
+            type: "simple", // Change the renderer type to 'simple'
+            symbol: {
+              type: "polygon-3d", // Specify 'polygon-3d' symbol type
+              symbolLayers: [
+                {
+                  type: "fill", // Use 'extrude' symbol layer for polygon extrusion
+                  material: {
+                    color: [255, 0, 0, 0.7] // Set the color and transparency for the polygons
+                  },/* for extrude mode
+                  edges: {
+                    type: "solid", // Specify solid edges
+                    color: [50, 50, 50, 0.5] // Set edge color and transparency
+                  },
+                  size: 10 // Adjust extrusion height as needed
+                  */
+                }
+              ]
+            }
+          }
+        });
+
+        webscene.add(polygonLayer);
+
+        const view = new SceneView({
+          container: "viewDiv",
+          qualityProfile: "high",
+          map: webscene
+        });
+
+        view.when(() => {
+          view.popupEnabled = false; //disable popups
+          // Create the Editor
+          const editor = new Editor({
+            view: view
+          });
+          // Add widget to top-right of the view
+          view.ui.add(editor, "top-right");
+
+
+        });
       });
+    </script>
+  </head>
 
-      const view = new MapView({
-        container: "viewDiv",
-        center: [-18, 65],
-        zoom: 5,
-        map: map
-      });
-    });
-
-        
-
-  </script>
-</head>
-
-<body>
-  <div id="viewDiv"></div>
-</body>
-
+  <body>
+    <div id="viewDiv"></div>
+  </body>
 </html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Include the CesiumJS JavaScript and CSS files -->
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.112/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.112/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
+  <!-- Information about site -->
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Test Cesium</title>
+  <link rel="icon" type="image" href="https://www.lmi.is/static/themes/2020/images/logo.svg">
+   
+  <!-- Configure modules and widgets -->
+  <script>
+    var dojoConfig = {
+      packages: [
+        {
+          name: "modules",
+          //location: location.pathname.replace(/\/[^/]+$/, "") + "/js/modules"
+          location: location.origin + location.pathname + "js/modules"
+        }
+      ]
+    };
+  </script>  
+</head>
+
+<body>
+  <div id="cesiumContainer"></div>
+  <script type="module">
+    // Your access token can be found at: https://ion.cesium.com/tokens.
+    // This is the default access token from your ion account
+    //Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5MTZiYTU1MC1jZmQ2LTRkZTEtOTgyOC0yMjBlZTAyZGZlMDgiLCJpZCI6MTU3NzMzLCJpYXQiOjE2OTA4ODYxOTR9.xLVVhFb_7-r8A6s2sMHkrKpBkjzWdnPZjK7fOr_l4co';
+    Cesium.Ion.defaultAccessToken = null;
+
+    // ArcGIS Satellite data
+    //Cesium.ArcGisMapService.defaultAccessToken = "<ArcGIS Access Token>"; // Token from ArcgisOnline needed
+    //const arcGisImagery = Cesium.ArcGisMapServerImageryProvider.fromBasemapType(
+    //  Cesium.ArcGisBaseMapType.SATELLITE)
+
+    const OSM = new Cesium.ImageryLayer(new Cesium.OpenStreetMapImageryProvider({url: "https://tile.openstreetmap.org/"})); // Uses Cesium.Ion
+    
+    const OSM_external = new Cesium.UrlTemplateImageryProvider({
+    url : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    credit : new Cesium.Credit(`<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>`, false)
+    });
+
+    // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
+    const viewer = new Cesium.Viewer('cesiumContainer', {// https://cesium.com/learn/cesiumjs/ref-doc/Viewer.html#.ConstructorOptions
+      sceneModePicker: false, // Allow to change to projected view
+      //sceneMode: Cesium.SceneMode.COLUMBUS_VIEW, // Set to projected view --> https://cesium.com/learn/cesiumjs/ref-doc/global.html#SceneMode
+      timeline: false, // Add timeline
+      animation: false, // Add animation control for timeline
+      baseLayerPicker: false,
+      geocoder: false,
+      geocoder: false,
+      imageryProvider: false,
+      baseLayerPicker: false,
+      //terrain: Cesium.Terrain.fromWorldTerrain(), // Add terrain 3D info
+      baseLayer:  OSM,
+      //baseLayer: Cesium.ImageryLayer.fromProviderAsync(arcGisImagery),
+      //baseLayer: Cesium.ImageryLayer.fromProviderAsync(OSM_external),
+      mapProjection: new Cesium.WebMercatorProjection(),
+    });   
+
+    // Remove Cesium Ion Logo
+    var cesiumIonLogoContainer = document.querySelector('.cesium-credit-logoContainer');
+    if (cesiumIonLogoContainer) {cesiumIonLogoContainer.parentNode.removeChild(cesiumIonLogoContainer);}
+
+    // Fly the camera to iceland
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(-21,64, 800000),
+      orientation: {
+        heading: Cesium.Math.toRadians(0.0),
+        pitch: Cesium.Math.toRadians(-90.0),
+      }});
+    
+    // WMS Layer
+    const WMSLayer = new Cesium.ImageryLayer(new Cesium.WebMapServiceImageryProvider({
+    url : 'https://gis.lmi.is/geoserver/IS_50V/wms',
+    layers : 'samgongur_linur',
+    srs: 'EPSG:4326',
+    //getFeatureInfoUrl: 'https://gis.lmi.is/mapcache/?',
+    parameters : {
+            transparent : 'true',
+            //tiled : 'true',
+            format : 'image/png',
+            //tileWidth : 512,
+            //tileHeight : 512,
+            //maximumLevel : 16,
+            enablePickFeatures : true
+        },
+    credit: new Cesium.Credit(`<a href="https://www.lmi.is/">Landmælingar Íslands</a>`, false)
+    })); // Make Layer
+    //viewer.imageryLayers.add(WMSLayer); // Add Layer
+
+    // Add feature layer (GeoJSON)
+    /*var promise = Cesium.GeoJsonDataSource.load('https://gis.lmi.is/geoserver/IS_50V/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=IS_50V%3Aornefni_punktar&maxFeatures=100000&outputFormat=application%2Fjson');
+    promise.then(function(dataSource) {
+        viewer.dataSources.add(dataSource);// Add the GeoJSON data source to the viewer
+    }).otherwise(function(error) {
+        console.error('Error loading GeoJSON:', error);// Display any errors encountered while loading the GeoJSON data
+    });*/
+
+    // Tiled layer
+    /*const DEM1 = new Cesium.WebMapTileServiceImageryProvider({
+    url : 'https://gis.lmi.is/mapcache/web-mercator/wmts/1.0.0/',
+    layer : 'DEM',
+    style : 'default',
+    format : 'image/png',
+    tileMatrixSetID : 'EPSG:3857',
+    tileMatrixLabels : ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16'],
+    maximumLevel: 16,
+    credit : new Cesium.Credit('LMI')
+    });*/
+    //viewer.imageryLayers.addImageryProvider(DEM1);
+
+    // Add Cesium OSM Buildings, a global 3D buildings layer.
+    //const buildingTileset = await Cesium.createOsmBuildingsAsync();
+    //viewer.scene.primitives.add(buildingTileset);  
+  
+  // Get data at specific intervals
+  function dataCallback(interval, index) {
+    let time;
+    if (index === 0) {
+      // leading
+      time = Cesium.JulianDate.toIso8601(interval.stop);
+    } else {
+      time = Cesium.JulianDate.toIso8601(interval.start);}
+    return {
+      Time: time,};
+  }
+
+  // SET TIMEFRAME FOR NASA IMAGERY
+  const t0 = "2023-10-01";
+  const t1 = "2024-02-02";
+  const times = Cesium.TimeIntervalCollection.fromIso8601({
+    iso8601: t0+"/"+t1+"/P1D",
+    leadingInterval: true,
+    trailingInterval: true,
+    isStopIncluded: false, // We want stop time to be part of the trailing interval
+    dataCallback: dataCallback,
+  });
+  
+  // Add a WMTS imagery layer.
+  // This comes from NASA's GIBS API.
+  // See https://wiki.earthdata.nasa.gov/display/GIBS/GIBS+API+for+Developers#GIBSAPIforDevelopers-OGCWebMapService(WMS)
+  const modis = new Cesium.WebMapTileServiceImageryProvider({
+    url:
+      "https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/{Time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
+    layer: "MODIS_Terra_CorrectedReflectance_TrueColor",
+    style: "default",
+    tileMatrixSetID: "250m",
+    maximumLevel: 5,
+    format: "image/png",
+    clock: viewer.clock,
+    times: times,
+    credit: "NASA Global Imagery Browse Services for EOSDIS",
+  });
+  
+  // Make the weather layer semi-transparent to see the underlying geography.
+  //const layer = new Cesium.ImageryLayer(modis);
+  //layer.alpha = 0.5;
+  //viewer.imageryLayers.add(layer);
+  
+  // Define clock
+  const start = Cesium.JulianDate.fromIso8601(t0);
+  const stop = Cesium.JulianDate.fromIso8601(t1);
+  const clock = viewer.clock;
+  clock.startTime = start;
+  clock.stopTime = stop;
+  clock.currentTime = start;
+  clock.clockRange = Cesium.ClockRange.LOOP_STOP;
+  clock.multiplier = 72000;
+  clock.shouldAnimate = true; // To automatically start animation
+    
+  </script>
+ </div>
+</body>
+</html>

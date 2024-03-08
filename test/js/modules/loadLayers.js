@@ -10,6 +10,7 @@ define([
     "esri/views/SceneView",
     "esri/Map",
     "esri/WebScene",
+    "esri/Basemap",
     //"esri/widgets/Search",
     "esri/widgets/Legend",
     //"esri/widgets/Home",
@@ -37,6 +38,9 @@ define([
     "esri/layers/WMSLayer",
     "esri/layers/WFSLayer",
     "esri/renderers/UniqueValueRenderer",
+    "esri/layers/WebTileLayer",
+    "esri/geometry/SpatialReference",
+    "esri/layers/support/TileInfo",
     ], function(
       //MapConfig,
       //BasicWidgets,
@@ -48,6 +52,7 @@ define([
       SceneView,
       Map,
       WebScene, 
+      Basemap,
       //Search,
       Legend,
       //Home,
@@ -74,7 +79,10 @@ define([
       OGCFeatureLayer,
       WMSLayer,
       WFSLayer,
-      UniqueValueRenderer
+      UniqueValueRenderer,
+      WebTileLayer,
+      SpatialReference, 
+      TileInfo,
       ) {
       return {
         setupLayers: function() {
@@ -570,6 +578,57 @@ define([
           layers: [ornefniFlakar, ornefniLinur, ornefniPunktar],
          });
 
+        // Loftmyndir XYZ
+        const tileInfo = new TileInfo({
+          spatialReference: {
+            wkid: 3057 // Set the WKID for EPSG:3057 projection
+          },
+          origin: {
+            x: -161616,
+            y: -72.00000049173832
+          },
+          lods: [
+            { level: 0, resolution: 4096 },
+            { level: 1, resolution: 2048 },
+            { level: 2, resolution: 1024},
+            { level: 3, resolution: 512 },
+            { level: 4, resolution: 256 },
+            { level: 5, resolution: 128 },
+            { level: 6, resolution: 64 },
+            { level: 7, resolution: 32 },
+            { level: 8, resolution: 16 },
+            { level: 9, resolution: 8 },
+            { level: 10, resolution: 4 },
+            { level: 11, resolution: 2 },
+            { level: 12, resolution: 1 },
+            { level: 13, resolution: 0.5 },
+            { level: 14, resolution: 0.25 },
+            { level: 15, resolution: 0.125 },
+            { level: 16, resolution: 0.0625 },
+            // Add other levels as per your requirement
+          ],
+          size: [512, 512] // Tile size
+        });
+
+        const loftmyndirLayer = new WebTileLayer({
+          urlTemplate: "https://ms.map.is/mapcache/tms/1.0.0/myndkort_512@isn93_512/{z}/{x}/{-y}.jpg",
+          title: "Loftmyndir",
+          copyright: 'Map data from &copy; <a href="https://www.loftmyndir.is/" target="_blank">Loftmyndir</a>',
+          spatialReference: {
+            wkid: 3057 // Set the WKID for EPSG:3057 projection
+          },
+          //tileInfo: tileInfo, // Set the custom tile information
+          //crossOrigin: null, // Set the cross-origin policy
+          // Define the extent if needed
+          // extent: {
+          //   xmin: 0,
+          //   ymin: 0,
+          //   xmax: 39913400.685578495,
+          //   ymax: 40074944.685578
+          // }
+        });
+
+
         // Load a basemap from https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap-id
         const map = new Map({
             basemap: "satellite",
@@ -582,6 +641,7 @@ define([
                 ornefniLayer,
                 vatnafarLayer,
                 obnLayer,
+                loftmyndirLayer
             ],
             });
         
