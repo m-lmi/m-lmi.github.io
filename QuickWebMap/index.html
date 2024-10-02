@@ -55,11 +55,9 @@
             attribution: '© Einar @ Hafro'
         }).addTo(map); // Overlay layer added to the map by default
 
-        // Add EMODnet WMTS layer for vessel density
-        var emodnetWMTS = L.tileLayer.wmts("https://ows.emodnet-humanactivities.eu/geoserver/gwc/service/wmts?", {
-            layer: 'emodnet:vesseldensity_01',
-            style: 'emodnet:VesselDensity',
-            tilematrixSet: 'EPSG:4326',
+        // Add EMODnet Vessel Density WMS layer
+        var vesselDensityLayer = L.tileLayer.wms("https://ows.emodnet-humanactivities.eu/geoserver/ows", {
+            layers: 'emodnet:vesseldensity_01',
             format: 'image/png',
             transparent: true,
             attribution: '© EMODnet'
@@ -72,8 +70,8 @@
         };
 
         var overlayMaps = {
-            "Hafro Overlay": hafroOverlay,
-            "Vessel Density (EMODnet)": emodnetWMTS
+            "Sea DEM": hafroOverlay,
+            "Vessel Density": vesselDensityLayer
         };
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
