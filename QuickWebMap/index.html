@@ -11,33 +11,25 @@
     <div id="map" style="width: 100%; height: 600px;"></div>
 
     <script>
-        // Initialize the map
-        var map = L.map('map').setView([64.9631, -19.0208], 4);  // Coordinates for Iceland
+        // Initialize map
+        var map = L.map('map').setView([0, 0], 2); // Centered at 0,0
 
-        // Esri Satellite Basemap
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{x}/{y}', {
-            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        // OSM base layer
+        var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
         }).addTo(map);
-      // Add Copernicus Marine Waves WMTS
-var copernicusLayer = L.tileLayer.wmts("https://wmts.marine.copernicus.eu/teroWmts/GLOBAL_ANALYSISFORECAST_WAV_001_027/cmems_mod_glo_wav_anfc_0.083deg_PT3H-i_202311", {
-    layer: 'VCMX',
-    tilematrixSet: 'EPSG:4326',
-    format: 'image/png',
-    transparent: true,
-    attribution: 'Copernicus Marine Service'
-}).addTo(map);
-      // Add Ship Traffic (Fishing Ships 2022) WMS
-var shipTrafficLayer = L.tileLayer.wms("http://havbase.kystverket.no/havbase_cache/?service=WMS", {
-    layers: 'Fiskefartøy',
-    format: 'image/png',
-    transparent: true,
-    crs: L.CRS.EPSG3575,
-    attribution: 'Havbase Kystverket'
-}).addTo(map);
-      // Add custom background tiles
-var customTiles = L.tileLayer("https://heima.hafro.is/~einarhj/tiles/haf/050m/{z}/{x}/{y}.png", {
-    attribution: "Hafro tiles"
-}).addTo(map);
+
+        // Esri Satellite Imagery layer
+        var satelliteLayer = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{x}/{y}', {
+            attribution: '© Esri & Contributors'
+        });
+
+        // Layer control to switch between OSM and satellite
+        L.control.layers({
+            "OpenStreetMap": osmLayer,
+            "Satellite Imagery": satelliteLayer
+        }).addTo(map);
     </script>
 </body>
 </html>
