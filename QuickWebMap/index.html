@@ -58,7 +58,7 @@
         // Add EMODnet WMTS layer for vessel density
         var emodnetWMTS = L.tileLayer.wmts("https://ows.emodnet-humanactivities.eu/geoserver/gwc/service/wmts?", {
             layer: 'emodnet:vesseldensity_01',
-            style: '',
+            style: 'emodnet:VesselDensity',
             tilematrixSet: 'EPSG:4326',
             format: 'image/png',
             transparent: true,
