@@ -1,39 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Copernicus Marine Web Map</title>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <title>Copernicus Marine Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-    <div id="map" style="width: 100%; height: 600px;"></div>
-
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        // Initialize map
-        var map = L.map('map').setView([0, 0], 2); // Centered at 0,0
+        // Create the map
+        var map = L.map('map').setView([20, 0], 2); // Initial view
 
-        // OSM base layer
+        // Add OpenStreetMap base layer
         var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-var mqi = L.tileLayer("http://{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png", {subdomains: ['otile1','otile2','otile3','otile4']});
+        // Add Google Satellite layer
+        var googleSatLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            attribution: '© Google'
+        });
 
-var baseMaps = {
-    "OpenStreetMap": osm,
-    "MapQuestImagery": mqi
-};
-
-L.control.layers(baseMaps,overlays, {position: 'bottomleft'}).addTo(map);
-
-        // Layer control to switch between OSM and satellite
-        L.control.layers({
+        // Layer control to switch between OSM and Google Satellite
+        var baseMaps = {
             "OpenStreetMap": osmLayer,
-            "Satellite Imagery": satelliteLayer
-        }).addTo(map);
+            "Google Satellite": googleSatLayer
+        };
+        L.control.layers(baseMaps).addTo(map);
     </script>
 </body>
 </html>
