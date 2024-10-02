@@ -63,6 +63,15 @@
             attribution: '© EMODnet'
         }).addTo(map);
 
+        // Add Copernicus Marine WMTS Sea Water Velocity layer
+        var seaWaterVelocityLayer = L.tileLayer.wms("https://wmts.marine.copernicus.eu/teroWmts/GLOBAL_ANALYSISFORECAST_PHY_001_024/cmems_mod_glo_phy-cur_anfc_0.083deg_PT6H-i_202406", {
+            layers: 'sea_water_velocity',
+            format: 'image/png',
+            transparent: true,
+            time: '2024-10-03T00:00:00Z',
+            attribution: '© Copernicus Marine'
+        }).addTo(map);
+
         // Add layer control
         var baseMaps = {
             "OpenStreetMap": osmLayer,
@@ -71,7 +80,8 @@
 
         var overlayMaps = {
             "Sea DEM": hafroOverlay,
-            "Vessel Density": vesselDensityLayer
+            "Vessel Density": vesselDensityLayer,
+            "Sea Water Velocity": seaWaterVelocityLayer
         };
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
