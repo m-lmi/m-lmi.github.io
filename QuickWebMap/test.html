@@ -40,9 +40,9 @@
         var template = 'https://wmts.marine.copernicus.eu/teroWmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=&LAYER={layer}&STYLE=&FORMAT=image/png&TILEMATRIXSET={tileMatrixSet}&TILEMATRIX={z}&time={time}&TILEROW={y}&TILECOL={x}';
         
         var copernicusLayer = L.tileLayer(template, {
-            layer: 'GLOBAL_MULTIYEAR_WAV_001_032/cmems_mod_glo_wav_my_0.2_PT3H-i_202112/VHM0',
+            layer: 'GLOBAL_ANALYSISFORECAST_PHY_001_024/cmems_mod_glo_phy-cur_anfc_0.083deg_P1M-m_202406/sea_water_velocity',
             tileMatrixSet: 'EPSG:4326',
-            time: '2021-12-31',
+            time: '2023-10-01',
             noWrap: true
         }).addTo(map);
 
