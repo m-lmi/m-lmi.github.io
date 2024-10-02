@@ -47,18 +47,18 @@
         }).addTo(map);
 
         // Add Copernicus Marine WMTS layer using the template
-        var template = 'https://wmts.marine.copernicus.eu/teroWmts?\
-            SERVICE=WMTS\
-            &REQUEST=GetTile\
-            &VERSION=\
-            &LAYER={layer}\
-            &STYLE=\
-            &FORMAT=image/png\
-            &TILEMATRIXSET={tileMatrixSet}\
-            &TILEMATRIX={z}\
-            &time={time}\
-            &TILEROW={y}\
-            &TILECOL={x}';
+        var template = 'https://wmts.marine.copernicus.eu/teroWmts?'+
+            'SERVICE=WMTS'+
+            '&REQUEST=GetTile'+
+            '&VERSION='+
+            '&LAYER={layer}'+
+            '&STYLE='+
+            '&FORMAT=image/png'+
+            '&TILEMATRIXSET={tileMatrixSet}'+
+            '&TILEMATRIX={z}'+
+            '&time={time}'+
+            '&TILEROW={y}'+
+            '&TILECOL={x}';
         
         var copernicusLayer = L.tileLayer(template, {
             layer: 'GLOBAL_ANALYSISFORECAST_PHY_001_024/cmems_mod_glo_phy-cur_anfc_0.083deg_P1M-m_202406/sea_water_velocity',
