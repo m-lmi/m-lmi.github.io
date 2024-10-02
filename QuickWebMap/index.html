@@ -4,7 +4,7 @@
     <title>Copernicus Marine Web Map</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
@@ -20,10 +20,14 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Esri Satellite Imagery layer
-        var satelliteLayer = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{x}/{-y}', {
-            attribution: '© Esri & Contributors'
-        });
+var mqi = L.tileLayer("http://{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png", {subdomains: ['otile1','otile2','otile3','otile4']});
+
+var baseMaps = {
+    "OpenStreetMap": osm,
+    "MapQuestImagery": mqi
+};
+
+L.control.layers(baseMaps,overlays, {position: 'bottomleft'}).addTo(map);
 
         // Layer control to switch between OSM and satellite
         L.control.layers({
