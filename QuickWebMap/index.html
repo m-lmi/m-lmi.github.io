@@ -51,18 +51,18 @@
             zoomReverse: false,
             opacity: 1,
             zIndex: 1,
-            detectRetina: false
+            detectRetina: false,
+            attribution: '© Einar @ Hafro'
         }).addTo(map); // Overlay layer added to the map by default
 
-
-        // Add the WEkEO WMTS layer (Sea surface wave maximum height)
-        var waveLayer = L.tileLayer.wmts("https://wmts.marine.copernicus.eu/teroWmts/GLOBAL_ANALYSISFORECAST_WAV_001_027/cmems_mod_glo_wav_anfc_0.083deg_PT3H-i_202311?service=WMTS", {
-            layer: 'cmems_mod_glo_wav_anfc_0.083deg_PT3H-i_202311_VCMX', // ID of the layer
-            tilematrixSet: 'EPSG:3857', // TileMatrixSet provided
+        // Add EMODnet WMTS layer for vessel density
+        var emodnetWMTS = L.tileLayer.wmts("https://ows.emodnet-humanactivities.eu/geoserver/gwc/service/wmts?", {
+            layer: 'emodnet:vesseldensity_01',
+            style: '',
+            tilematrixSet: 'EPSG:4326',
             format: 'image/png',
             transparent: true,
-            attribution: '© Copernicus Marine Service',
-            opacity: 0.7 // Adjust opacity as needed
+            attribution: '© EMODnet'
         }).addTo(map);
 
         // Add layer control
@@ -73,7 +73,7 @@
 
         var overlayMaps = {
             "Hafro Overlay": hafroOverlay,
-            "Sea Surface Wave Maximum Height": waveLayer
+            "Vessel Density (EMODnet)": emodnetWMTS
         };
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
