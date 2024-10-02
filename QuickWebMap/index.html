@@ -38,10 +38,20 @@
             attribution: '© Google'
         });
 
-        // Add Hafro overlay layer
-        var hafroOverlay = L.tileLayer('https://heima.hafro.is/~einarhj/tiles/haf/050m/{z}/{x}/{y}.png', {
-            maxZoom: 12,
-            attribution: '© Hafro'
+        // Add Hafro overlay layer with the provided configurations
+        var hafroOverlay = L.tileLayer('https://heima.hafro.is/~einarhj/tiles/haf/050m/{z}/{x}/{-y}.png', {
+            minZoom: 5,
+            maxZoom: 16,
+            tileSize: 256,
+            subdomains: 'abc',
+            errorTileUrl: '',
+            tms: false,
+            noWrap: false,
+            zoomOffset: 0,
+            zoomReverse: false,
+            opacity: 1,
+            zIndex: 1,
+            detectRetina: false
         }).addTo(map); // Overlay layer added to the map by default
 
         // Add layer control
