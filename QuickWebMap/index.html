@@ -38,25 +38,8 @@
             attribution: '© Google'
         });
 
-        // Add Hafro overlay layer with the provided configurations
-        var hafroOverlay = L.tileLayer('https://heima.hafro.is/~einarhj/tiles/haf/050m/{z}/{x}/{-y}.png', {
-            minZoom: 5,
-            maxZoom: 16,
-            tileSize: 256,
-            subdomains: 'abc',
-            errorTileUrl: '',
-            tms: false,
-            noWrap: false,
-            zoomOffset: 0,
-            zoomReverse: false,
-            opacity: 1,
-            zIndex: 1,
-            detectRetina: false,
-            attribution: '© Einar @ Hafro'
-        }).addTo(map); // Overlay layer added to the map by default
-
         // Add EMODnet Vessel Density WMS layer
-        var vesselDensityLayer = L.tileLayer.wms("https://ows.emodnet-humanactivities.eu/geoserver/ows", {
+        var vesselDensityLayer = L.tileLayer.wms("https://ows.emodnet-humanactivities.eu/geoserver/wms", {
             layers: 'emodnet:vesseldensity_01',
             format: 'image/png',
             transparent: true,
@@ -64,13 +47,25 @@
         }).addTo(map);
 
         // Add Copernicus Marine WMTS layer using the template
-        var template = 'https://wmts.marine.copernicus.eu/teroWmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=&LAYER={layer}&STYLE=&FORMAT=image/png&TILEMATRIXSET={tileMatrixSet}&TILEMATRIX={z}&time={time}&TILEROW={y}&TILECOL={x}';
+        var template = 'https://wmts.marine.copernicus.eu/teroWmts?\
+            SERVICE=WMTS\
+            &REQUEST=GetTile\
+            &VERSION=\
+            &LAYER={layer}\
+            &STYLE=\
+            &FORMAT=image/png\
+            &TILEMATRIXSET={tileMatrixSet}\
+            &TILEMATRIX={z}\
+            &time={time}\
+            &TILEROW={y}\
+            &TILECOL={x}';
         
         var copernicusLayer = L.tileLayer(template, {
             layer: 'GLOBAL_ANALYSISFORECAST_PHY_001_024/cmems_mod_glo_phy-cur_anfc_0.083deg_P1M-m_202406/sea_water_velocity',
             tileMatrixSet: 'EPSG:3857',
             time: '2023-10-01',
-            noWrap: true
+            noWrap: true,
+            attribution: '© Copernicus Marine'
         }).addTo(map);
 
         // Add layer control
@@ -78,9 +73,8 @@
             "OpenStreetMap": osmLayer,
             "Google Satellite": googleSatLayer
         };
-
+        
         var overlayMaps = {
-            "Sea DEM": hafroOverlay,
             "Sea Water Velocity": copernicusLayer,
             "Vessel Density": vesselDensityLayer,
         };
