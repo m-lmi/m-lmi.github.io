@@ -3,40 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copernicus Marine Map</title>
+    <title>Leaflet Map - Copernicus Marine</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
-        html, body, #map {
+        /* Make the map fill the entire browser window */
+        html, body {
             height: 100%;
             margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
     <div id="map"></div>
+
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        // Create the map
-        var map = L.map('map').setView([20, 0], 2); // Initial view
+        // Initialize the map and set view to Iceland
+        var map = L.map('map').setView([64.9631, -19.0208], 6); // Coordinates of Iceland
 
         // Add OpenStreetMap base layer
         var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Add Google Satellite layer
+        // Add Google Satellite base layer
         var googleSatLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
             maxZoom: 20,
             attribution: '© Google'
         });
 
-        // Layer control to switch between OSM and Google Satellite
+        // Add Hafro overlay layer
+        var hafroOverlay = L.tileLayer('https://heima.hafro.is/~einarhj/tiles/haf/050m/{z}/{x}/{y}.png', {
+            maxZoom: 12,
+            attribution: '© Hafro'
+        }).addTo(map); // Overlay layer added to the map by default
+
+        // Add layer control
         var baseMaps = {
             "OpenStreetMap": osmLayer,
             "Google Satellite": googleSatLayer
         };
-        L.control.layers(baseMaps).addTo(map);
+
+        var overlayMaps = {
+            "Hafro Overlay": hafroOverlay
+        };
+
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
     </script>
 </body>
 </html>
