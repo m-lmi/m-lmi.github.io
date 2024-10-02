@@ -54,6 +54,17 @@
             detectRetina: false
         }).addTo(map); // Overlay layer added to the map by default
 
+
+        // Add the WEkEO WMTS layer (Sea surface wave maximum height)
+        var waveLayer = L.tileLayer.wmts("https://wmts.marine.copernicus.eu/teroWmts/GLOBAL_ANALYSISFORECAST_WAV_001_027/cmems_mod_glo_wav_anfc_0.083deg_PT3H-i_202311?service=WMTS", {
+            layer: 'cmems_mod_glo_wav_anfc_0.083deg_PT3H-i_202311_VCMX', // ID of the layer
+            tilematrixSet: 'EPSG:3857', // TileMatrixSet provided
+            format: 'image/png',
+            transparent: true,
+            attribution: '© Copernicus Marine Service',
+            opacity: 0.7 // Adjust opacity as needed
+        }).addTo(map);
+
         // Add layer control
         var baseMaps = {
             "OpenStreetMap": osmLayer,
@@ -61,7 +72,8 @@
         };
 
         var overlayMaps = {
-            "Hafro Overlay": hafroOverlay
+            "Hafro Overlay": hafroOverlay,
+            "Sea Surface Wave Maximum Height": waveLayer
         };
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
