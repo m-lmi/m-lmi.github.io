@@ -4,7 +4,7 @@
 
 ---
 
-
+# 🎮 [Play the Game](https://m-lmi.github.io/30DayMapChallenge/Day-20/index.html)
 
 ### Íslenska
 **Upplifðu 3D-heim OpenStreetMap með kortaleik!**
@@ -58,6 +58,6 @@ It’s up to you to explore, observe, and discover!
 
 ---
 
-This interactive 3D map game invites users to dive into the world of OpenStreetMap, blending fun and discovery with geographical exploration. Start your adventure now!
+This interactive 3D map game invites users to dive into the world of OpenStreetMap, blending fun and discovery with geographical exploration. Start your adventure now! Click on the image to start the game!
 
-![Day 20 - OpenStreetMap](Day20-OpenStreetMap.png)
+[![Day 20 - OpenStreetMap](Day20-OpenStreetMap.png)](https://m-lmi.github.io/30DayMapChallenge/Day-20/index.html)
